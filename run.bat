@@ -1,0 +1,1 @@
+call "build/a.exe"
