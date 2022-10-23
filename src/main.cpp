@@ -76,7 +76,7 @@ main()
         glfwPollEvents();
         
         now = glfwGetTime();
-        float deltaTime = now-last;
+        float deltaTime = (float)(now-last);
         last = now;
         
         UpdateSpriteAnim(&anim, deltaTime);
@@ -124,7 +124,7 @@ main()
             
             DisplayEntireSheet(&spriteSheet, {-0.2,-0.2,-1}, {0.4,0.4});
             
-            for (int i = 0; i < Sprites.size(); ++i)
+            for (unsigned long long i = 0; i < Sprites.size(); ++i)
             {
                 AddSpriteToRender(&spriteSheet, &Sprites[i],  Positions[posIndex++%posCounts]);
             }
