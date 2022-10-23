@@ -9,15 +9,20 @@ struct SpriteVertexData
 {
     v3f position;
     v2f uv;
-    //Colour colour;
 };
 
 struct Sprite
 {
-    v3f position;
     v2f size;
     v2f bl_coord, ur_coord;
-    Colour colour;
+};
+
+struct SpriteAnimation
+{
+    int count;
+    float speed;
+    float timedIndex;
+    Sprite* sprites;
 };
 
 struct Renderer
@@ -42,17 +47,20 @@ struct SpriteSheet
 
 void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
 bool LoadSprite(SpriteSheet* sheet, Sprite* sprite, const char* path);
-void AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite);
+void AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite, const v3f& pos);
 void EndRender(Renderer* renderer);
 void DisplayEntireSheet(SpriteSheet* sheet, const v3f& position, const v2f& size);
 void CleanupSpritesheet(SpriteSheet* sheet);
 
-void CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode);
+void InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed = 1.0f ,const v2f& size = {1.f,1.f});
+void UpdateSpriteAnimation(SpriteAnimation* anim, float deltaTime);
+void RenderSpriteAnimationFrame(SpriteSheet* sheet, SpriteAnimation* anim, const v3f& pos);
+void CleanupSpriteAnimation(SpriteAnimation* anim);
 
+void CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode);
 void CompileSpriteShaderProgram(Renderer* renderer);
 
 void InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize);
-
 void CleanupRenderer(Renderer* renderer);
 
 

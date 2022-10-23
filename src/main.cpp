@@ -10,34 +10,13 @@
 
 #include <string>
 
+int InitPlatform(GLFWwindow*& window);
+
 int 
 main()
 {
     GLFWwindow* window = 0;
-    
-    // int glfw and other platform stuff
-    {
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        
-        window = glfwCreateWindow(800,800,"TEST",0,0);
-        if (window == 0)
-        {
-            fprintf(stderr, "Failed to create window");
-            glfwTerminate();
-            return -1;
-        }
-        glfwMakeContextCurrent(window);
-        
-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-        {
-            fprintf(stderr,"Failed to initialize glad\n");
-            
-            return -1;
-        }
-    }
+    InitPlatform(window);
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -81,9 +60,26 @@ main()
     int tileCount = 0;
     std::string tilesPath = "data/kenney/tile_00";
     
+    SpriteAnimation anim = {};
+    InitializeSpriteAnim(&anim, 4, 5, {.2f,.2f});
+    
+    LoadSprite(&spriteSheet, &anim.sprites[0], "data/testanim-01.png");
+    LoadSprite(&spriteSheet, &anim.sprites[1], "data/testanim-02.png");
+    LoadSprite(&spriteSheet, &anim.sprites[2], "data/testanim-03.png");
+    LoadSprite(&spriteSheet, &anim.sprites[3], "data/testanim-04.png");
+    
+    double now = glfwGetTime();
+    double last = now;
+    
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
+        
+        now = glfwGetTime();
+        float deltaTime = now-last;
+        last = now;
+        
+        UpdateSpriteAnim(&anim, deltaTime);
         
         int state = glfwGetKey(window, GLFW_KEY_E);
         if (state != keyState)
@@ -91,7 +87,6 @@ main()
             keyState = state;
             if (state == GLFW_PRESS)
             {
-                //fprintf(stderr,"E Key Pressed\n");
                 {
                     std::string tilesPathFull = tilesPath;
                     if (tileCount < 10)
@@ -111,7 +106,6 @@ main()
                     spr.size.y = 0.2f;
                     if (LoadSprite(&spriteSheet, &spr, tilesPathFull.c_str()))
                     {
-                        spr.position = Positions[posIndex++%posCounts];
                         Sprites.push_back(spr);
                     }else{
                         fprintf(stderr, "Failed to add sprite\n");
@@ -132,8 +126,10 @@ main()
             
             for (int i = 0; i < Sprites.size(); ++i)
             {
-                AddSpriteToRender(&spriteSheet, &Sprites[i]);
+                AddSpriteToRender(&spriteSheet, &Sprites[i],  Positions[posIndex++%posCounts]);
             }
+            
+            RenderSpriteAnimationFrame(&spriteSheet, &anim, Positions[posIndex++%posCounts]);
             
             EndRender(&spriteSheet.renderer);
         }
@@ -142,9 +138,41 @@ main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
     
+    CleanupSpriteAnimation(&anim);
     CleanupRenderer(&spriteSheet.renderer);
     CleanupSpriteSheet(&spriteSheet);
     
     glfwTerminate();
     return 0;
 }
+
+
+
+int 
+InitPlatform(GLFWwindow*& window)
+{
+    // int glfw and other platform stuff
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
+    window = glfwCreateWindow(800,800,"TEST",0,0);
+    if (window == 0)
+    {
+        fprintf(stderr, "Failed to create window");
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+    
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        fprintf(stderr,"Failed to initialize glad\n");
+        
+        return -1;
+    }
+    
+    return 0;
+}
+

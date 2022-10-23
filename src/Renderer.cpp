@@ -1,10 +1,12 @@
 #include <Renderer.h>
+
+#include <iostream>
+
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
-#include <iostream>
 
 struct GeneratedSprite
 {
@@ -43,10 +45,6 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, uv)));
     glEnableVertexAttribArray(1);
-    
-    //glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, colour)));
-    //glEnableVertexAttribArray(2);
-    
 }
 
 bool
@@ -97,7 +95,7 @@ LoadSprite(SpriteSheet* sheet, Sprite* sprite, const char* path)
 }
 
 void
-AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite)
+AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite, const v3f& pos)
 {
     if (sheet->renderer.vertexCount + 4 > sheet->renderer.maxVertices)
     {
@@ -106,24 +104,24 @@ AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite)
     
     SpriteVertexData vertices[4] = {};
     v3f& pos0 = vertices[0].position;
-    pos0.x = sprite->position.x;
-    pos0.y = sprite->position.y;
-    pos0.z = sprite->position.z;
+    pos0.x = pos.x;
+    pos0.y = pos.y;
+    pos0.z = pos.z;
     
     v3f& pos1 = vertices[1].position;
-    pos1.x = sprite->position.x + sprite->size.x;
-    pos1.y = sprite->position.y;
-    pos1.z = sprite->position.z;
+    pos1.x = pos.x + sprite->size.x;
+    pos1.y = pos.y;
+    pos1.z = pos.z;
     
     v3f& pos2 = vertices[2].position;
-    pos2.x = sprite->position.x + sprite->size.x;
-    pos2.y = sprite->position.y + sprite->size.y;
-    pos2.z = sprite->position.z;
+    pos2.x = pos.x + sprite->size.x;
+    pos2.y = pos.y + sprite->size.y;
+    pos2.z = pos.z;
     
     v3f& pos3 = vertices[3].position;
-    pos3.x = sprite->position.x;
-    pos3.y = sprite->position.y + sprite->size.y;
-    pos3.z = sprite->position.z;
+    pos3.x = pos.x;
+    pos3.y = pos.y + sprite->size.y;
+    pos3.z = pos.z;
     
     v2f& uv0 = vertices[0].uv;
     uv0.x = sprite->bl_coord.x;
@@ -235,12 +233,9 @@ CompileSpriteShaderProgram(Renderer* renderer)
         "#version 330 core\n"
         "layout (location = 0) in vec3 inPos;"
         "layout (location = 1) in vec2 inCoords;"
-        //"layout (location = 2) in vec4 inColour;"
-        "out vec4 SpriteColour;"
         "out vec2 TexCoords;"
         "void main(){"
         "gl_Position = vec4(inPos, 1.0f);"
-        //"SpriteColour = inColour;"
         "TexCoords = inCoords;"
         "}\0"
         ;
@@ -248,12 +243,10 @@ CompileSpriteShaderProgram(Renderer* renderer)
     const char* fragCode = 
         "#version 330 core\n"
         "out vec4 FragColor;"
-        "in vec4 SpriteColour;"
         "in vec2 TexCoords;"
         "uniform sampler2D tex;"
         "void main(){"
         "FragColor = texture(tex, TexCoords);"
-        //"* SpriteColour;"
         "}\0"
         ;
     
@@ -329,3 +322,38 @@ CleanupRenderer(Renderer* renderer)
     glDeleteProgram(renderer->shaderProgram);
 }
 
+void
+InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed, const v2f& size)
+{
+    anim->count = count;
+    anim->speed = speed;
+    
+    anim->sprites = new Sprite[anim->count];
+    for (int i = 0; i < anim->count; ++i)
+    {
+        anim->sprites[i].size.x = size.x;
+        anim->sprites[i].size.y = size.y;
+    }
+}
+
+void 
+CleanupSpriteAnimation(SpriteAnimation* anim)
+{
+    delete[] anim->sprites;
+}
+
+void
+UpdateSpriteAnim(SpriteAnimation* anim, float deltaTime)
+{
+    anim->timedIndex += anim->speed*deltaTime;
+    if (anim->timedIndex > anim->count)
+    {
+        anim->timedIndex -= anim->count;
+    }
+}
+
+void
+RenderSpriteAnimationFrame(SpriteSheet* sheet, SpriteAnimation* anim, const v3f& pos)
+{
+    AddSpriteToRender(sheet, &anim->sprites[(int)anim->timedIndex], pos);
+}
