@@ -13,8 +13,6 @@
 void 
 InitializeSpriteSheet(SpriteSheet *sheet)
 {
-    sheet->format = 4; //RGBA
-    
     sheet->atlasSize.x = 1024;
     sheet->atlasSize.y = 1024;
     
@@ -27,6 +25,9 @@ InitializeSpriteSheet(SpriteSheet *sheet)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
+    GeneratedSprite gsd = {};
+    gsd.data = stbi_load("data/test.png", &gsd.x, &gsd.y, &gsd.channel,4);
+    
     glTexImage2D(GL_TEXTURE_2D,
                  0,
                  GL_RGBA,
@@ -35,8 +36,10 @@ InitializeSpriteSheet(SpriteSheet *sheet)
                  0,
                  GL_RGBA,
                  GL_UNSIGNED_BYTE,
-                 0
+                 gsd.data
                  );
+    
+    stbi_image_free(gsd.data);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, position)));
     glEnableVertexAttribArray(0);
@@ -63,28 +66,38 @@ AddSprite(SpriteSheet* sheet, Sprite* sprite, const char* path)
         return false;
     }
     
+    if (sheet->currentAtlasLoc.y + gsd.y > sheet->atlasSize.y)
+    {
+        fprintf(stderr, "No more height in the current spritesheet. But permanent\n");
+        return false;
+    }
+    
     if ((sheet->currentAtlasLoc.x + gsd.x) > sheet->atlasSize.x)
     {
         sheet->currentAtlasLoc.x = 0; 
         sheet->currentAtlasLoc.y = sheet->usedAtlasHeight;
         if (sheet->currentAtlasLoc.y + gsd.y > sheet->atlasSize.y)
         {
-            printf("No more height in the current spritesheet\n");
+            fprintf(stderr, "No more height in the current spritesheet\n");
             return false;
         }
     }
     
-    glTexSubImage2D(
-                    GL_TEXTURE_2D, 0,
+    sprite->bl_coord.x = (float)sheet->currentAtlasLoc.x / (float)sheet->atlasSize.x;
+    sprite->bl_coord.y = (float)sheet->currentAtlasLoc.y / (float)sheet->atlasSize.y;
+    sprite->ur_coord.x = (float)(sheet->currentAtlasLoc.x + gsd.x) / (float)sheet->atlasSize.x;
+    sprite->ur_coord.y = (float)(sheet->currentAtlasLoc.y + gsd.y) / (float)sheet->atlasSize.y;
+    
+    glTexSubImage2D(GL_TEXTURE_2D, 0,
                     sheet->currentAtlasLoc.x, sheet->currentAtlasLoc.y,
                     gsd.x, gsd.y, 
                     GL_RGBA,
                     GL_UNSIGNED_BYTE,
-                    gsd.data
-                    );
+                    gsd.data);
     
     sheet->currentAtlasLoc.x += gsd.x;
-    sheet->usedAtlasHeight = (sheet->usedAtlasHeight - sheet->currentAtlasLoc.y) < gsd.y ? gsd.y + sheet->currentAtlasLoc.y : sheet->usedAtlasHeight;
+    sheet->usedAtlasHeight = (sheet->usedAtlasHeight - sheet->currentAtlasLoc.y) < gsd.y
+        ? gsd.y + sheet->currentAtlasLoc.y : sheet->usedAtlasHeight;
     
     stbi_image_free(gsd.data);
     
@@ -188,11 +201,11 @@ InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize)
     glBindVertexArray(renderer->vao);
     
     glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
-    glBufferData(GL_ARRAY_BUFFER, size_t(4) * size_t(BatchCount) * DataSize, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, renderer->maxVertices * DataSize, NULL, GL_DYNAMIC_DRAW);
     
     unsigned int* indices = new unsigned int[IndiceCount];
     unsigned int offset = 0;
-    for (unsigned int i = 0; i < BatchCount; ++i)
+    for (unsigned int i = 0; i < BatchCount; i+=6)
     {
         indices[i + 0] = offset + 0;
         indices[i + 1] = offset + 1;
@@ -204,7 +217,7 @@ InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize)
     }
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size_t(IndiceCount)*sizeof(unsigned int), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndiceCount*sizeof(unsigned int), indices, GL_STATIC_DRAW);
     
     delete[] indices;
 }
@@ -231,7 +244,7 @@ main()
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         
-        window = glfwCreateWindow(800,600,"TEST",0,0);
+        window = glfwCreateWindow(800,800,"TEST",0,0);
         if (window == 0)
         {
             fprintf(stderr, "Failed to create window");
@@ -250,24 +263,21 @@ main()
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glViewport(0, 0, 800, 600);
+    glEnable(GL_DEPTH);
+    glViewport(0, 0, 800, 800);
     glClearColor(0.1,0.2,0.2,1.0);
     
     // Custom Init
     SpriteSheet spriteSheet = {};
-    Sprite sprite0 = {};
     {
-        InitializeRenderer(&spriteSheet.renderer, 1, sizeof(SpriteVertexData));
+        InitializeRenderer(&spriteSheet.renderer, 8, sizeof(SpriteVertexData));
         InitializeSpriteSheet(&spriteSheet);
         CompileSpriteShaderProgram(&spriteSheet.renderer);
     }
     
-    std::vector<Sprite> Sprites;
-    
-    printf("Starting main loop\n");
     int keyState = glfwGetKey(window, GLFW_KEY_E);
     
-    int index = 0;
+    int index = 1;
     const char* files[] =
     {
         "data/blue64.png",
@@ -279,6 +289,8 @@ main()
         "data/red256.png",
     };
     
+    std::vector<Sprite> Sprites;
+    
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -287,10 +299,21 @@ main()
         if (state != keyState)
         {
             keyState = state;
-            if (state == GLFW_PRESS){
-                fprintf(stderr,"E Key Pressed\n");
-                AddSprite(&spriteSheet, &sprite0, files[index]);
-                if (++index > 6) index = 0;
+            if (state == GLFW_PRESS)
+            {
+                //fprintf(stderr,"E Key Pressed\n");
+                index%=7;
+                {
+                    Sprite spr = {};
+                    if (AddSprite(&spriteSheet, &spr, files[index]))
+                    {
+                        //fprintf(stderr, "Adding sprite\n");
+                        Sprites.push_back(spr);
+                    }else{
+                        fprintf(stderr, "Failed to add sprite\n");
+                    }
+                    ++index;
+                }
             }
         }
         
@@ -300,37 +323,75 @@ main()
             glBindVertexArray(spriteSheet.renderer.vao);
             glBindBuffer(GL_ARRAY_BUFFER, spriteSheet.renderer.vbo);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteSheet.renderer.ebo);
+            glBindTexture(GL_TEXTURE_2D, spriteSheet.textureID);
             
-            SpriteVertexData vertices[4];
-            for (int i = 0; i < 4; ++i)
             {
-                vertices[i].colour.g = vertices[i].colour.b = vertices[i].colour.r = vertices[i].colour.a = 255;
+                SpriteVertexData vertices[4];
+                
+                float pos;
+                pos = 0.2;
+                
+                v3f& pos0 = vertices[0].position;
+                pos0.x = -pos; pos0.y = -pos; pos0.z = 0.0;
+                v3f& pos1 = vertices[1].position;
+                pos1.x = pos; pos1.y = -pos; pos1.z=0;
+                v3f& pos2 = vertices[2].position;
+                pos2.x = pos; pos2.y = pos; pos2.z=0;
+                v3f& pos3= vertices[3].position;
+                pos3.x = -pos; pos3.y = pos; pos3.z=0;
+                
+                v2f& uv0 = vertices[0].uv;
+                uv0.x = 0.0; uv0.y = 0;
+                v2f& uv1 = vertices[1].uv;
+                uv1.x = 1.0; uv1.y = 0;
+                v2f& uv2 = vertices[2].uv;
+                uv2.x = 1.0; uv2.y = 1;
+                v2f& uv3 = vertices[3].uv;
+                uv3.x = 0.0; uv3.y = 1;
+                
+                
+                glBufferSubData(GL_ARRAY_BUFFER, spriteSheet.renderer.vertexCount * sizeof(SpriteVertexData),
+                                4 * sizeof(SpriteVertexData),
+                                &vertices[0]);
+                
             }
             
-            v3f& pos0 = vertices[0].position;
-            pos0.x = -0.5; pos0.y = -0.5; pos0.z = 0.0;
-            v3f& pos1 = vertices[1].position;
-            pos1.x = 0.5; pos1.y = -0.5f; pos1.z=0;
-            v3f& pos2 = vertices[2].position;
-            pos2.x = 0.5; pos2.y = 0.5f; pos2.z=0;
-            v3f& pos3= vertices[3].position;
-            pos3.x = -0.5; pos3.y = 0.5f; pos3.z=0;
-            
-            v2f& uv0 = vertices[0].uv;
-            uv0.x = 0.0; uv0.y = 0;
-            v2f& uv1 = vertices[1].uv;
-            uv1.x = 1.0; uv1.y = 0;
-            v2f& uv2 = vertices[2].uv;
-            uv2.x = 1.0; uv2.y = 1;
-            v2f& uv3 = vertices[3].uv;
-            uv3.x = 0.0; uv3.y = 1;
-            
-            glBufferSubData(GL_ARRAY_BUFFER, spriteSheet.renderer.vertexCount * sizeof(SpriteVertexData),
-                            4 * sizeof(SpriteVertexData),
-                            &vertices[0]);
-            
             spriteSheet.renderer.vertexCount += 4;
-            spriteSheet.renderer.drawCount = 1;
+            ++spriteSheet.renderer.drawCount;
+            
+            
+            for (int i = 0; i < Sprites.size(); ++i)
+            {
+                const Sprite& spr = Sprites[i];
+                
+                SpriteVertexData vertices[4] = {};
+                
+                v3f& pos0 = vertices[0].position;
+                pos0.x = 0.2 * i; pos0.y = 0.2 * i; pos0.z = -1.0;
+                v3f& pos1 = vertices[1].position;
+                pos1.x = 0.2 * i + 0.1; pos1.y = 0.2 * i; pos1.z=-1;
+                v3f& pos2 = vertices[2].position;
+                pos2.x =  0.2 * i + 0.1; pos2.y =  0.2 * i + 0.1; pos2.z=-1;
+                v3f& pos3= vertices[3].position;
+                pos3.x = 0.2 * i; pos3.y = 0.2 * i + 0.1; pos3.z=-1;
+                
+                v2f& uv0 = vertices[0].uv;
+                uv0.x = spr.bl_coord.x; uv0.y = spr.bl_coord.y;
+                v2f& uv1 = vertices[1].uv;
+                uv1.x = spr.ur_coord.x; uv1.y = spr.bl_coord.y;
+                v2f& uv2 = vertices[2].uv;
+                uv2.x =  spr.ur_coord.x; uv2.y = spr.ur_coord.y;
+                v2f& uv3 = vertices[3].uv;
+                uv3.x =  spr.bl_coord.x; uv3.y = spr.ur_coord.x;
+                
+                glBufferSubData(GL_ARRAY_BUFFER,
+                                spriteSheet.renderer.vertexCount*sizeof(SpriteVertexData),
+                                4*sizeof(SpriteVertexData),
+                                &vertices[0]);
+                
+                spriteSheet.renderer.vertexCount += 4;
+                ++spriteSheet.renderer.drawCount;
+            }
             
             glDrawElements(GL_TRIANGLES, spriteSheet.renderer.drawCount * 6, GL_UNSIGNED_INT, 0);
             

@@ -61,7 +61,6 @@ struct SpriteSheet
     int usedAtlasHeight;
     
     unsigned int textureID;
-    unsigned int format;
 };
 
 
