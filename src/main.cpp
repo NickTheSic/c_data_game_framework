@@ -8,6 +8,8 @@
 #include <Types.h>
 #include <Renderer.h>
 
+#include <string>
+
 int 
 main()
 {
@@ -47,23 +49,11 @@ main()
     SpriteSheet spriteSheet = {};
     {
         InitializeRenderer(&spriteSheet.renderer, 8, sizeof(SpriteVertexData));
-        InitializeSpriteSheet(&spriteSheet);
+        InitializeSpriteSheet(&spriteSheet, 256, 256);
         CompileSpriteShaderProgram(&spriteSheet.renderer);
     }
     
     int keyState = glfwGetKey(window, GLFW_KEY_E);
-    
-    int index = 1;
-    const char* files[] =
-    {
-        "data/blue64.png",
-        "data/red256.png",
-        "data/blue64.png",
-        "data/white256x128.png",
-        "data/red256.png",
-        "data/blue64.png",
-        "data/green128x256.png",
-    };
     
     std::vector<Sprite> Sprites;
     
@@ -88,6 +78,9 @@ main()
         { 0.6f, -0.2f, 0.0f},
     };
     
+    int tileCount = 0;
+    std::string tilesPath = "data/kenney/tile_00";
+    
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -99,19 +92,30 @@ main()
             if (state == GLFW_PRESS)
             {
                 //fprintf(stderr,"E Key Pressed\n");
-                index%=7;
                 {
+                    std::string tilesPathFull = tilesPath;
+                    if (tileCount < 10)
+                    {
+                        tilesPathFull.append("0");
+                        tilesPathFull.append(std::to_string(tileCount));
+                    }
+                    else if (tileCount < 100)
+                    {
+                        tilesPathFull.append(std::to_string(tileCount));
+                    }
+                    tilesPathFull.append(".png");
+                    ++tileCount;
+                    
                     Sprite spr = {};
                     spr.size.x = 0.2f;
                     spr.size.y = 0.2f;
-                    if (LoadSprite(&spriteSheet, &spr, files[index]))
+                    if (LoadSprite(&spriteSheet, &spr, tilesPathFull.c_str()))
                     {
                         spr.position = Positions[posIndex++%posCounts];
                         Sprites.push_back(spr);
                     }else{
                         fprintf(stderr, "Failed to add sprite\n");
                     }
-                    ++index;
                 }
             }
         }
@@ -124,35 +128,7 @@ main()
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteSheet.renderer.ebo);
             glBindTexture(GL_TEXTURE_2D, spriteSheet.textureID);
             
-            {
-                SpriteVertexData vertices[4];
-                
-                float pos;
-                pos = 0.2;
-                
-                v3f& pos0 = vertices[0].position;
-                pos0.x = -pos; pos0.y = -pos; pos0.z = 0.0;
-                v3f& pos1 = vertices[1].position;
-                pos1.x = pos; pos1.y = -pos; pos1.z=0;
-                v3f& pos2 = vertices[2].position;
-                pos2.x = pos; pos2.y = pos; pos2.z=0;
-                v3f& pos3= vertices[3].position;
-                pos3.x = -pos; pos3.y = pos; pos3.z=0;
-                
-                v2f& uv0 = vertices[0].uv;
-                uv0.x = 0.0; uv0.y = 0;
-                v2f& uv1 = vertices[1].uv;
-                uv1.x = 1.0; uv1.y = 0;
-                v2f& uv2 = vertices[2].uv;
-                uv2.x = 1.0; uv2.y = 1;
-                v2f& uv3 = vertices[3].uv;
-                uv3.x = 0.0; uv3.y = 1;
-                
-                glBufferSubData(GL_ARRAY_BUFFER, spriteSheet.renderer.vertexCount * sizeof(SpriteVertexData),4 * sizeof(SpriteVertexData),&vertices[0]);
-                
-                spriteSheet.renderer.vertexCount += 4;
-                ++spriteSheet.renderer.drawCount;
-            }
+            DisplayEntireSheet(&spriteSheet, {-0.2,-0.2,-1}, {0.4,0.4});
             
             for (int i = 0; i < Sprites.size(); ++i)
             {

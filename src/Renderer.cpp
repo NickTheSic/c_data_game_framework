@@ -22,13 +22,10 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     glGenTextures(1, &sheet->textureID);
     glBindTexture(GL_TEXTURE_2D, sheet->textureID);
     
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-    GeneratedSprite gsd = {};
-    gsd.data = stbi_load("data/test.png", &gsd.x, &gsd.y, &gsd.channel,4);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     
     glTexImage2D(GL_TEXTURE_2D,
                  0,
@@ -38,10 +35,8 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
                  0,
                  GL_RGBA,
                  GL_UNSIGNED_BYTE,
-                 gsd.data
+                 0
                  );
-    
-    stbi_image_free(gsd.data);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, position)));
     glEnableVertexAttribArray(0);
@@ -150,6 +145,51 @@ AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite)
                     sheet->renderer.vertexCount*sizeof(SpriteVertexData),
                     4*sizeof(SpriteVertexData),
                     &vertices[0]);
+    
+    sheet->renderer.vertexCount += 4;
+    ++sheet->renderer.drawCount;
+}
+
+void
+DisplayEntireSheet(SpriteSheet *sheet, const v3f& pos, const v2f& size)
+{
+    if (sheet->renderer.vertexCount > sheet->renderer.maxVertices)
+    {
+        EndRender(&sheet->renderer);
+    }
+    
+    SpriteVertexData vertices[4] = {};
+    
+    v3f& pos0 = vertices[0].position;
+    pos0.x = pos.x;
+    pos0.y = pos.y;
+    pos0.z = pos.z;
+    
+    v3f& pos1 = vertices[1].position;
+    pos1.x = pos.x + size.x;
+    pos1.y = pos.y;
+    pos1.z = pos.z;
+    
+    v3f& pos2 = vertices[2].position;
+    pos2.x = pos.x + size.x;
+    pos2.y = pos.y + size.y;
+    pos2.z = pos.z;
+    
+    v3f& pos3 = vertices[3].position;
+    pos3.x = pos.x;
+    pos3.y = pos.y + size.y;
+    pos3.z = pos.z;
+    
+    v2f& uv0 = vertices[0].uv;
+    uv0.x = 0.0f; uv0.y = 0.0f;
+    v2f& uv1 = vertices[1].uv;
+    uv1.x = 1.0f; uv1.y = 0.0f;
+    v2f& uv2 = vertices[2].uv;
+    uv2.x = 1.0f; uv2.y = 1.0f;
+    v2f& uv3 = vertices[3].uv;
+    uv3.x = 0.0f; uv3.y = 1.0f;
+    
+    glBufferSubData(GL_ARRAY_BUFFER, sheet->renderer.vertexCount * sizeof(SpriteVertexData),4 * sizeof(SpriteVertexData),&vertices[0]);
     
     sheet->renderer.vertexCount += 4;
     ++sheet->renderer.drawCount;

@@ -44,6 +44,7 @@ void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
 bool LoadSprite(SpriteSheet* sheet, Sprite* sprite, const char* path);
 void AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite);
 void EndRender(Renderer* renderer);
+void DisplayEntireSheet(SpriteSheet* sheet, const v3f& position, const v2f& size);
 void CleanupSpritesheet(SpriteSheet* sheet);
 
 void CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode);
