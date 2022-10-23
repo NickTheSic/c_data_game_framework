@@ -1,33 +1,15 @@
-/* date = October 22nd 2022 2:34 pm */
+/* date = October 23rd 2022 1:47 am */
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef _RENDERER_H
+#define _RENDERER_H
 
-struct v2f
-{
-    float x,y;
-};
-
-struct v2i
-{
-    int x,y;
-};
-
-struct v3f
-{
-    float x,y,z;
-};
-
-struct Colour
-{
-    unsigned char r,g,b,a;
-};
+#include <Types.h>
 
 struct SpriteVertexData
 {
     v3f position;
     v2f uv;
-    Colour colour;
+    //Colour colour;
 };
 
 struct Sprite
@@ -46,12 +28,6 @@ struct Renderer
     unsigned int shaderProgram;
 };
 
-struct GeneratedSprite
-{
-    int x,y,channel;
-    unsigned char* data;
-};
-
 struct SpriteSheet
 {
     Renderer renderer;
@@ -64,15 +40,21 @@ struct SpriteSheet
 };
 
 
-void InitializeSpriteSheet(SpriteSheet* sheet);
-bool AddSprite(SpriteSheet* sheet, Sprite* sprite, const char* path);
-void ClenupSpritesheet(SpriteSheet* sheet);
+void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
+bool LoadSprite(SpriteSheet* sheet, Sprite* sprite, const char* path);
+void AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite);
+void EndRender(Renderer* renderer);
+void CleanupSpritesheet(SpriteSheet* sheet);
 
 void CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode);
-void ComponeSpriteShaderProgram(Renderer* renderer);
+
+void CompileSpriteShaderProgram(Renderer* renderer);
 
 void InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize);
+
 void CleanupRenderer(Renderer* renderer);
 
 
-#endif //MAIN_H
+
+
+#endif //_RENDERER_H

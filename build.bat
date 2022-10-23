@@ -9,7 +9,7 @@ set GLAD=../vendor/src/glad.c
 set FLAGS= -g -Wall
 @echo on
 
-clang++ %FLAGS% %INCLUDES% %LIBS% %GLAD% ../src/main.cpp -o a.exe
+clang++ %FLAGS% %INCLUDES% %LIBS% %GLAD% ../src/build.cpp -o a.exe
 
 @echo off
 popd 
