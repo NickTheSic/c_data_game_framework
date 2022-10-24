@@ -27,7 +27,7 @@ main()
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glEnable(GL_DEPTH);
+    glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, 800, 800);
     glClearColor(0.1,0.2,0.2,1.0);
     
@@ -39,34 +39,6 @@ main()
         CompileSpriteShaderProgram(&spriteSheet.renderer);
     }
     
-    int keyState = glfwGetKey(window, GLFW_KEY_E);
-    
-    std::vector<Sprite> Sprites;
-    
-    int posIndex=0;
-    int posCounts = 15;
-    v3f Positions[] =
-    {
-        {-1.0f, -1.0f, 0.0f},
-        {-0.6f, -1.0f, 0.0f},
-        {-0.2f, -1.0f, 0.0f},
-        { 0.2f, -1.0f, 0.0f},
-        { 0.6f, -1.0f, 0.0f},
-        {-1.0f, -0.6f, 0.0f},
-        {-0.6f, -0.6f, 0.0f},
-        {-0.2f, -0.6f, 0.0f},
-        { 0.2f, -0.6f, 0.0f},
-        { 0.6f, -0.6f, 0.0f},
-        {-1.0f, -0.2f, 0.0f},
-        {-0.6f, -0.2f, 0.0f},
-        {-0.2f, -0.2f, 0.0f},
-        { 0.2f, -0.2f, 0.0f},
-        { 0.6f, -0.2f, 0.0f},
-    };
-    
-    int tileCount = 0;
-    std::string tilesPath = "data/kenney/tile_00";
-    
     SpriteAnimation anims[2] = {};
     InitializeSpriteAnim(&anims[0], 4, 5, {.2f,.2f});
     
@@ -76,10 +48,10 @@ main()
     LoadSprite(&spriteSheet, &anims[0].sprites[3], "data/testanim-04.png");
 
     InitializeSpriteAnim(&anims[1], 3, 5, {.2f,.2f});
-    anims[1].callback = &UnAttackAnim;
     LoadSprite(&spriteSheet, &anims[1].sprites[0], "data/testanimattack-01.png");
     LoadSprite(&spriteSheet, &anims[1].sprites[1], "data/testanimattack-02.png");
     LoadSprite(&spriteSheet, &anims[1].sprites[2], "data/testanimattack-03.png");
+    anims[1].callback = &UnAttackAnim;
     
     double now = glfwGetTime();
     double last = now;
@@ -94,39 +66,15 @@ main()
         
         UpdateSpriteAnim(&anims[ActiveAnim], deltaTime);
         
-        int state = glfwGetKey(window, GLFW_KEY_E);
-        if (state != keyState)
-        {
-            keyState = state;
-            if (state == GLFW_PRESS)
-            {
-                ActiveAnim = 1;
-                {
-                    std::string tilesPathFull = tilesPath;
-                    if (tileCount < 10)
-                    {
-                        tilesPathFull.append("0");
-                        tilesPathFull.append(std::to_string(tileCount));
-                    }
-                    else if (tileCount < 100)
-                    {
-                        tilesPathFull.append(std::to_string(tileCount));
-                    }
-                    tilesPathFull.append(".png");
-                    ++tileCount;
-                    
-                    Sprite spr = {};
-                    spr.size.x = 0.2f;
-                    spr.size.y = 0.2f;
-                    if (LoadSprite(&spriteSheet, &spr, tilesPathFull.c_str()))
-                    {
-                        Sprites.push_back(spr);
-                    }else{
-                        fprintf(stderr, "Failed to add sprite\n");
-                    }
-                }
-            }
-        }
+        //int state = glfwGetKey(window, GLFW_KEY_E);
+        //if (state != keyState)
+        //{
+        //    keyState = state;
+        //    if (state == GLFW_PRESS)
+        //    {
+        //        ActiveAnim = 1;
+        //    }
+        //}
         
         // custom render code
         {
@@ -138,12 +86,7 @@ main()
             
             DisplayEntireSheet(&spriteSheet, {-0.2,-0.2,-1}, {0.4,0.4});
             
-            for (unsigned long long i = 0; i < Sprites.size(); ++i)
-            {
-                AddSpriteToRender(&spriteSheet, &Sprites[i],  Positions[posIndex%posCounts]);
-            }
-            
-            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], Positions[posIndex%posCounts]);
+            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], {-1.0f, -1.f, 1.f});
             
             EndRender(&spriteSheet.renderer);
         }
