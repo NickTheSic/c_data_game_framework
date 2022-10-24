@@ -17,12 +17,15 @@ struct Sprite
     v2f bl_coord, ur_coord;
 };
 
+typedef void(*AnimEndCallback)();
+
 struct SpriteAnimation
 {
     int count;
     float speed;
     float timedIndex;
     Sprite* sprites;
+    AnimEndCallback callback;
 };
 
 struct Renderer

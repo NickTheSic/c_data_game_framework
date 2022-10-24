@@ -349,6 +349,11 @@ UpdateSpriteAnim(SpriteAnimation* anim, float deltaTime)
     if (anim->timedIndex > anim->count)
     {
         anim->timedIndex -= anim->count;
+
+        if (anim->callback != NULL)
+        {
+            anim->callback();
+        }
     }
 }
 

@@ -12,6 +12,13 @@
 
 int InitPlatform(GLFWwindow*& window);
 
+int ActiveAnim = 0;
+
+void UnAttackAnim()
+{
+    ActiveAnim = 0;
+}
+
 int 
 main()
 {
@@ -60,13 +67,19 @@ main()
     int tileCount = 0;
     std::string tilesPath = "data/kenney/tile_00";
     
-    SpriteAnimation anim = {};
-    InitializeSpriteAnim(&anim, 4, 5, {.2f,.2f});
+    SpriteAnimation anims[2] = {};
+    InitializeSpriteAnim(&anims[0], 4, 5, {.2f,.2f});
     
-    LoadSprite(&spriteSheet, &anim.sprites[0], "data/testanim-01.png");
-    LoadSprite(&spriteSheet, &anim.sprites[1], "data/testanim-02.png");
-    LoadSprite(&spriteSheet, &anim.sprites[2], "data/testanim-03.png");
-    LoadSprite(&spriteSheet, &anim.sprites[3], "data/testanim-04.png");
+    LoadSprite(&spriteSheet, &anims[0].sprites[0], "data/testanim-01.png");
+    LoadSprite(&spriteSheet, &anims[0].sprites[1], "data/testanim-02.png");
+    LoadSprite(&spriteSheet, &anims[0].sprites[2], "data/testanim-03.png");
+    LoadSprite(&spriteSheet, &anims[0].sprites[3], "data/testanim-04.png");
+
+    InitializeSpriteAnim(&anims[1], 3, 5, {.2f,.2f});
+    anims[1].callback = &UnAttackAnim;
+    LoadSprite(&spriteSheet, &anims[1].sprites[0], "data/testanimattack-01.png");
+    LoadSprite(&spriteSheet, &anims[1].sprites[1], "data/testanimattack-02.png");
+    LoadSprite(&spriteSheet, &anims[1].sprites[2], "data/testanimattack-03.png");
     
     double now = glfwGetTime();
     double last = now;
@@ -79,7 +92,7 @@ main()
         float deltaTime = (float)(now-last);
         last = now;
         
-        UpdateSpriteAnim(&anim, deltaTime);
+        UpdateSpriteAnim(&anims[ActiveAnim], deltaTime);
         
         int state = glfwGetKey(window, GLFW_KEY_E);
         if (state != keyState)
@@ -87,6 +100,7 @@ main()
             keyState = state;
             if (state == GLFW_PRESS)
             {
+                ActiveAnim = 1;
                 {
                     std::string tilesPathFull = tilesPath;
                     if (tileCount < 10)
@@ -126,10 +140,10 @@ main()
             
             for (unsigned long long i = 0; i < Sprites.size(); ++i)
             {
-                AddSpriteToRender(&spriteSheet, &Sprites[i],  Positions[posIndex++%posCounts]);
+                AddSpriteToRender(&spriteSheet, &Sprites[i],  Positions[posIndex%posCounts]);
             }
             
-            RenderSpriteAnimationFrame(&spriteSheet, &anim, Positions[posIndex++%posCounts]);
+            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], Positions[posIndex%posCounts]);
             
             EndRender(&spriteSheet.renderer);
         }
@@ -138,7 +152,8 @@ main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
     
-    CleanupSpriteAnimation(&anim);
+    CleanupSpriteAnimation(&anims[0]);
+    CleanupSpriteAnimation(&anims[1]);
     CleanupRenderer(&spriteSheet.renderer);
     CleanupSpriteSheet(&spriteSheet);
     
