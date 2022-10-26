@@ -3,7 +3,7 @@
 #ifndef _RENDERER_H
 #define _RENDERER_H
 
-#include <Types.h>
+#include <nl_math.h>
 #include <vector>
 
 struct SpriteVertexData
@@ -50,7 +50,7 @@ struct SpriteSheet
     int used_atlas_height;
     
     unsigned int textureID;
-
+    
     int sprite_count;
     std::vector<Sprite> sprites;
 };

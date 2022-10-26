@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Types.h>
+#include <nl_math.h>
 #include <Renderer.h>
 
 #include <string>
@@ -46,7 +46,7 @@ main()
     anims[0].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanim-02.png");
     anims[0].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanim-03.png");
     anims[0].sprite_handles[3] = LoadSprite(&spriteSheet, "data/testanim-04.png");
-
+    
     InitializeSpriteAnim(&anims[1], 3, 10);
     anims[1].sprite_handles[0] = LoadSprite(&spriteSheet, "data/testanimattack-01.png");
     anims[1].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanimattack-02.png");
@@ -56,6 +56,10 @@ main()
     double now = glfwGetTime();
     double last = now;
     int keyState = glfwGetKey(window, GLFW_KEY_E);
+    
+    mat4f mat;
+    MatrixTest(mat);
+    float *fpm = &mat.m11;
     
     while (!glfwWindowShouldClose(window))
     {
@@ -85,7 +89,7 @@ main()
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteSheet.renderer.ebo);
             glBindTexture(GL_TEXTURE_2D, spriteSheet.textureID);
             
-            DisplayEntireSheet(&spriteSheet, {-0.2,-0.2,-1}, {0.4,0.4});
+            DisplayEntireSheet(&spriteSheet, {-0.2,-0.2,-1}, {0.4f,0.4f});
             
             RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], {-1.0f, -1.f, 0.f});
             
