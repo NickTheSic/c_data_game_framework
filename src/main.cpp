@@ -13,7 +13,6 @@
 int InitPlatform(GLFWwindow*& window);
 
 int ActiveAnim = 0;
-
 void UnAttackAnim()
 {
     ActiveAnim = 0;
@@ -27,7 +26,8 @@ main()
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glViewport(0, 0, 800, 800);
     glClearColor(0.1,0.2,0.2,1.0);
     
@@ -40,21 +40,22 @@ main()
     }
     
     SpriteAnimation anims[2] = {};
-    InitializeSpriteAnim(&anims[0], 4, 5, {.2f,.2f});
+    InitializeSpriteAnim(&anims[0], 4, 5);
     
-    LoadSprite(&spriteSheet, &anims[0].sprites[0], "data/testanim-01.png");
-    LoadSprite(&spriteSheet, &anims[0].sprites[1], "data/testanim-02.png");
-    LoadSprite(&spriteSheet, &anims[0].sprites[2], "data/testanim-03.png");
-    LoadSprite(&spriteSheet, &anims[0].sprites[3], "data/testanim-04.png");
+    anims[0].sprite_handles[0] = LoadSprite(&spriteSheet, "data/testanim-01.png");
+    anims[0].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanim-02.png");
+    anims[0].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanim-03.png");
+    anims[0].sprite_handles[3] = LoadSprite(&spriteSheet, "data/testanim-04.png");
 
-    InitializeSpriteAnim(&anims[1], 3, 5, {.2f,.2f});
-    LoadSprite(&spriteSheet, &anims[1].sprites[0], "data/testanimattack-01.png");
-    LoadSprite(&spriteSheet, &anims[1].sprites[1], "data/testanimattack-02.png");
-    LoadSprite(&spriteSheet, &anims[1].sprites[2], "data/testanimattack-03.png");
+    InitializeSpriteAnim(&anims[1], 3, 10);
+    anims[1].sprite_handles[0] = LoadSprite(&spriteSheet, "data/testanimattack-01.png");
+    anims[1].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanimattack-02.png");
+    anims[1].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanimattack-03.png");
     anims[1].callback = &UnAttackAnim;
     
     double now = glfwGetTime();
     double last = now;
+    int keyState = glfwGetKey(window, GLFW_KEY_E);
     
     while (!glfwWindowShouldClose(window))
     {
@@ -66,19 +67,19 @@ main()
         
         UpdateSpriteAnim(&anims[ActiveAnim], deltaTime);
         
-        //int state = glfwGetKey(window, GLFW_KEY_E);
-        //if (state != keyState)
-        //{
-        //    keyState = state;
-        //    if (state == GLFW_PRESS)
-        //    {
-        //        ActiveAnim = 1;
-        //    }
-        //}
+        int state = glfwGetKey(window, GLFW_KEY_E);
+        if (state != keyState)
+        {
+            keyState = state;
+            if (state == GLFW_PRESS)
+            {
+                ActiveAnim = 1;
+            }
+        }
         
         // custom render code
         {
-            glUseProgram(spriteSheet.renderer.shaderProgram);
+            glUseProgram(spriteSheet.renderer.shader_program);
             glBindVertexArray(spriteSheet.renderer.vao);
             glBindBuffer(GL_ARRAY_BUFFER, spriteSheet.renderer.vbo);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteSheet.renderer.ebo);
@@ -86,13 +87,13 @@ main()
             
             DisplayEntireSheet(&spriteSheet, {-0.2,-0.2,-1}, {0.4,0.4});
             
-            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], {-1.0f, -1.f, 1.f});
+            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], {-1.0f, -1.f, 0.f});
             
             EndRender(&spriteSheet.renderer);
         }
         
         glfwSwapBuffers(window);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
     }
     
     CleanupSpriteAnimation(&anims[0]);

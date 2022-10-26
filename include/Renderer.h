@@ -4,6 +4,7 @@
 #define _RENDERER_H
 
 #include <Types.h>
+#include <vector>
 
 struct SpriteVertexData
 {
@@ -17,47 +18,53 @@ struct Sprite
     v2f bl_coord, ur_coord;
 };
 
+typedef int SpriteHandle;
+static SpriteHandle INVALID_SPRITE_HANDLE = -1;
+static v2f DEFAULT_SPRITE_SIZE = v2f{0.2f,0.2f};
+
 typedef void(*AnimEndCallback)();
 
 struct SpriteAnimation
 {
     int count;
     float speed;
-    float timedIndex;
-    Sprite* sprites;
+    float timed_index;
     AnimEndCallback callback;
+    SpriteHandle* sprite_handles;
 };
 
 struct Renderer
 {
     unsigned int vbo, vao, ebo;
-    unsigned int vertexCount, maxVertices;
-    unsigned int drawCount;
-    unsigned int shaderProgram;
+    unsigned int vertex_count, max_vertices;
+    unsigned int draw_count;
+    unsigned int shader_program;
 };
 
 struct SpriteSheet
 {
     Renderer renderer;
     
-    v2i atlasSize;
-    v2i currentAtlasLoc;
-    int usedAtlasHeight;
+    v2i atlas_size;
+    v2i current_atlas_loc;
+    int used_atlas_height;
     
     unsigned int textureID;
+
+    int sprite_count;
+    std::vector<Sprite> sprites;
 };
 
 
 void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
-bool LoadSprite(SpriteSheet* sheet, Sprite* sprite, const char* path);
-void AddSpriteToRender(SpriteSheet* sheet, Sprite* sprite, const v3f& pos);
+SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path);
+void AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos);
 void EndRender(Renderer* renderer);
 void DisplayEntireSheet(SpriteSheet* sheet, const v3f& position, const v2f& size);
 void CleanupSpritesheet(SpriteSheet* sheet);
 
-void InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed = 1.0f ,const v2f& size = {1.f,1.f});
+void InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed = 1.0f);
 void UpdateSpriteAnimation(SpriteAnimation* anim, float deltaTime);
-void RenderSpriteAnimationFrame(SpriteSheet* sheet, SpriteAnimation* anim, const v3f& pos);
 void CleanupSpriteAnimation(SpriteAnimation* anim);
 
 void CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode);
