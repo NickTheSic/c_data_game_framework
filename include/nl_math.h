@@ -3,11 +3,18 @@
 #ifndef NL_MATH_H
 #define NL_MATH_H
 
+// if WEB define the define that removes instrinsics
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-typedef glm::vec2f v2f;
-typedef glm::vec2i v2i;
+struct v2i
+{
+    int x, y;
+};
 
-typedef glm::vec3f v3f;
+typedef glm::vec2 v2f;
+typedef glm::vec3 v3f;
+typedef glm::mat4 mat4f;
 
 #endif //NL_MATH_H

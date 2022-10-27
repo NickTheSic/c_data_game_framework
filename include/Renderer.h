@@ -6,6 +6,11 @@
 #include <nl_math.h>
 #include <vector>
 
+typedef int SpriteHandle;
+static SpriteHandle INVALID_SPRITE_HANDLE = -1;
+static v2f DEFAULT_SPRITE_SIZE = v2f{0.2f,0.2f};
+typedef void(*AnimEndCallback)();
+
 struct SpriteVertexData
 {
     v3f position;
@@ -17,12 +22,6 @@ struct Sprite
     v2f size;
     v2f bl_coord, ur_coord;
 };
-
-typedef int SpriteHandle;
-static SpriteHandle INVALID_SPRITE_HANDLE = -1;
-static v2f DEFAULT_SPRITE_SIZE = v2f{0.2f,0.2f};
-
-typedef void(*AnimEndCallback)();
 
 struct SpriteAnimation
 {
@@ -60,15 +59,13 @@ void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path);
 void AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos);
 void EndRender(Renderer* renderer);
+
 void DisplayEntireSheet(SpriteSheet* sheet, const v3f& position, const v2f& size);
 void CleanupSpritesheet(SpriteSheet* sheet);
 
 void InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed = 1.0f);
 void UpdateSpriteAnimation(SpriteAnimation* anim, float deltaTime);
 void CleanupSpriteAnimation(SpriteAnimation* anim);
-
-void CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode);
-void CompileSpriteShaderProgram(Renderer* renderer);
 
 void InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize);
 void CleanupRenderer(Renderer* renderer);

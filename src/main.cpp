@@ -7,6 +7,8 @@
 
 #include <nl_math.h>
 #include <Renderer.h>
+#include <Camera.h>
+#include <Shader.h>
 
 #include <string>
 
@@ -16,6 +18,20 @@ int ActiveAnim = 0;
 void UnAttackAnim()
 {
     ActiveAnim = 0;
+}
+
+bool HandleKeyPress(GLFWwindow* window, int& state, unsigned int GlfwKey)
+{
+    int key = glfwGetKey(window, GlfwKey);
+    if (key != state)
+    {
+        state = key;
+        if (state == GLFW_PRESS)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 int 
@@ -32,11 +48,18 @@ main()
     glClearColor(0.1,0.2,0.2,1.0);
     
     // Custom Init
+    Camera cam = {};
+    
+    Shader shader = {};
     SpriteSheet spriteSheet = {};
     {
         InitializeRenderer(&spriteSheet.renderer, 8, sizeof(SpriteVertexData));
         InitializeSpriteSheet(&spriteSheet, 256, 256);
+
+        CreateViewMatrix(&cam, v3f(0.0f,0.f,1.f), v3f(0.f,0.f,0.f));
         CompileSpriteShaderProgram(&spriteSheet.renderer);
+        shader.program = spriteSheet.renderer.shader_program;
+        SetUniform(&shader, "view", cam.view);
     }
     
     SpriteAnimation anims[2] = {};
@@ -55,12 +78,15 @@ main()
     
     double now = glfwGetTime();
     double last = now;
-    int keyState = glfwGetKey(window, GLFW_KEY_E);
     
-    mat4f mat;
-    MatrixTest(mat);
-    float *fpm = &mat.m11;
-    
+    int actionKey = glfwGetKey(window, GLFW_KEY_E);
+    int upKey = glfwGetKey(window, GLFW_KEY_W);
+    int downKey = glfwGetKey(window, GLFW_KEY_S);
+    int leftKey = glfwGetKey(window, GLFW_KEY_A);
+    int rightKey = glfwGetKey(window, GLFW_KEY_D);
+
+    v3f PlayerPos(0.f,0.f,0.f);
+
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -71,14 +97,25 @@ main()
         
         UpdateSpriteAnim(&anims[ActiveAnim], deltaTime);
         
-        int state = glfwGetKey(window, GLFW_KEY_E);
-        if (state != keyState)
+        if (HandleKeyPress(window, actionKey, GLFW_KEY_E))
         {
-            keyState = state;
-            if (state == GLFW_PRESS)
-            {
-                ActiveAnim = 1;
-            }
+            ActiveAnim = 1;
+        }
+        if (HandleKeyPress(window, upKey, GLFW_KEY_W))
+        {
+            PlayerPos.y += 0.1;
+        }
+        if (HandleKeyPress(window, downKey, GLFW_KEY_S))
+        {
+            PlayerPos.y -= 0.1;
+        }
+         if (HandleKeyPress(window, leftKey, GLFW_KEY_A))
+        {
+            PlayerPos.x -= 0.1;
+        }
+        if (HandleKeyPress(window, rightKey, GLFW_KEY_D))
+        {
+            PlayerPos.x += 0.1;
         }
         
         // custom render code
@@ -89,9 +126,9 @@ main()
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteSheet.renderer.ebo);
             glBindTexture(GL_TEXTURE_2D, spriteSheet.textureID);
             
-            DisplayEntireSheet(&spriteSheet, {-0.2,-0.2,-1}, {0.4f,0.4f});
+            DisplayEntireSheet(&spriteSheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
             
-            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], {-1.0f, -1.f, 0.f});
+            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], PlayerPos);
             
             EndRender(&spriteSheet.renderer);
         }

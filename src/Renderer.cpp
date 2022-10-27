@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <Shader.h>
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -231,79 +233,6 @@ void
 CleanupSpriteSheet(SpriteSheet* sheet)
 {
     glDeleteTextures(1, &sheet->textureID);
-}
-
-void
-CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode)
-{
-    shader = glCreateShader(type);
-    glShaderSource(shader, 1, &shaderCode, 0);
-    glCompileShader(shader);
-    
-    int  success = 0;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    
-    if (!success)
-    {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "Error compiling shader: " << type << std::endl;
-        std::cout << "\t" << infoLog << std::endl;
-    }
-}
-
-void 
-CompileSpriteShaderProgram(Renderer* renderer)
-{
-    unsigned int vertShader, fragShader;
-    
-    const char* vertCode = 
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 inPos;"
-        "layout (location = 1) in vec2 inCoords;"
-        "out vec2 TexCoords;"
-        "void main(){"
-        "gl_Position = vec4(inPos, 1.0f);"
-        "TexCoords = inCoords;"
-        "}\0"
-        ;
-    
-    const char* fragCode = 
-        "#version 330 core\n"
-        "out vec4 FragColor;"
-        "in vec2 TexCoords;"
-        "uniform sampler2D tex;"
-        "void main(){"
-        "FragColor = texture(tex, TexCoords);"
-        "}\0"
-        ;
-    
-    CompileShaderCode(vertShader, GL_VERTEX_SHADER, vertCode);
-    CompileShaderCode(fragShader, GL_FRAGMENT_SHADER, fragCode);
-    
-    renderer->shader_program = glCreateProgram();
-    glAttachShader(renderer->shader_program, vertShader);
-    glAttachShader(renderer->shader_program, fragShader);
-    glLinkProgram(renderer->shader_program);
-    
-    // check program error
-    {
-        int  success;
-        char infoLog[512];
-        glGetProgramiv(renderer->shader_program, GL_LINK_STATUS, &success);
-        
-        if (!success)
-        {
-            glGetShaderInfoLog(renderer->shader_program, 512, NULL, infoLog);
-            std::cout << "Error linking Shader Program" << std::endl;
-            std::cout << infoLog << std::endl;
-        }
-    }
-    
-    glUseProgram(renderer->shader_program);
-    
-    glDeleteShader(fragShader);
-    glDeleteShader(vertShader);
 }
 
 void 
