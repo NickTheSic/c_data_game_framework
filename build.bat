@@ -3,7 +3,7 @@ if not exist build mkdir build
 pushd build
 
 set INCLUDES=-I../include -I../vendor/include
-set LIBS=-L../lib -lglfw3dll -lglad
+set LIBS=-L../lib -lglfw3dll -lopengl32
 set FLAGS= -g -Wall -Wextra 
 
 @echo on

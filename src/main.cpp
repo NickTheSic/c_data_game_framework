@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <nl_math.h>
@@ -42,25 +41,30 @@ main()
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
     glViewport(0, 0, 800, 800);
     glClearColor(0.1,0.2,0.2,1.0);
     
     // Custom Init
-    Camera cam = {};
+    v3f player_pos(0.f,0.f,1.f);
+    FollowCamera cam = {};
+    cam.position = &player_pos;
     
     Shader shader = {};
     SpriteSheet spriteSheet = {};
     {
         InitializeRenderer(&spriteSheet.renderer, 8, sizeof(SpriteVertexData));
-        InitializeSpriteSheet(&spriteSheet, 256, 256);
-
-        CreateViewMatrix(&cam, v3f(0.0f,0.f,1.f), v3f(0.f,0.f,0.f));
+        InitializeSpriteSheet(&spriteSheet, 512, 512);
+        
+        CreateFollowViewMatrix(&cam);
         CompileSpriteShaderProgram(&spriteSheet.renderer);
         shader.program = spriteSheet.renderer.shader_program;
         SetUniform(&shader, "view", cam.view);
     }
+    
+    SpriteHandle sprite_handle_1 = LoadSprite(&spriteSheet, "data/red256.png");
     
     SpriteAnimation anims[2] = {};
     InitializeSpriteAnim(&anims[0], 4, 5);
@@ -76,17 +80,13 @@ main()
     anims[1].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanimattack-03.png");
     anims[1].callback = &UnAttackAnim;
     
+    SpriteHandle sprite_handle_2 = LoadSprite(&spriteSheet, "data/red256.png");
+    
     double now = glfwGetTime();
     double last = now;
     
     int actionKey = glfwGetKey(window, GLFW_KEY_E);
-    int upKey = glfwGetKey(window, GLFW_KEY_W);
-    int downKey = glfwGetKey(window, GLFW_KEY_S);
-    int leftKey = glfwGetKey(window, GLFW_KEY_A);
-    int rightKey = glfwGetKey(window, GLFW_KEY_D);
-
-    v3f PlayerPos(0.f,0.f,0.f);
-
+    
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -101,22 +101,25 @@ main()
         {
             ActiveAnim = 1;
         }
-        if (HandleKeyPress(window, upKey, GLFW_KEY_W))
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            PlayerPos.y += 0.1;
+            player_pos.y += 1 * deltaTime;
         }
-        if (HandleKeyPress(window, downKey, GLFW_KEY_S))
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            PlayerPos.y -= 0.1;
+            player_pos.y -= 1 * deltaTime;
         }
-         if (HandleKeyPress(window, leftKey, GLFW_KEY_A))
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            PlayerPos.x -= 0.1;
+            player_pos.x -= 1 * deltaTime;
         }
-        if (HandleKeyPress(window, rightKey, GLFW_KEY_D))
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            PlayerPos.x += 0.1;
+            player_pos.x += 1 * deltaTime;
         }
+        
+        CreateFollowViewMatrix(&cam);
+        SetUniform(&shader, "view", cam.view);
         
         // custom render code
         {
@@ -126,15 +129,19 @@ main()
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteSheet.renderer.ebo);
             glBindTexture(GL_TEXTURE_2D, spriteSheet.textureID);
             
+            float offset_pos = 0.3;
+            AddSpriteToRender(&spriteSheet, sprite_handle_1, v3f(-offset_pos, -offset_pos, -0.0));
+            AddSpriteToRender(&spriteSheet, sprite_handle_2, v3f(offset_pos, offset_pos, 0.0));
+            
             DisplayEntireSheet(&spriteSheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
             
-            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], PlayerPos);
+            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], player_pos);
             
             EndRender(&spriteSheet.renderer);
         }
         
         glfwSwapBuffers(window);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
     
     CleanupSpriteAnimation(&anims[0]);
@@ -162,17 +169,17 @@ InitPlatform(GLFWwindow*& window)
     {
         fprintf(stderr, "Failed to create window");
         glfwTerminate();
-        return -1;
+        return 0;
     }
     glfwMakeContextCurrent(window);
     
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (LoadGLExtensions() == 0)
     {
-        fprintf(stderr,"Failed to initialize glad\n");
+        fprintf(stderr,"Failed to load opengl extensions\n");
         
-        return -1;
+        return 0;
     }
     
-    return 0;
+    return 1;
 }
 

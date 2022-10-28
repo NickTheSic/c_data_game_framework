@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <glad/glad.h>
+#include <nl_gl.h>
 #include <GLFW/glfw3.h>
 
 #include <Shader.h>
@@ -20,16 +20,16 @@ void
 InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
 {
     stbi_set_flip_vertically_on_load(true);
-
+    
     sheet->atlas_size.x = sx;
     sheet->atlas_size.y = sy;
-
-// uneeded as long as we = {}; before passing?
+    
+    // uneeded as long as we = {}; before passing?
     sheet->sprite_count = 0;
     sheet->used_atlas_height = 0;
     sheet->current_atlas_loc.x = 0;
     sheet->current_atlas_loc.y = 0;
-
+    
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &sheet->textureID);
     glBindTexture(GL_TEXTURE_2D, sheet->textureID);
@@ -61,14 +61,14 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
 {
     Sprite sprite = {};
     SpriteHandle handle = INVALID_SPRITE_HANDLE;
-
+    
     GeneratedSprite gsd = {};
     
     gsd.data = stbi_load(path, &gsd.x, &gsd.y, &gsd.channel, 4);
     
     if (stbi_failure_reason())
     {
-        std::cout << stbi_failure_reason() << std::endl;
+        std::cout << stbi_failure_reason() << " while loading: " << path << std::endl;
         return handle;
     }
     
@@ -101,13 +101,13 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
         ? gsd.y + sheet->current_atlas_loc.y : sheet->used_atlas_height;
     
     stbi_image_free(gsd.data);
-
+    
     handle = sheet->sprite_count++;
     //sprite.size.x = gsd.x;
     //sprite.size.y = gsd.y;
     sprite.size = DEFAULT_SPRITE_SIZE;
     sheet->sprites.push_back(sprite);
-
+    
     return handle;
 }
 
@@ -116,7 +116,7 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos)
 {
     if (spriteHandle == INVALID_SPRITE_HANDLE)
     {
-        fprintf(stderr, "Sprite Handle was Invalid Sprite Handle");
+        //fprintf(stderr, "Sprite Handle was Invalid\n");
         return;
     }
     else if (spriteHandle > sheet->sprite_count || spriteHandle < 0)
@@ -124,7 +124,7 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos)
         fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", spriteHandle);
         return;
     }
-
+    
     if (sheet->renderer.vertex_count + 4 > sheet->renderer.max_vertices)
     {
         EndRender(&sheet->renderer);
@@ -305,7 +305,7 @@ UpdateSpriteAnim(SpriteAnimation* anim, float deltaTime)
     if (anim->timed_index > anim->count)
     {
         anim->timed_index -= anim->count;
-
+        
         if (anim->callback != NULL)
         {
             anim->callback();
