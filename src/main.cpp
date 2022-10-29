@@ -5,9 +5,9 @@
 #include <GLFW/glfw3.h>
 
 #include <nl_math.h>
-#include <Renderer.h>
+#include <nl_renderer.h>
 #include <Camera.h>
-#include <Shader.h>
+#include <nl_shader.h>
 
 #include <string>
 
@@ -64,7 +64,7 @@ main()
         SetUniform(&shader, "view", cam.view);
     }
     
-    SpriteHandle sprite_handle_1 = LoadSprite(&spriteSheet, "data/red256.png");
+    SpriteHandle sprite_handle_1 = LoadSprite(&spriteSheet, "data/blue64.png");
     
     SpriteAnimation anims[2] = {};
     InitializeSpriteAnim(&anims[0], 4, 5);
@@ -80,7 +80,7 @@ main()
     anims[1].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanimattack-03.png");
     anims[1].callback = &UnAttackAnim;
     
-    SpriteHandle sprite_handle_2 = LoadSprite(&spriteSheet, "data/red256.png");
+    SpriteHandle sprite_handle_2 = LoadSprite(&spriteSheet, "data/blue64.png");
     
     double now = glfwGetTime();
     double last = now;

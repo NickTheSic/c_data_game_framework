@@ -1,11 +1,11 @@
-#include <Renderer.h>
+#include <nl_renderer.h>
 
 #include <iostream>
 
 #include <nl_gl.h>
 #include <GLFW/glfw3.h>
 
-#include <Shader.h>
+#include <nl_shader.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>

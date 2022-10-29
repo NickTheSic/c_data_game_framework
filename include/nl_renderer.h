@@ -1,7 +1,7 @@
 /* date = October 23rd 2022 1:47 am */
 
-#ifndef _RENDERER_H
-#define _RENDERER_H
+#ifndef _NL_RENDERER_H
+#define _NL_RENDERER_H
 
 #include <nl_math.h>
 #include <vector>
@@ -71,6 +71,4 @@ void InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t Data
 void CleanupRenderer(Renderer* renderer);
 
 
-
-
-#endif //_RENDERER_H
+#endif //_NL_RENDERER_H

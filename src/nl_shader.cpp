@@ -1,15 +1,8 @@
-
-#ifndef _SHADER_H_
-#define _SHADER_H_
-
-#include <map>
-#include <string>
-
-struct Shader
-{
-    unsigned int program;
-    std::map<std::string, unsigned int> uniform_locs; 
-};
+#include <nl_shader.h>
+#include <iostream>
+#include <nl_gl.h>
+#include <nl_math.h>
+#include <nl_renderer.h>
 
 // TODO: Put in cpp file only
 static int GetUniformLocation(Shader* shader, std::string name)
@@ -24,17 +17,18 @@ static int GetUniformLocation(Shader* shader, std::string name)
     return shader->uniform_locs[name];
 }
 
-static void SetUniform(Shader* shader, const char* name, float val)
+void SetUniform(Shader* shader, const char* name, float val)
 {
     int loc = GetUniformLocation(shader, name);
     glUniform1f(loc, val);
 }
 
-static void SetUniform(Shader* shader, const char* name, const mat4f& val)
+void SetUniform(Shader* shader, const char* name, const mat4f& val)
 {
     int loc = GetUniformLocation(shader, name);
     glUniformMatrix4fv(loc,1, GL_FALSE, glm::value_ptr(val));
 }
+
 
 void
 CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode)
@@ -54,7 +48,6 @@ CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCod
         std::cout << "\t" << infoLog << std::endl;
     }
 }
-
 
 void 
 CompileSpriteShaderProgram(Renderer* renderer)
@@ -110,5 +103,3 @@ CompileSpriteShaderProgram(Renderer* renderer)
     glDeleteShader(fragShader);
     glDeleteShader(vertShader);
 }
-
-#endif //_SHADER_H
