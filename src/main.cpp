@@ -64,7 +64,6 @@ main()
         SetUniform(&shader, "view", cam.view);
     }
     
-    
     SpriteAnimation anims[2] = {};
     InitializeSpriteAnim(&anims[0], 4, 5);
     
@@ -74,7 +73,7 @@ main()
     anims[0].sprite_handles[3] = LoadSprite(&spriteSheet, "data/testanim-04.png");
     
     SpriteHandle sprite_handle_1 = LoadSprite(&spriteSheet, "data/blue64.png");
-    
+
     InitializeSpriteAnim(&anims[1], 3, 10);
     anims[1].sprite_handles[0] = LoadSprite(&spriteSheet, "data/testanimattack-01.png");
     anims[1].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanimattack-02.png");
@@ -124,19 +123,16 @@ main()
         
         // custom render code
         {
-            glUseProgram(spriteSheet.renderer.shader_program);
-            glBindVertexArray(spriteSheet.renderer.vao);
-            glBindBuffer(GL_ARRAY_BUFFER, spriteSheet.renderer.vbo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, spriteSheet.renderer.ebo);
+            BeginRender(&spriteSheet.renderer);
             glBindTexture(GL_TEXTURE_2D, spriteSheet.textureID);
+            
+            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], player_pos);
             
             float offset_pos = 0.3;
             AddSpriteToRender(&spriteSheet, sprite_handle_1, v3f(-offset_pos, -offset_pos, -0.0));
             AddSpriteToRender(&spriteSheet, sprite_handle_2, v3f(offset_pos, offset_pos, 0.0));
             
             DisplayEntireSheet(&spriteSheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
-            
-            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], player_pos);
             
             EndRender(&spriteSheet.renderer);
         }

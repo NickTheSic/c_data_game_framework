@@ -232,6 +232,14 @@ DisplayEntireSheet(SpriteSheet *sheet, const v3f& pos, const v2f& size)
     ++sheet->renderer.draw_count;
 }
 
+void BeginRender(Renderer* renderer)
+{
+    glBindVertexArray(renderer->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->ebo);
+    glUseProgram(renderer->shader_program);
+}
+
 void EndRender(Renderer* renderer)
 {
     glDrawElements(GL_TRIANGLES, renderer->draw_count * 6, GL_UNSIGNED_INT, 0);

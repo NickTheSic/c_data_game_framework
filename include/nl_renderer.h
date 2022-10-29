@@ -35,10 +35,10 @@ struct SpriteAnimation
 
 struct Renderer
 {
-    unsigned int vbo, vao, ebo;
+    unsigned int vao, vbo, ebo;
+    unsigned int shader_program;
     unsigned int vertex_count, max_vertices;
     unsigned int draw_count;
-    unsigned int shader_program;
 };
 
 struct SpriteSheet
@@ -56,11 +56,9 @@ struct SpriteSheet
     std::vector<Sprite> sprites;
 };
 
-
 void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path);
 void AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos);
-void EndRender(Renderer* renderer);
 
 void DisplayEntireSheet(SpriteSheet* sheet, const v3f& position, const v2f& size);
 void CleanupSpritesheet(SpriteSheet* sheet);
@@ -71,6 +69,8 @@ void CleanupSpriteAnimation(SpriteAnimation* anim);
 
 void InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize);
 void CleanupRenderer(Renderer* renderer);
+void BeginRender(Renderer* renderer);
+void EndRender(Renderer* renderer);
 
 
 #endif //_NL_RENDERER_H
