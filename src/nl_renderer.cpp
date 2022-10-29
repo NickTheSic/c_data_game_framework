@@ -59,6 +59,13 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
 
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
 {
+    auto it = sheet->loaded_sprites.find(path);
+
+    if (it != sheet->loaded_sprites.end())
+    {
+        return it->second;
+    }
+
     Sprite sprite = {};
     SpriteHandle handle = INVALID_SPRITE_HANDLE;
     
@@ -108,7 +115,9 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     sprite.size = DEFAULT_SPRITE_SIZE;
     sheet->sprites.push_back(sprite);
     
-    return handle;
+    sheet->loaded_sprites[path] = handle;
+
+    return sheet->loaded_sprites[path];
 }
 
 void

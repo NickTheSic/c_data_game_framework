@@ -64,7 +64,6 @@ main()
         SetUniform(&shader, "view", cam.view);
     }
     
-    SpriteHandle sprite_handle_1 = LoadSprite(&spriteSheet, "data/blue64.png");
     
     SpriteAnimation anims[2] = {};
     InitializeSpriteAnim(&anims[0], 4, 5);
@@ -73,6 +72,8 @@ main()
     anims[0].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanim-02.png");
     anims[0].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanim-03.png");
     anims[0].sprite_handles[3] = LoadSprite(&spriteSheet, "data/testanim-04.png");
+    
+    SpriteHandle sprite_handle_1 = LoadSprite(&spriteSheet, "data/blue64.png");
     
     InitializeSpriteAnim(&anims[1], 3, 10);
     anims[1].sprite_handles[0] = LoadSprite(&spriteSheet, "data/testanimattack-01.png");

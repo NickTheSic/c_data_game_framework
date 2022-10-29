@@ -5,6 +5,7 @@
 
 #include <nl_math.h>
 #include <vector>
+#include <map>
 
 typedef int SpriteHandle;
 static SpriteHandle INVALID_SPRITE_HANDLE = -1;
@@ -51,6 +52,7 @@ struct SpriteSheet
     unsigned int textureID;
     
     int sprite_count;
+    std::map<std::string, SpriteHandle> loaded_sprites;
     std::vector<Sprite> sprites;
 };
 
