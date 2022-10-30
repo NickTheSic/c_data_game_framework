@@ -232,6 +232,12 @@ DisplayEntireSheet(SpriteSheet *sheet, const v3f& pos, const v2f& size)
     ++sheet->renderer.draw_count;
 }
 
+void BeginRender(SpriteSheet* sheet)
+{   
+    BeginRender(&sheet->renderer);
+    glBindTexture(GL_TEXTURE_2D, sheet->textureID);
+}
+
 void BeginRender(Renderer* renderer)
 {
     glBindVertexArray(renderer->vao);
@@ -316,7 +322,7 @@ CleanupSpriteAnimation(SpriteAnimation* anim)
 }
 
 void
-UpdateSpriteAnim(SpriteAnimation* anim, float deltaTime)
+UpdateSpriteAnimation(SpriteAnimation* anim, float deltaTime)
 {
     anim->timed_index += anim->speed*deltaTime;
     if (anim->timed_index > anim->count)

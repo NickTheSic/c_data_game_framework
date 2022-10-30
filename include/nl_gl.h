@@ -8,11 +8,28 @@ extern "C"{
 #endif
     
 #ifdef _WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#include <Windows.h>
-#include <gl/GL.h>
+ #ifndef WIN32_LEAN_AND_MEAN
+  #define WIN32_LEAN_AND_MEAN
+  #endif
+ #include <Windows.h>
+ #include <gl/GL.h>
+#elif defined (PLATFORM_WEB) || defined (__EMSCRIPTEN__)
+
+ #include <EGL/egl.h>
+ #include <GLES2/gl2.h>
+ #define GL_GLEXT_PROTOTYPES
+ #include <GLES2/gl2ext.h>
+
+ #ifndef glBindVertexArray
+  #define glBindVertexArray    glBindVertexArrayOES
+ #endif
+ #ifndef glGenVertexArrays
+  #define glGenVertexArrays    glGenVertexArraysOES
+ #endif
+ #ifndef glDeleteVertexArrays
+  #define glDeleteVertexArrays glDeleteVertexArraysOES
+ #endif
+
 #else
 #error Unimplemented GL Platform using GLAD
 #include <glad.h>
@@ -34,7 +51,7 @@ extern "C"{
 #define GL_CLAMP_TO_EDGE         0x812F
 #define GL_CLAMP_TO_BORDER       0x812D
     
-    
+#if !defined __EMSCRIPTEN__
     typedef void   (APIENTRY* PFNGLATTACHSHADERPROC) (GLuint program, GLuint shader);
     extern  PFNGLATTACHSHADERPROC glAttachShader;
     
@@ -142,6 +159,7 @@ extern "C"{
     
     typedef void   (APIENTRY* PFNGLBUFFERSUBDATAPROC)  (GLenum target, ptrdiff_t offset, ptrdiff_t size, const void* data);
     extern  PFNGLBUFFERSUBDATAPROC glBufferSubData;
+#endif
     
 #ifdef __cplusplus
 };

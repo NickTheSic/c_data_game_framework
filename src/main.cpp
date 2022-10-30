@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include <GLFW/glfw3.h>
 
+#include <nl_camera.h>
+#include <nl_gl.h>
 #include <nl_math.h>
 #include <nl_renderer.h>
-#include <Camera.h>
 #include <nl_shader.h>
 
-#include <string>
 
 int InitPlatform(GLFWwindow*& window);
 
@@ -42,8 +43,8 @@ main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH);
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     glViewport(0, 0, 800, 800);
     glClearColor(0.1,0.2,0.2,1.0);
     
@@ -95,7 +96,7 @@ main()
         float deltaTime = (float)(now-last);
         last = now;
         
-        UpdateSpriteAnim(&anims[ActiveAnim], deltaTime);
+        UpdateSpriteAnimation(&anims[ActiveAnim], deltaTime);
         
         if (HandleKeyPress(window, actionKey, GLFW_KEY_E))
         {
@@ -123,8 +124,7 @@ main()
         
         // custom render code
         {
-            BeginRender(&spriteSheet.renderer);
-            glBindTexture(GL_TEXTURE_2D, spriteSheet.textureID);
+            BeginRender(&spriteSheet);
             
             RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], player_pos);
             

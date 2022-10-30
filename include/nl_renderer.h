@@ -59,13 +59,15 @@ struct SpriteSheet
 void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path);
 void AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos);
+void BeginRender(SpriteSheet* sheet);
 
 void DisplayEntireSheet(SpriteSheet* sheet, const v3f& position, const v2f& size);
-void CleanupSpritesheet(SpriteSheet* sheet);
+void CleanupSpriteSheet(SpriteSheet* sheet);
 
 void InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed = 1.0f);
 void UpdateSpriteAnimation(SpriteAnimation* anim, float deltaTime);
 void CleanupSpriteAnimation(SpriteAnimation* anim);
+void RenderSpriteAnimationFrame(SpriteSheet* sheet, SpriteAnimation* anim, const v3f& pos);
 
 void InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize);
 void CleanupRenderer(Renderer* renderer);
