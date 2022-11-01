@@ -3,7 +3,10 @@
 #ifndef NL_MATH_H
 #define NL_MATH_H
 
-// if WEB define the define that removes instrinsics
+#ifdef __EMSCRIPTEN__
+ #define GLM_FORCE_PURE
+#endif
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
