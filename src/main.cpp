@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include <nl_camera.h>
+#include <nl_game.h>
 #include <nl_gl.h>
 #include <nl_math.h>
 #include <nl_renderer.h>
@@ -49,39 +50,9 @@ main()
     glClearColor(0.1,0.2,0.2,1.0);
     
     // Custom Init
-    v3f player_pos(0.f,0.f,1.f);
-    FollowCamera cam = {};
-    cam.position = &player_pos;
     
-    Shader shader = {};
-    SpriteSheet spriteSheet = {};
-    {
-        InitializeRenderer(&spriteSheet.renderer, 8, sizeof(SpriteVertexData));
-        InitializeSpriteSheet(&spriteSheet, 512, 512);
-        
-        CreateFollowViewMatrix(&cam);
-        CompileSpriteShaderProgram(&spriteSheet.renderer);
-        shader.program = spriteSheet.renderer.shader_program;
-        SetUniform(&shader, "view", cam.view);
-    }
-    
-    SpriteAnimation anims[2] = {};
-    InitializeSpriteAnim(&anims[0], 4, 5);
-    
-    anims[0].sprite_handles[0] = LoadSprite(&spriteSheet, "data/testanim-01.png");
-    anims[0].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanim-02.png");
-    anims[0].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanim-03.png");
-    anims[0].sprite_handles[3] = LoadSprite(&spriteSheet, "data/testanim-04.png");
-    
-    SpriteHandle sprite_handle_1 = LoadSprite(&spriteSheet, "data/blue64.png");
-
-    InitializeSpriteAnim(&anims[1], 3, 10);
-    anims[1].sprite_handles[0] = LoadSprite(&spriteSheet, "data/testanimattack-01.png");
-    anims[1].sprite_handles[1] = LoadSprite(&spriteSheet, "data/testanimattack-02.png");
-    anims[1].sprite_handles[2] = LoadSprite(&spriteSheet, "data/testanimattack-03.png");
-    anims[1].callback = &UnAttackAnim;
-    
-    SpriteHandle sprite_handle_2 = LoadSprite(&spriteSheet, "data/blue64.png");
+    GameData game_data = {};
+    GameInitialize(&game_data);
     
     double now = glfwGetTime();
     double last = now;
@@ -96,55 +67,53 @@ main()
         float deltaTime = (float)(now-last);
         last = now;
         
-        UpdateSpriteAnimation(&anims[ActiveAnim], deltaTime);
+        GameUpdate(&game_data, deltaTime);
         
         if (HandleKeyPress(window, actionKey, GLFW_KEY_E))
         {
-            ActiveAnim = 1;
+            game_data.active_player_anim = 1;
         }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            player_pos.y += 1 * deltaTime;
+            game_data.player_pos.y += 1 * deltaTime;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            player_pos.y -= 1 * deltaTime;
+            game_data.player_pos.y -= 1 * deltaTime;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            player_pos.x -= 1 * deltaTime;
+            game_data.player_pos.x -= 1 * deltaTime;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            player_pos.x += 1 * deltaTime;
+            game_data.player_pos.x += 1 * deltaTime;
         }
         
-        CreateFollowViewMatrix(&cam);
-        SetUniform(&shader, "view", cam.view);
+        //CreateFollowViewMatrix(&cam);
+        CreateViewMatrixFollow(&game_data.camera, game_data.player_pos);
+        SetUniform(&game_data.shader, "view", game_data.camera.view);
         
         // custom render code
         {
-            BeginRender(&spriteSheet);
+            BeginRender(&game_data.sprite_sheet);
             
-            RenderSpriteAnimationFrame(&spriteSheet, &anims[ActiveAnim], player_pos);
+            RenderSpriteAnimationFrame(&game_data.sprite_sheet, &game_data.player_animations[game_data.active_player_anim], game_data.player_pos);
             
             float offset_pos = 0.3;
-            AddSpriteToRender(&spriteSheet, sprite_handle_1, v3f(-offset_pos, -offset_pos, -0.0));
-            AddSpriteToRender(&spriteSheet, sprite_handle_2, v3f(offset_pos, offset_pos, 0.0));
+            AddSpriteToRender(&game_data.sprite_sheet, game_data.sprite_handle1, v3f(-offset_pos, -offset_pos, -0.0));
+            AddSpriteToRender(&game_data.sprite_sheet, game_data.sprite_handle2, v3f(offset_pos, offset_pos, 0.0));
             
-            DisplayEntireSheet(&spriteSheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
+            DisplayEntireSheet(&game_data.sprite_sheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
             
-            EndRender(&spriteSheet.renderer);
+            EndRender(&game_data.sprite_sheet.renderer);
         }
         
         glfwSwapBuffers(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
     
-    CleanupSpriteAnimation(&anims[0]);
-    CleanupSpriteAnimation(&anims[1]);
-    CleanupRenderer(&spriteSheet.renderer);
-    CleanupSpriteSheet(&spriteSheet);
+    GameCleanup(&game_data);
     
     glfwTerminate();
     return 0;

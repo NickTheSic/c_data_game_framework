@@ -17,7 +17,7 @@ struct FollowCamera
 
 void CreateViewMatrix(Camera* camera, const v3f& position, const v3f& direction);
 // Regular camera to follow a position passed in
-void CreateViewMatrixFollow(Camera* camera, const v3f& position);
+void CreateViewMatrixFollow(Camera* camera, const v3f& position, float dir_offset = -10.f);
 // Handles a Follow camera object
 void CreateFollowViewMatrix(FollowCamera* camera);
 
