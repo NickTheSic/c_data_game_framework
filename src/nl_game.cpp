@@ -44,12 +44,26 @@ void
 GameUpdate(GameData* data, float delta_time)
 {
     UpdateSpriteAnimation(&data->player_animations[data->active_player_anim], delta_time);
+
+    CreateViewMatrixFollow(&data->camera, data->player_pos);
 }
 
 void 
 GameRender(GameData* data)
 {
-    (void)(data);
+    SetUniform(&data->shader, "view", data->camera.view);
+
+    BeginRender(&data->sprite_sheet);
+    
+    RenderSpriteAnimationFrame(&data->sprite_sheet, &data->player_animations[data->active_player_anim], data->player_pos);
+    
+    float offset_pos = 0.3;
+    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle1, v3f(-offset_pos, -offset_pos, -0.0));
+    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle2, v3f(offset_pos, offset_pos, 0.0));
+    
+    DisplayEntireSheet(&data->sprite_sheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
+    
+    EndRender(&data->sprite_sheet.renderer);
 }
 
 void

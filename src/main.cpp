@@ -12,16 +12,10 @@
 #include <nl_renderer.h>
 #include <nl_shader.h>
 
-
 int InitPlatform(GLFWwindow*& window);
 
-int ActiveAnim = 0;
-void UnAttackAnim()
-{
-    ActiveAnim = 0;
-}
-
-bool HandleKeyPress(GLFWwindow* window, int& state, unsigned int GlfwKey)
+bool 
+HandleKeyPress(GLFWwindow* window, int& state, unsigned int GlfwKey)
 {
     int key = glfwGetKey(window, GlfwKey);
     if (key != state)
@@ -54,17 +48,17 @@ main()
     GameData game_data = {};
     GameInitialize(&game_data);
     
+    int actionKey = glfwGetKey(window, GLFW_KEY_E);
+    
     double now = glfwGetTime();
     double last = now;
-    
-    int actionKey = glfwGetKey(window, GLFW_KEY_E);
     
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
         
         now = glfwGetTime();
-        float deltaTime = (float)(now-last);
+        const float deltaTime = (float)(now-last);
         last = now;
         
         GameUpdate(&game_data, deltaTime);
@@ -90,23 +84,9 @@ main()
             game_data.player_pos.x += 1 * deltaTime;
         }
         
-        //CreateFollowViewMatrix(&cam);
-        CreateViewMatrixFollow(&game_data.camera, game_data.player_pos);
-        SetUniform(&game_data.shader, "view", game_data.camera.view);
-        
         // custom render code
         {
-            BeginRender(&game_data.sprite_sheet);
-            
-            RenderSpriteAnimationFrame(&game_data.sprite_sheet, &game_data.player_animations[game_data.active_player_anim], game_data.player_pos);
-            
-            float offset_pos = 0.3;
-            AddSpriteToRender(&game_data.sprite_sheet, game_data.sprite_handle1, v3f(-offset_pos, -offset_pos, -0.0));
-            AddSpriteToRender(&game_data.sprite_sheet, game_data.sprite_handle2, v3f(offset_pos, offset_pos, 0.0));
-            
-            DisplayEntireSheet(&game_data.sprite_sheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
-            
-            EndRender(&game_data.sprite_sheet.renderer);
+            GameRender(&game_data);
         }
         
         glfwSwapBuffers(window);
