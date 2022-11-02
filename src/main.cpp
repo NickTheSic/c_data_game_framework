@@ -37,7 +37,7 @@ main()
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glEnable(GL_DEPTH);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glViewport(0, 0, 800, 800);
@@ -62,6 +62,8 @@ main()
         last = now;
         
         GameUpdate(&game_data, deltaTime);
+
+        float player_speed = 200;
         
         if (HandleKeyPress(window, actionKey, GLFW_KEY_E))
         {
@@ -69,19 +71,19 @@ main()
         }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            game_data.player_pos.y += 1 * deltaTime;
+            game_data.player_pos.y += player_speed * deltaTime;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            game_data.player_pos.y -= 1 * deltaTime;
+            game_data.player_pos.y -= player_speed * deltaTime;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            game_data.player_pos.x -= 1 * deltaTime;
+            game_data.player_pos.x -= player_speed * deltaTime;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            game_data.player_pos.x += 1 * deltaTime;
+            game_data.player_pos.x += player_speed * deltaTime;
         }
         
         // custom render code

@@ -7,6 +7,7 @@
 struct Camera
 {
     mat4f view;
+    v2f size;
 };
 
 void CreateViewMatrix(Camera* camera, const v3f& position, const v3f& direction);

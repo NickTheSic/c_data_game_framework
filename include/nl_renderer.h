@@ -9,7 +9,7 @@
 
 typedef int SpriteHandle;
 static SpriteHandle INVALID_SPRITE_HANDLE = -1;
-static v2f DEFAULT_SPRITE_SIZE = v2f{0.2f,0.2f};
+static v2f DEFAULT_SPRITE_SIZE = v2f{100.f,100.f};
 
 typedef void(*AnimEndCallback)(void *userdata);
 

@@ -14,9 +14,11 @@ UnAttackAnim(void* data)
 void
 GameInitialize(GameData* data)
 {
-    data->player_pos.z = 1.f;
+    data->player_pos.z = 0.f;
     InitializeRenderer(&data->sprite_sheet.renderer, 8, sizeof(SpriteVertexData));
     InitializeSpriteSheet(&data->sprite_sheet, 512, 512);
+    data->camera.size.x = 200.f;
+    data->camera.size.y = 200.f;
     CreateViewMatrixFollow(&data->camera, data->player_pos);
     CompileSpriteShaderProgram(&data->sprite_sheet.renderer);
     data->shader.program = data->sprite_sheet.renderer.shader_program;
@@ -58,10 +60,10 @@ GameRender(GameData* data)
     RenderSpriteAnimationFrame(&data->sprite_sheet, &data->player_animations[data->active_player_anim], data->player_pos);
     
     float offset_pos = 0.3;
-    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle1, v3f(-offset_pos, -offset_pos, -0.0));
-    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle2, v3f(offset_pos, offset_pos, 0.0));
+    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle1, v3f(-offset_pos, -offset_pos, -1.0));
+    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle2, v3f(offset_pos, offset_pos, 1.0));
     
-    DisplayEntireSheet(&data->sprite_sheet, {-0.1,-0.1, 1}, {0.4f,0.4f});
+    DisplayEntireSheet(&data->sprite_sheet, {0.f,0.f, 0.0f}, {400.4f,400.4f});
     
     EndRender(&data->sprite_sheet.renderer);
 }

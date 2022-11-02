@@ -73,6 +73,7 @@ CompileSpriteShaderProgram(Renderer* renderer)
         "uniform sampler2D tex;"
         "void main(){"
         "FragColor = texture(tex, TexCoords);"
+        "if (FragColor.a == 0) discard;"
         "}\0"
         ;
     

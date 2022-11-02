@@ -1,4 +1,3 @@
-#include <nl_platform.h>
 #include <Windows.h>
 
 static LRESULT CALLBACK

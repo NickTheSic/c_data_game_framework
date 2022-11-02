@@ -110,9 +110,9 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     stbi_image_free(gsd.data);
     
     handle = sheet->sprite_count++;
-    //sprite.size.x = gsd.x;
-    //sprite.size.y = gsd.y;
-    sprite.size = DEFAULT_SPRITE_SIZE;
+    sprite.size.x = 32;
+    sprite.size.y = 32;
+    //sprite.size = gsd;
     sheet->sprites.push_back(sprite);
     
     sheet->loaded_sprites[path] = handle;
