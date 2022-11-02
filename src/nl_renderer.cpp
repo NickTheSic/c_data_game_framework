@@ -60,12 +60,12 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
 {
     auto it = sheet->loaded_sprites.find(path);
-
+    
     if (it != sheet->loaded_sprites.end())
     {
         return it->second;
     }
-
+    
     Sprite sprite = {};
     SpriteHandle handle = INVALID_SPRITE_HANDLE;
     
@@ -116,7 +116,7 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     sheet->sprites.push_back(sprite);
     
     sheet->loaded_sprites[path] = handle;
-
+    
     return sheet->loaded_sprites[path];
 }
 
@@ -331,7 +331,7 @@ UpdateSpriteAnimation(SpriteAnimation* anim, float deltaTime)
         
         if (anim->callback != NULL)
         {
-            anim->callback();
+            anim->callback(anim->user_data);
         }
     }
 }

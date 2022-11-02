@@ -1,5 +1,15 @@
 #include <nl_game.h>
 #include <nl_gl.h>
+#include <GLFW/glfw3.h>
+
+static void
+UnAttackAnim(void* data)
+{
+    if (data != 0)
+    {
+        ((GameData*)data)->active_player_anim = 0;
+    }
+}
 
 void
 GameInitialize(GameData* data)
@@ -24,7 +34,8 @@ GameInitialize(GameData* data)
     data->player_animations[1].sprite_handles[0] = LoadSprite(&data->sprite_sheet, "data/testanimattack-01.png");
     data->player_animations[1].sprite_handles[1] = LoadSprite(&data->sprite_sheet, "data/testanimattack-02.png");
     data->player_animations[1].sprite_handles[2] = LoadSprite(&data->sprite_sheet, "data/testanimattack-03.png");
-    //anims[1].callback = &UnAttackAnim;
+    data->player_animations[1].user_data = data;
+    data->player_animations[1].callback = &UnAttackAnim;
     
     data->sprite_handle2 = LoadSprite(&data->sprite_sheet, "data/blue64.png");
 }
