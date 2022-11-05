@@ -10,11 +10,8 @@ CreateViewMatrix(Camera* camera,
 
 void 
 CreateViewMatrixFollow(Camera* camera, 
-                       const v3f& position, 
-                       float dir_offset /*=-10.f*/)
+                       const v3f& position)
 {
-    const v3f dir(position.x, position.y, dir_offset);
-
     const float left   = position.x - camera->size.x;
     const float right  = position.x + camera->size.x;
     const float bottom = position.y - camera->size.y;

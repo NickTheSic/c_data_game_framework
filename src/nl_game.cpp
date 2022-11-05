@@ -1,6 +1,7 @@
 #include <nl_game.h>
 #include <nl_gl.h>
 #include <GLFW/glfw3.h>
+#include <nl_input.h>
 
 static void
 UnAttackAnim(void* data)
@@ -8,6 +9,50 @@ UnAttackAnim(void* data)
     if (data != 0)
     {
         ((GameData*)data)->active_player_anim = 0;
+    }
+}
+
+static void 
+PlayerAttack(int action, int code, void* data)
+{
+    int& val = *(int*)data;
+    if (val == 1) return;
+
+    if (code == GLFW_KEY_E && action == GLFW_PRESS)
+    {
+        val = 1;
+    }
+}
+
+static void
+PlayerMove(int action, int code, void* data)
+{
+    v2f& velocity = *(v2f*)data;
+    float player_speed = 200;
+
+    if (action == GLFW_REPEAT) return;
+
+    switch(code)
+    {
+        case GLFW_KEY_W:
+        {
+            velocity.y += (action == GLFW_PRESS) ? player_speed : -player_speed;
+        } break;
+
+        case GLFW_KEY_S:
+        {
+            velocity.y -= (action == GLFW_PRESS) ? player_speed : -player_speed;
+        } break;
+
+        case GLFW_KEY_D:
+        {
+            velocity.x += (action == GLFW_PRESS) ? player_speed : -player_speed;
+        } break;
+
+        case GLFW_KEY_A:
+        {
+            velocity.x -= (action == GLFW_PRESS) ? player_speed : -player_speed;
+        } break;
     }
 }
 
@@ -40,12 +85,18 @@ GameInitialize(GameData* data)
     data->player_animations[1].callback = &UnAttackAnim;
     
     data->sprite_handle2 = LoadSprite(&data->sprite_sheet, "data/blue64.png");
+
+    AddActionCallback(&data->active_player_anim, &PlayerAttack);
+    AddActionCallback(&data->player_velocity, &PlayerMove);
 }
 
 void 
 GameUpdate(GameData* data, float delta_time)
 {
     UpdateSpriteAnimation(&data->player_animations[data->active_player_anim], delta_time);
+
+    data->player_pos.x += data->player_velocity.x * delta_time;
+    data->player_pos.y += data->player_velocity.y * delta_time;
 
     CreateViewMatrixFollow(&data->camera, data->player_pos);
 }

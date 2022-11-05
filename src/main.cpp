@@ -8,6 +8,7 @@
 #include <nl_camera.h>
 #include <nl_game.h>
 #include <nl_gl.h>
+#include <nl_input.h>
 #include <nl_math.h>
 #include <nl_renderer.h>
 #include <nl_shader.h>
@@ -44,11 +45,13 @@ main()
     glClearColor(0.1,0.2,0.2,1.0);
     
     // Custom Init
-    
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scan, int action, int mode) {
+        (void)window; (void)scan; (void)mode;
+        HandleAction(action, key);
+    });
+
     GameData game_data = {};
     GameInitialize(&game_data);
-    
-    int actionKey = glfwGetKey(window, GLFW_KEY_E);
     
     double now = glfwGetTime();
     double last = now;
@@ -63,29 +66,6 @@ main()
         
         GameUpdate(&game_data, deltaTime);
 
-        float player_speed = 200;
-        
-        if (HandleKeyPress(window, actionKey, GLFW_KEY_E))
-        {
-            game_data.active_player_anim = 1;
-        }
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        {
-            game_data.player_pos.y += player_speed * deltaTime;
-        }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        {
-            game_data.player_pos.y -= player_speed * deltaTime;
-        }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        {
-            game_data.player_pos.x -= player_speed * deltaTime;
-        }
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        {
-            game_data.player_pos.x += player_speed * deltaTime;
-        }
-        
         // custom render code
         {
             GameRender(&game_data);

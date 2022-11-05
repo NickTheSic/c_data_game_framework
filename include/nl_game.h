@@ -14,6 +14,7 @@ struct GameData
     
     SpriteAnimation player_animations[2];
     v3f player_pos;
+    v2f player_velocity;
     
     SpriteHandle sprite_handle1;
     SpriteHandle sprite_handle2;
