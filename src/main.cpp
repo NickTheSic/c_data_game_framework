@@ -10,32 +10,42 @@
 #include <nl_gl.h>
 #include <nl_input.h>
 #include <nl_math.h>
+//#include <nl_platform.h>
 #include <nl_renderer.h>
 #include <nl_shader.h>
 
 int InitPlatform(GLFWwindow*& window);
 
-bool 
-HandleKeyPress(GLFWwindow* window, int& state, unsigned int GlfwKey)
+#ifdef __EMSCRIPTEN__
+
+#include <emscripten.h>
+#include <emscripten/html5.h>
+
+void em_run(void* data)
 {
-    int key = glfwGetKey(window, GlfwKey);
-    if (key != state)
-    {
-        state = key;
-        if (state == GLFW_PRESS)
-        {
-            return true;
-        }
-    }
-    return false;
+    GameData* game_data = (GameData*)data;
+
+    glfwPollEvents();
+        
+    now = glfwGetTime();
+    const float deltaTime = (float)(now-last);
+    last = now;
+    
+    GameUpdate(&game_data, deltaTime);
+    GameRender(&game_data);
+    
+    //glfwSwapBuffers(window);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
+#endif
 
 int 
 main()
 {
     GLFWwindow* window = 0;
     InitPlatform(window);
-    
+
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
@@ -56,6 +66,7 @@ main()
     double now = glfwGetTime();
     double last = now;
     
+    #ifndef __EMSCRIPTEN__
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -74,9 +85,11 @@ main()
         glfwSwapBuffers(window);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
+    #else
+    emscripten_set_main_loop_arg(em_run, &game_data, 0, 1);
+    #endif
     
     GameCleanup(&game_data);
-    
     glfwTerminate();
     return 0;
 }
@@ -100,7 +113,7 @@ InitPlatform(GLFWwindow*& window)
         return 0;
     }
     glfwMakeContextCurrent(window);
-    
+
     if (LoadGLExtensions() == 0)
     {
         fprintf(stderr,"Failed to load opengl extensions\n");

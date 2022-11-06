@@ -3,7 +3,7 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
-    
+#ifndef __EMSCRIPTEN__
     PFNGLATTACHSHADERPROC glAttachShader;
     PFNGLBINDBUFFERPROC glBindBuffer;
     PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
@@ -86,6 +86,12 @@ extern "C"{
 #undef LOAD_GL_EXTENSION
         return 1;
     }
+#else 
+ int LoadGLExtensions()
+ {
+    return 1;
+ }
+#endif //__EMSCRIPTEN__
     
 #ifdef __cplusplus
 }

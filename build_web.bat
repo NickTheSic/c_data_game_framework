@@ -4,7 +4,8 @@ pushd build
 
 set INCLUDES=-I../include -I../vendor/include
 set LIBS=-L../lib -lglfw
-set FLAGS= -Wall -Wextra -o2
+set FLAGS= -Wall -Wextra -o2 -sUSE_GLFW
+set DATA=--preload-file data
 
 @echo on
 
