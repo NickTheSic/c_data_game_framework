@@ -10,6 +10,12 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
     switch(msg)
     {
+		case WM_DESTROY:
+		case WM_QUIT:
+		{
+			PostQuitMessage(0);
+		} break;
+
         default:
             result = DefWindowProc(window, msg, wParam, lParam);
     }
@@ -17,7 +23,8 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
     return result;
 }
 
-NLPlatform* CreatePlatform(int width, int height, const char* title)
+NLPlatform* 
+CreatePlatform(int width, int height, const char* title)
 {
     DWORD dw_ex_style, dw_style;
 	dw_ex_style = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
@@ -48,7 +55,7 @@ NLPlatform* CreatePlatform(int width, int height, const char* title)
     }
 
     AdjustWindowRectEx(&window_rect, dw_style, 0, dw_ex_style);
-
+	
     NLPlatform* platform = new NLPlatform;
 
     platform->window = CreateWindowEx(
@@ -56,9 +63,9 @@ NLPlatform* CreatePlatform(int width, int height, const char* title)
 		wc.lpszClassName,
 		title,
 		dw_style,
-		0, 0,
-		window_rect.right - window_rect.left,
-		window_rect.bottom - window_rect.top,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		(window_rect.right - window_rect.left),
+		(window_rect.bottom - window_rect.top),
 		NULL, NULL, GetModuleHandle(0),
 		nullptr // User Data - Needs to be parameter
     );
@@ -77,7 +84,6 @@ NLPlatform* CreatePlatform(int width, int height, const char* title)
         return nullptr;
     }
 
-    
 	//@todo: Learn more about zbits and stencil bits
 	BYTE colorbits = 32;
 	BYTE zbits = 31;
@@ -140,20 +146,37 @@ NLPlatform* CreatePlatform(int width, int height, const char* title)
 
 	// Displays the graphics card used
 	{
-		//char* rendererString;
-		//rendererString = (char*)glGetString(GL_RENDERER);
-		//if (rendererString) dbglog(rendererString);
+		char* rendererString;
+		rendererString = (char*)glGetString(GL_RENDERER);
+		if (rendererString) fprintf(stderr, TEXT("%s"), rendererString);
+	}
+
+
+	// calculate DPI for scaling
+	{
+		SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+		
+		const UINT dpi = GetDpiForWindow((HWND)platform->window);
+		AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
+		SetWindowPos(
+			(HWND)platform->window,
+			0,
+			window_rect.left,
+			window_rect.top,
+			window_rect.right - window_rect.left,
+			window_rect.bottom - window_rect.top,
+			0);
 	}
 
 	ShowWindow((HWND)platform->window, SW_SHOW);
 	SetForegroundWindow((HWND)platform->window);
 	SetFocus((HWND)platform->window);
 
-
     return platform;
 }
 
-void DestroyPlatform(NLPlatform* platform)
+void 
+DestroyPlatform(NLPlatform* platform)
 {
     if (platform)
     {
@@ -161,4 +184,34 @@ void DestroyPlatform(NLPlatform* platform)
         ReleaseDC((HWND)platform->window, (HDC)platform->device);
         delete platform;
     }
+}
+
+bool 
+NLPollEvents(NLPlatform* platform)
+{
+	//Unused, for compatibility
+	(void)(platform);
+
+	MSG msg = {};
+	//while (PeekMessage(&msg, (HWND)platform->window, 0, 0, PM_REMOVE))
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	{
+		if (msg.message != WM_QUIT)
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void 
+NLSwapBuffers(NLPlatform* platform)
+{
+	SwapBuffers((HDC)platform->device);
 }

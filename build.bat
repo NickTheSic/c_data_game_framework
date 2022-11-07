@@ -4,7 +4,7 @@ pushd build
 
 set INCLUDES=-I../include -I../vendor/include
 set LIBS=-L../lib -lglfw3dll -lopengl32 -lgdi32 -luser32
-set FLAGS= -g -Wall -Wextra 
+set FLAGS= -g -Wall -Wextra -DGLFW_PLATFORM_LAYER
 
 @echo on
 
