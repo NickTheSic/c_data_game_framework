@@ -4,6 +4,8 @@
 #include <nl_debug.h>
 
 #include <GLFW/glfw3.h>
+#undef near
+#undef far
 
 NLPlatform*
 CreatePlatform(int width, int height, const char* title)
