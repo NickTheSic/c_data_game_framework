@@ -23,13 +23,6 @@ struct InputCallbacks
     std::vector<InputCommand> axese;
 };
 
-// Probably need to remove these too at some point
-//void AddActionCallback(InputCallbacks* input, void* user_data, InputActionCallback callback);
-//void AddAxisCallback(InputCallbacks* input, void* user_data, InputAxisCallback callback);
-//
-//void HandleAction(InputCallbacks* input, int state, int key_code);
-//void HandleAxis(InputCallbacks* input, float value);
-
 void AddActionCallback(void* user_data, InputActionCallback callback);
 void AddAxisCallback(void* user_data, InputAxisCallback callback);
 
