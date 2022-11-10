@@ -110,9 +110,9 @@ GameRender(GameData* data)
     
     RenderSpriteAnimationFrame(&data->sprite_sheet, &data->player_animations[data->active_player_anim], data->player_pos);
     
-    float offset_pos = 0.3;
-    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle1, v3f(-offset_pos, -offset_pos, -1.0));
-    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle2, v3f(offset_pos, offset_pos, 1.0));
+    float offset_pos = 30;
+    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle1, v3f{-offset_pos, -offset_pos, -1.0});
+    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle2, v3f{ offset_pos,  offset_pos,  1.0});
     
     DisplayEntireSheet(&data->sprite_sheet, {0.f,0.f, 0.0f}, {400.4f,400.4f});
     

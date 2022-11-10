@@ -32,6 +32,11 @@ CreatePlatform(int width, int height, const char* title)
                            UNUSED_VARIABLE(window);
                            UNUSED_VARIABLE(scancode);
                            UNUSED_VARIABLE(mods);
+
+                           if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+                           {
+                              glfwSetWindowShouldClose(window, GLFW_TRUE);
+                           }
                            
                            HandleAction(action, key);
                        });

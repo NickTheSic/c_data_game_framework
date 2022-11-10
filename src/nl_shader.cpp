@@ -4,7 +4,6 @@
 #include <nl_math.h>
 #include <nl_renderer.h>
 
-// TODO: Put in cpp file only
 static int GetUniformLocation(Shader* shader, std::string name)
 {
     auto it = shader->uniform_locs.find(name);
@@ -26,7 +25,12 @@ void SetUniform(Shader* shader, const char* name, float val)
 void SetUniform(Shader* shader, const char* name, const mat4f& val)
 {
     int loc = GetUniformLocation(shader, name);
+
+    #ifdef NL_MATH_IMPLEMENTATION
+    glUniformMatrix4fv(loc,1, GL_FALSE, &val.m11);
+    #else
     glUniformMatrix4fv(loc,1, GL_FALSE, glm::value_ptr(val));
+    #endif
 }
 
 

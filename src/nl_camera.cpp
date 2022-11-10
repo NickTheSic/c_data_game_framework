@@ -9,7 +9,5 @@ CreateViewMatrixFollow(Camera* camera,
     const float bottom = position.y - camera->size.y;
     const float top    = position.y + camera->size.y;
 
-    camera->view = glm::ortho(left, right, bottom, top, 0.0f, 100.0f);
-
     CreateOrtho(camera->view, left, right, bottom, top, 0.0f, 100.0f); 
 }

@@ -5,10 +5,12 @@
 struct NLPlatform
 {
     void* window;
+
 #ifndef GLFW_PLATFORM_LAYER
     void* device;
     void* context;
 #endif
+
 };
 
 NLPlatform* CreatePlatform(int width, int height, const char* title);
