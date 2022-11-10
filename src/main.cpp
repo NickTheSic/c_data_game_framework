@@ -49,8 +49,13 @@ main()
 
     InitTime();
 
-    GameData game_data = {};
-    GameInitialize(&game_data);
+    GameData* game_data = 0;
+    GameInitialize(game_data);
+
+    if (game_data == 0)
+    {
+        return -42069;
+    }
     
     #ifndef __EMSCRIPTEN__
 
@@ -58,11 +63,11 @@ main()
     {
         const float delta_time = GetTime();
         
-        GameUpdate(&game_data, delta_time);
+        GameUpdate(game_data, delta_time);
 
         // custom render code
         {
-            GameRender(&game_data);
+            GameRender(game_data);
         }
         
         NLSwapBuffers(platform);
@@ -70,10 +75,10 @@ main()
     }
 
     #else
-    emscripten_set_main_loop_arg(em_run, &game_data, 0, 1);
+    emscripten_set_main_loop_arg(em_run, game_data, 0, 1);
     #endif
     
-    GameCleanup(&game_data);
+    GameCleanup(game_data);
     DestroyPlatform(platform);
     return 0;
 }

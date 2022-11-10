@@ -3,6 +3,21 @@
 #include <GLFW/glfw3.h>
 #include <nl_input.h>
 
+struct GameData
+{
+    Camera camera;
+    SpriteSheet sprite_sheet;
+    Shader shader;
+    
+    SpriteAnimation player_animations[2];
+    v3f player_pos;
+    v2f player_velocity;
+    
+    SpriteHandle sprite_handle1;
+    SpriteHandle sprite_handle2;
+    int active_player_anim;
+};
+
 static void
 UnAttackAnim(void* data)
 {
@@ -57,8 +72,10 @@ PlayerMove(int action, int code, void* data)
 }
 
 void
-GameInitialize(GameData* data)
+GameInitialize(GameData*& data)
 {
+    data = new GameData();
+
     data->player_pos.z = 0.f;
     InitializeRenderer(&data->sprite_sheet.renderer, 8, sizeof(SpriteVertexData));
     InitializeSpriteSheet(&data->sprite_sheet, 512, 512);
@@ -120,10 +137,13 @@ GameRender(GameData* data)
 }
 
 void
-GameCleanup(GameData* data)
+GameCleanup(GameData*& data)
 {
     CleanupSpriteAnimation(&data->player_animations[0]);
     CleanupSpriteAnimation(&data->player_animations[1]);
     CleanupRenderer(&data->sprite_sheet.renderer);
     CleanupSpriteSheet(&data->sprite_sheet);
+
+    delete data;
+    data = 0;
 }

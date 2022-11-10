@@ -6,24 +6,11 @@
 #include <nl_renderer.h>
 #include <nl_shader.h>
 
-struct GameData
-{
-    Camera camera;
-    SpriteSheet sprite_sheet;
-    Shader shader;
-    
-    SpriteAnimation player_animations[2];
-    v3f player_pos;
-    v2f player_velocity;
-    
-    SpriteHandle sprite_handle1;
-    SpriteHandle sprite_handle2;
-    int active_player_anim;
-};
+typedef struct GameData GameData;
 
-void GameInitialize(GameData* data);
+void GameInitialize(GameData*& data);
 void GameUpdate(GameData* data, float delta_time);
 void GameRender(GameData* data);
-void GameCleanup(GameData* data);
+void GameCleanup(GameData*& data);
 
 #endif //_NL_GAME_H
