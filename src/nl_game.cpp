@@ -1,7 +1,11 @@
 #include <nl_game.h>
+#include <nl_camera.h>
 #include <nl_gl.h>
-#include <GLFW/glfw3.h>
 #include <nl_input.h>
+#include <nl_renderer.h>
+#include <nl_shader.h>
+
+#include <GLFW/glfw3.h>
 
 struct GameData
 {

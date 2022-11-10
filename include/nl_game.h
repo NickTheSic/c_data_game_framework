@@ -2,10 +2,6 @@
 #ifndef _NL_GAME_H
 #define _NL_GAME_H
 
-#include <nl_camera.h>
-#include <nl_renderer.h>
-#include <nl_shader.h>
-
 typedef struct GameData GameData;
 
 void GameInitialize(GameData*& data);
