@@ -27,8 +27,8 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			if (was_down != is_down)
 			{
-				if (is_down) fprintf(stdout, "Is Down\n");
-				if (was_down) fprintf(stdout, "Was down\n");
+				//if (is_down) fprintf(stdout, "Is Down\n");
+				//if (was_down) fprintf(stdout, "Was down\n");
 				HandleAction(is_down, wParam);
 			}
 
