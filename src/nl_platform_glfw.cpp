@@ -63,3 +63,8 @@ NLSwapBuffers(NLPlatform* platform)
 {
     glfwSwapBuffers((GLFWwindow*)platform->window);
 }
+
+void NLSetWindowShouldClose(NLPlatform* platform)
+{
+     glfwSetWindowShouldClose((GLFWwindow*)platform->window, GLFW_TRUE);
+}

@@ -21,6 +21,8 @@ struct InputCallbacks
 {
     std::vector<InputCommand> actions;
     std::vector<InputCommand> axese;
+
+    std::vector<int> action_keys;
 };
 
 void AddActionCallback(void* user_data, InputActionCallback callback);

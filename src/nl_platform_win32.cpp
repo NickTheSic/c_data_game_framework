@@ -1,4 +1,5 @@
 #include <nl_platform.h>
+#include <nl_input.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -16,6 +17,25 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_QUIT:
 		{
 			PostQuitMessage(0);
+		} break;
+		
+		case WM_KEYUP:
+		case WM_KEYDOWN:
+		{
+			bool is_down  = (lParam & (1 << 31)) == 0;
+			bool was_down = (lParam & (1 << 30)) != 0;
+
+			if (was_down != is_down)
+			{
+				if (is_down) fprintf(stdout, "Is Down\n");
+				if (was_down) fprintf(stdout, "Was down\n");
+				HandleAction(is_down, wParam);
+			}
+
+			if (is_down && wParam == VK_ESCAPE)
+			{
+				NLSetWindowShouldClose(0);
+			}
 		} break;
 
         default:
@@ -153,22 +173,21 @@ CreatePlatform(int width, int height, const char* title)
 		if (rendererString) fprintf(stderr, TEXT("%s"), rendererString);
 	}
 
-
-	// calculate DPI for scaling
-	{
-		SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-		
-		const UINT dpi = GetDpiForWindow((HWND)platform->window);
-		AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
-		SetWindowPos(
-			(HWND)platform->window,
-			0,
-			window_rect.left,
-			window_rect.top,
-			window_rect.right - window_rect.left,
-			window_rect.bottom - window_rect.top,
-			0);
-	}
+	//// calculate DPI for scaling
+	//{
+	//	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+	//	
+	//	const UINT dpi = GetDpiForWindow((HWND)platform->window);
+	//	AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
+	//	SetWindowPos(
+	//		(HWND)platform->window,
+	//		0,
+	//		window_rect.left,
+	//		window_rect.top,
+	//		window_rect.right - window_rect.left,
+	//		window_rect.bottom - window_rect.top,
+	//		0);
+	//}
 
 	ShowWindow((HWND)platform->window, SW_SHOW);
 	SetForegroundWindow((HWND)platform->window);
@@ -216,4 +235,11 @@ void
 NLSwapBuffers(NLPlatform* platform)
 {
 	SwapBuffers((HDC)platform->device);
+}
+
+void 
+NLSetWindowShouldClose(NLPlatform* platform)
+{
+	(void)(platform);
+	PostQuitMessage(0);
 }
