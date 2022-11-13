@@ -25,8 +25,9 @@ void AddAxisCallback(void* user_data, InputAxisCallback callback)
 
 void HandleAction(KeyState state, Key key_code)
 {
+    //fprintf(stdout, TEXT("Running Input callback\n"));
     for (auto& callback : g_input.actions)
-    {
+    {   
         callback.action(state, key_code, callback.user_data);
     }
 }
@@ -38,8 +39,6 @@ void HandleAxis(float value)
         callback.axis(value, callback.user_data);
     }
 }
-
-
 
 // Probably need to remove these too at some point
 void AddActionCallback(InputCallbacks* input, void* user_data, InputActionCallback callback)

@@ -10,9 +10,13 @@ extern "C"{
 #ifdef _WIN32
  #ifndef WIN32_LEAN_AND_MEAN
   #define WIN32_LEAN_AND_MEAN
-  #endif
+ #endif
+
  #include <Windows.h>
+ #undef near
+ #undef far
  #include <gl/GL.h>
+
 #elif defined (PLATFORM_WEB) || defined (__EMSCRIPTEN__)
 
  #include <EGL/egl.h>
@@ -31,7 +35,7 @@ extern "C"{
  #endif
 
 #else
-#error Unimplemented GL Platform using GLAD
+#error Unimplemented GL Platform default to using GLAD
 #include <glad.h>
 #endif
     

@@ -6,7 +6,6 @@
 #include <nl_renderer.h>
 #include <nl_shader.h>
 
-#include <GLFW/glfw3.h>
 
 struct GameData
 {
@@ -49,6 +48,8 @@ PlayerMove(KeyState action, Key code, void* data)
 {
     v2f& velocity = *(v2f*)data;
     float player_speed = 200;
+
+    if (action == KeyState::Repeat) return;
     
     switch(code)
     {
