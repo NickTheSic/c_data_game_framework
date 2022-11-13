@@ -193,7 +193,7 @@ GameInitialize()
     AddActionCallback(&data->deck, &DeckInputCallback);
 
     // Todo: Extract out of Game Init, we can probably specify 4 pieces of data back to the platform
-    data->camera.size.x = 200.f;
+    data->camera.size.x = 300.f;
     data->camera.size.y = 200.f;
     InitializeRenderer(&data->sheet.renderer, 52, sizeof(SpriteVertexData));
     InitializeSpriteSheet(&data->sheet, 32 * 14, 48*5);
@@ -232,14 +232,13 @@ GameRender(GameData* data)
 {
     BeginRender(&data->sheet);
 
-    DisplayEntireSheet(&data->sheet, {0.f,0.f,0.f}, {100.f,150.f});
+    DisplayEntireSheet(&data->sheet, {0.f,0.f,0.f}, {100.f,100.f});
 
     for (int i = 0; i < 52; ++i)
     {
-        //AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos);
         float z_order = 0.0f;
         if (i == (int)data->active_card) z_order = 1.f;
-        AddSpriteToRender(&data->sheet, data->card_sprites[i], {-200.f + (i*10), 0.f, z_order});
+        AddSpriteToRender(&data->sheet, data->card_sprites[i], {-data->camera.size.x + (i*10), -30.f, z_order});
     }
 
     EndRender(&data->sheet.renderer);
