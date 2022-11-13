@@ -171,7 +171,7 @@ CreatePlatform(int width, int height, const char* title)
 	{
 		char* rendererString;
 		rendererString = (char*)glGetString(GL_RENDERER);
-		if (rendererString) fprintf(stderr, TEXT("%s"), rendererString);
+		if (rendererString) fprintf(stderr, TEXT("%s\n"), rendererString);
 	}
 
 	//// calculate DPI for scaling

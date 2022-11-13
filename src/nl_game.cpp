@@ -6,7 +6,9 @@
 #include <nl_renderer.h>
 #include <nl_shader.h>
 
-
+//TODO: Camera Spritesheet and Shader can probably be their own outside of the game
+// The shader would use the camera view but the camera view would change
+// the renderer can also change based on what is required at the time
 struct GameData
 {
     Camera camera;
