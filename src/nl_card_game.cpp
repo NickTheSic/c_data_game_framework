@@ -18,7 +18,7 @@ struct GameData
 // 0 < idx < 52
 byte MakeCard(byte idx)
 {
-    const byte suit = 1 << (4+(idx/13));
+    const byte suit =1 << (4+(idx/13));
     const byte val = idx%13;
     return (suit | val);
 }
