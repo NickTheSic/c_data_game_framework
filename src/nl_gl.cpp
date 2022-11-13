@@ -3,6 +3,7 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
+// I could load these even with emscripten if I choes to learn how to.
 #ifndef __EMSCRIPTEN__
     PFNGLATTACHSHADERPROC glAttachShader;
     PFNGLBINDBUFFERPROC glBindBuffer;
@@ -40,6 +41,13 @@ extern "C"{
     PFNGLUNIFORM3FVPROC glUniform3fv;
     PFNGLUNIFORM4FVPROC glUniform4fv;
     PFNGLBUFFERSUBDATAPROC glBufferSubData;
+    
+#ifdef _WIN32
+#define GETPROCADDRESSFUN wglGetProcAddress
+#else
+#error Double check the current platform for GL function loading
+#define GETPROCADDRESSFUN
+#endif
     
     int LoadGLExtensions()
     {
