@@ -49,8 +49,7 @@ main()
 
     InitTime();
 
-    GameData* game_data = 0;
-    GameInitialize(game_data);
+    GameData* game_data = GameInitialize();
 
     if (game_data == 0)
     {

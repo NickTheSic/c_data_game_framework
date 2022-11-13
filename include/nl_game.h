@@ -4,7 +4,7 @@
 
 typedef struct GameData GameData;
 
-void GameInitialize(GameData*& data);
+GameData* GameInitialize();
 void GameUpdate(GameData* data, float delta_time);
 void GameRender(GameData* data);
 void GameCleanup(GameData*& data);

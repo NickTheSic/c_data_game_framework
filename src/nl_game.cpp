@@ -75,10 +75,10 @@ PlayerMove(KeyState action, Key code, void* data)
     }
 }
 
-void
-GameInitialize(GameData*& data)
+GameData* 
+GameInitialize()
 {
-    data = new GameData();
+    GameData* data = new GameData();
 
     data->player_pos.z = 0.f;
     InitializeRenderer(&data->sprite_sheet.renderer, 8, sizeof(SpriteVertexData));
@@ -109,6 +109,8 @@ GameInitialize(GameData*& data)
 
     AddActionCallback(&data->active_player_anim, &PlayerAttack);
     AddActionCallback(&data->player_velocity, &PlayerMove);
+
+    return data;
 }
 
 void 
