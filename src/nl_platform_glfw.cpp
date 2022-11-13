@@ -1,6 +1,7 @@
 
 #include <nl_platform.h>
 #include <nl_input.h>
+#include <nl_key.h>
 #include <nl_debug.h>
 
 #include <GLFW/glfw3.h>
@@ -38,7 +39,7 @@ CreatePlatform(int width, int height, const char* title)
                               glfwSetWindowShouldClose(window, GLFW_TRUE);
                            }
                            
-                           HandleAction(action, key);
+                           HandleAction((KeyState)action, (Key)key);
                        });
     
     return platform;
@@ -66,5 +67,5 @@ NLSwapBuffers(NLPlatform* platform)
 
 void NLSetWindowShouldClose(NLPlatform* platform)
 {
-     glfwSetWindowShouldClose((GLFWwindow*)platform->window, GLFW_TRUE);
+    glfwSetWindowShouldClose((GLFWwindow*)platform->window, GLFW_TRUE);
 }

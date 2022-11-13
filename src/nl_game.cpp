@@ -2,6 +2,7 @@
 #include <nl_camera.h>
 #include <nl_gl.h>
 #include <nl_input.h>
+#include <nl_key.h>
 #include <nl_renderer.h>
 #include <nl_shader.h>
 
@@ -32,45 +33,43 @@ UnAttackAnim(void* data)
 }
 
 static void 
-PlayerAttack(int action, int code, void* data)
+PlayerAttack(KeyState action, Key code, void* data)
 {
     int& val = *(int*)data;
     if (val == 1) return;
 
-    if (code == GLFW_KEY_E && action == GLFW_PRESS)
+    if (code == Key::E && action == KeyState::Down)
     {
         val = 1;
     }
 }
 
 static void
-PlayerMove(int action, int code, void* data)
+PlayerMove(KeyState action, Key code, void* data)
 {
     v2f& velocity = *(v2f*)data;
     float player_speed = 200;
-
-    if (action == GLFW_REPEAT) return;
-
+    
     switch(code)
     {
-        case GLFW_KEY_W:
+        case Key::W:
         {
-            velocity.y += (action == GLFW_PRESS) ? player_speed : -player_speed;
+            velocity.y += (action == KeyState::Down) ? player_speed : -player_speed;
         } break;
 
-        case GLFW_KEY_S:
+        case Key::S:
         {
-            velocity.y -= (action == GLFW_PRESS) ? player_speed : -player_speed;
+            velocity.y -= (action == KeyState::Down) ? player_speed : -player_speed;
         } break;
 
-        case GLFW_KEY_D:
+        case Key::D:
         {
-            velocity.x += (action == GLFW_PRESS) ? player_speed : -player_speed;
+            velocity.x += (action == KeyState::Down) ? player_speed : -player_speed;
         } break;
 
-        case GLFW_KEY_A:
+        case Key::A:
         {
-            velocity.x -= (action == GLFW_PRESS) ? player_speed : -player_speed;
+            velocity.x -= (action == KeyState::Down) ? player_speed : -player_speed;
         } break;
     }
 }

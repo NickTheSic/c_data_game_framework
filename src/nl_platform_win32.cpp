@@ -1,5 +1,6 @@
 #include <nl_platform.h>
 #include <nl_input.h>
+#include <nl_key.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -27,9 +28,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			if (was_down != is_down)
 			{
-				//if (is_down) fprintf(stdout, "Is Down\n");
-				//if (was_down) fprintf(stdout, "Was down\n");
-				HandleAction(is_down, wParam);
+				HandleAction((KeyState)is_down, (Key)wParam);
 			}
 
 			if (is_down && wParam == VK_ESCAPE)
@@ -39,7 +38,9 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 		} break;
 
         default:
+		{
             result = DefWindowProc(window, msg, wParam, lParam);
+		} break;
     }
 
     return result;

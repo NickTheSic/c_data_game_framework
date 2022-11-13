@@ -23,7 +23,7 @@ void AddAxisCallback(void* user_data, InputAxisCallback callback)
     g_input.actions.push_back(ic);
 }
 
-void HandleAction(int state, int key_code)
+void HandleAction(KeyState state, Key key_code)
 {
     for (auto& callback : g_input.actions)
     {
@@ -60,20 +60,4 @@ void AddAxisCallback(InputCallbacks* input, void* user_data, InputAxisCallback c
     ic.axis = callback;
 
     input->actions.push_back(ic);
-}
-
-void HandleAction(InputCallbacks* input, int state, int key_code)
-{
-    for (auto& callback : input->actions)
-    {
-        callback.action(state, key_code, callback.user_data);
-    }
-}
-
-void HandleAxis(InputCallbacks* input, float value)
-{
-    for (auto& callback : input->axese)
-    {
-        callback.axis(value, callback.user_data);
-    }
 }
