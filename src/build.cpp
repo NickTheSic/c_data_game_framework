@@ -12,7 +12,7 @@
 // Game
 #ifdef NL_CARD_GAME
 #include "nl_card_game.cpp"
-#elif
+#else
 #include "nl_game.cpp"
 #endif
 
