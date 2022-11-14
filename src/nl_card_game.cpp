@@ -26,10 +26,10 @@ typedef unsigned char byte;
 
 enum class Suit : byte
 {
-    clubs   =  16,
-    spades  =  32,
-    hearts  =  64,
-    diamods = 128,
+    spade   =  16,
+    heart   =  32,
+    diamond =  64,
+    club    = 128,
 };
 
 #define log(m, ...) fprintf(stdout, m,##__VA_ARGS__);
@@ -38,6 +38,7 @@ struct Card
 {
     v2f pos;
     byte data;
+    SpriteHandle sprite;
     bool visible;
 };
 
@@ -49,7 +50,6 @@ struct Deck
 struct GameData
 {
     Deck deck;
-    SpriteHandle card_sprites[52];
     SpriteHandle card_back_sprite;
     SpriteHandle card_empty_sprite;
     SpriteSheet sheet;
@@ -63,8 +63,8 @@ struct GameData
 byte 
 MakeCard(byte idx)
 {
-    const byte suit =1 << (4+(idx/13));
-    const byte val = idx%13;
+    const byte suit = 1 << (4+(idx/13));
+    const byte val  = idx % 13;
     return (suit | val);
 }
 
@@ -106,22 +106,22 @@ CheckCard(byte card)
         break;
     }
 
-    if (card & 16)
+    if (card & (byte)Suit::club)
     {
         log("%s", " of Clubs\n");
     }
 
-    if (card & 32)
+    if (card & (byte)Suit::spade)
     {
         log("%s"," of Spades\n");
     }
     
-    if (card & 64)
+    if (card & (byte)Suit::heart)
     {
         log("%s"," of Hearts\n");
     }
     
-    if (card & 128)
+    if (card & (byte)Suit::diamond)
     {
         log("%s"," of Diamonds\n");
     }
@@ -156,8 +156,13 @@ ShuffleDeck(Deck* deck)
         sr2 = SimpleRandom() % 52;
 
         byte temp = deck->card[sr1].data;
+        SpriteHandle sprite = deck->card[sr1].sprite;
+
         deck->card[sr1].data = deck->card[sr2].data;
+        deck->card[sr1].sprite = deck->card[sr2].sprite;
+
         deck->card[sr2].data = temp;
+        deck->card[sr2].sprite = sprite;
     }
 }
 
@@ -184,14 +189,6 @@ GameInitialize()
 {
     GameData* data = new GameData;
 
-    ResetDeck(&data->deck);
-    CheckDeck(&data->deck);
-
-    ShuffleDeck(&data->deck);
-    CheckDeck(&data->deck);
-
-    AddActionCallback(&data->deck, &DeckInputCallback);
-
     // Todo: Extract out of Game Init, we can probably specify 4 pieces of data back to the platform
     data->camera.size.x = 300.f;
     data->camera.size.y = 200.f;
@@ -215,8 +212,15 @@ GameInitialize()
         path.append(std::to_string(i+2));
         path.append(".png");
 
-        data->card_sprites[i] = LoadSprite(&data->sheet, path.c_str());
+        data->deck.card[i].sprite = LoadSprite(&data->sheet, path.c_str());
     }
+    
+    ResetDeck(&data->deck);
+    CheckDeck(&data->deck);
+
+    AddActionCallback(&data->deck, &DeckInputCallback);
+
+    data->active_card = 0.0f;
 
     return data;
 }
@@ -225,6 +229,7 @@ void
 GameUpdate(GameData* data, float delta_time)
 {
     data->active_card += delta_time * 4;
+    if (data->active_card > 52.f) data->active_card -= 52.f;
 }
 
 void
@@ -232,13 +237,13 @@ GameRender(GameData* data)
 {
     BeginRender(&data->sheet);
 
-    DisplayEntireSheet(&data->sheet, {0.f,0.f,0.f}, {100.f,100.f});
+    DisplayEntireSheet(&data->sheet, {0.f,30.f,0.f}, {100.f,100.f});
 
     for (int i = 0; i < 52; ++i)
     {
         float z_order = 0.0f;
         if (i == (int)data->active_card) z_order = 1.f;
-        AddSpriteToRender(&data->sheet, data->card_sprites[i], {-data->camera.size.x + (i*10), -30.f, z_order});
+        AddSpriteToRender(&data->sheet, data->deck.card[i].sprite, {-data->camera.size.x + (i*10), -30.f, z_order});
     }
 
     EndRender(&data->sheet.renderer);
