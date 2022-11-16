@@ -1,6 +1,7 @@
 
 #include "main.cpp"
 #include "nl_camera.cpp"
+#include "nl_framework.cpp"
 #include "nl_gl.cpp"
 #include "nl_input.cpp"
 #include "nl_math.cpp"

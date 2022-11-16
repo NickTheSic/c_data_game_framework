@@ -16,10 +16,13 @@ struct Framework
 
 struct FrameworkInitializationData
 {
+    v2i sheet_size;
     v2f camera_size;
-    v2f initialize_camera_position;
-    unsigned int sheet_width, sheet_height;
+    v3f starting_camera_position;
     unsigned int batch_count;
 };
+
+Framework* InitializeFramework(const FrameworkInitializationData& fw_data);
+void CleanupFramework(Framework* fw);
 
 #endif //NL_FRAMEWORK_H_

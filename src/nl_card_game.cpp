@@ -143,6 +143,7 @@ ResetDeck(Deck* deck)
     for (byte i = 0; i < 52; ++i)
     {
         deck->card[i].data = MakeCard(i);
+        deck->card[i].sprite = i+2; // Make this a function? I hard coded this though
     }
 }
 
