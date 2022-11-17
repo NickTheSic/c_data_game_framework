@@ -24,5 +24,6 @@ CleanupFramework(Framework* fw)
 {
     CleanupRenderer(&fw->sprite_sheet.renderer);
     CleanupSpriteSheet(&fw->sprite_sheet);
+    
     delete fw;
 }

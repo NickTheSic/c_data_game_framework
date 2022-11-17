@@ -19,7 +19,6 @@
 
 
 // Platform
-
 #ifdef GLFW_PLATFORM_LAYER
 #include "nl_platform_glfw.cpp"
 #elif defined(_WIN32)

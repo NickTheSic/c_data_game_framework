@@ -56,7 +56,7 @@ main()
         return -42069;
     }
     
-    #ifndef __EMSCRIPTEN__
+#ifndef __EMSCRIPTEN__
 
     while (NLPollEvents(platform))
     {
@@ -73,9 +73,9 @@ main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    #else
+#else
     emscripten_set_main_loop_arg(em_run, game_data, 0, 1);
-    #endif
+#endif
     
     GameCleanup(game_data);
     DestroyPlatform(platform);
