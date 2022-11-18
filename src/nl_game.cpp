@@ -9,6 +9,7 @@
 #include <nl_renderer.h>
 #include <nl_shader.h>
 #include <nl_spritesheet.h>
+#include <nl_utils.h>
 
 //TODO: Camera Spritesheet and Shader can probably be their own outside of the game
 // The shader would use the camera view but the camera view would change
@@ -30,6 +31,7 @@ struct GameData
     
     SpriteHandle sprite_handle1;
     SpriteHandle sprite_handle2;
+    SpriteHandle player_outline;
 };
 
 static void
@@ -96,6 +98,11 @@ static void
 mouse_on_player(int mouse, int state, int pos_x, int pos_y, void* data)
 {
     Player* p = static_cast<Player*>(data);
+
+    if (PointInRect({static_cast<float>(pos_x), static_cast<float>(pos_y)}, {p->pos.x, p->pos.y}, {p->pos.x +32, p->pos.y + 32}))
+    {
+        LOG("Yes?");
+    }
 }
 
 GameData* 
@@ -123,6 +130,7 @@ GameInitialize()
     data->player.animations[1].callback = &UnAttackAnim;
     
     data->sprite_handle2 = LoadSprite(&data->fw.sprite_sheet, "data/blue64.png");
+    data->player_outline = LoadSprite(&data->fw.sprite_sheet, "data/rect_outline.png");
 
     AddActionCallback(&data->player.active_anim, &PlayerAttack);
     AddActionCallback(&data->player.velocity, &PlayerMove);
@@ -151,6 +159,8 @@ GameRender(GameData* data)
     SpriteSheetBeginRender(&data->fw.sprite_sheet);
     
     RenderSpriteAnimationFrame(&data->fw.sprite_sheet, &data->player.animations[data->player.active_anim], data->player.pos);
+
+    AddSizedSpriteToRender(&data->fw.sprite_sheet, data->player_outline, v3f{data->player.pos.x, data->player.pos.y, 2}, v2f{32.f,32.f});
     
     float offset_pos = 30;
     AddSpriteToRender(&data->fw.sprite_sheet, data->sprite_handle1, v3f{-offset_pos, -offset_pos, -1.0});

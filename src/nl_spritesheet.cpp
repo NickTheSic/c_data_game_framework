@@ -117,16 +117,33 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
 }
 
 void
-AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos)
+AddSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos)
 {
-    if (spriteHandle == INVALID_SPRITE_HANDLE)
+    if (sprite_handle == INVALID_SPRITE_HANDLE)
     {
-        //fprintf(stderr, "Sprite Handle was Invalid\n");
+        fprintf(stderr, "Sprite Handle was Invalid\n");
         return;
     }
-    else if (spriteHandle > sheet->sprite_count || spriteHandle < 0)
+    else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
-        fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", spriteHandle);
+        fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
+        return;
+    }
+
+    AddSizedSpriteToRender(sheet, sprite_handle, pos, sheet->sprites[sprite_handle].size);
+}
+
+void 
+AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos, const v2f& size)
+{
+    if (sprite_handle == INVALID_SPRITE_HANDLE)
+    {
+        fprintf(stderr, "Sprite Handle was Invalid\n");
+        return;
+    }
+    else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
+    {
+        fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
         return;
     }
     
@@ -135,7 +152,7 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos)
         EndRender(&sheet->renderer);
     }
     
-    const Sprite& sprite = sheet->sprites[spriteHandle];
+    const Sprite& sprite = sheet->sprites[sprite_handle];
     
     SpriteVertexData vertices[4] = {};
     v3f& pos0 = vertices[0].position;
@@ -144,18 +161,18 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos)
     pos0.z = pos.z;
     
     v3f& pos1 = vertices[1].position;
-    pos1.x = pos.x + sprite.size.x;
+    pos1.x = pos.x + size.x;
     pos1.y = pos.y;
     pos1.z = pos.z;
     
     v3f& pos2 = vertices[2].position;
-    pos2.x = pos.x + sprite.size.x;
-    pos2.y = pos.y + sprite.size.y;
+    pos2.x = pos.x + size.x;
+    pos2.y = pos.y + size.y;
     pos2.z = pos.z;
     
     v3f& pos3 = vertices[3].position;
     pos3.x = pos.x;
-    pos3.y = pos.y + sprite.size.y;
+    pos3.y = pos.y + size.y;
     pos3.z = pos.z;
     
     v2f& uv0 = vertices[0].uv;
