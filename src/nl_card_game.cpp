@@ -236,7 +236,7 @@ GameUpdate(GameData* data, float delta_time)
 void
 GameRender(GameData* data)
 {
-    BeginRender(&data->sheet);
+    SpriteSheetBeginRender(&data->sheet);
 
     DisplayEntireSheet(&data->sheet, {0.f,30.f,0.f}, {100.f,100.f});
 

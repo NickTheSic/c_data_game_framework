@@ -26,7 +26,7 @@ void SetUniform(Shader* shader, const char* name, const mat4f& val)
 {
     int loc = GetUniformLocation(shader, name);
 
-    #ifdef NL_MATH_IMPLEMENTATION
+    #ifndef USE_GLM_MATH
     glUniformMatrix4fv(loc,1, GL_FALSE, &val.m11);
     #else
     glUniformMatrix4fv(loc,1, GL_FALSE, glm::value_ptr(val));

@@ -5,7 +5,7 @@ pushd build
 set INCLUDES=-I../include -I../vendor/include
 set LIBS=-L../lib -lglfw3dll -lopengl32 -lgdi32 -luser32
 set FLAGS= -g -Wall -Wextra
-set EXTRA= %1 %2
+set EXTRA= %1 %2 %3
 
 @echo on
 

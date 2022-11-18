@@ -5,6 +5,7 @@
 #include <nl_key.h>
 #include <nl_renderer.h>
 #include <nl_shader.h>
+#include <nl_spritesheet.h>
 
 //TODO: Camera Spritesheet and Shader can probably be their own outside of the game
 // The shader would use the camera view but the camera view would change
@@ -131,7 +132,7 @@ GameRender(GameData* data)
 {
     SetUniform(&data->shader, "view", data->camera.view);
 
-    BeginRender(&data->sprite_sheet);
+    SpriteSheetBeginRender(&data->sprite_sheet);
     
     RenderSpriteAnimationFrame(&data->sprite_sheet, &data->player_animations[data->active_player_anim], data->player_pos);
     

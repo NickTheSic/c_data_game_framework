@@ -6,6 +6,7 @@
 #include <nl_math.h>
 #include <nl_renderer.h>
 #include <nl_shader.h>
+#include <nl_spritesheet.h>
 
 struct Framework
 {

@@ -8,7 +8,8 @@ struct v2i
     int x, y;
 };
 
-#ifdef NL_MATH_IMPLEMENTATION
+#ifndef USE_GLM_MATH
+
 struct v2f
 {
     float x, y;

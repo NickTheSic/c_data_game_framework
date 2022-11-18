@@ -7,6 +7,7 @@
 #include "nl_math.cpp"
 #include "nl_renderer.cpp"
 #include "nl_shader.cpp"
+#include "nl_spritesheet.cpp"
 #include "nl_timer.cpp"
 
 
