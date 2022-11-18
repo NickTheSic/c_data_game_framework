@@ -1,8 +1,12 @@
 
+#error "Deprecated for the time being"
+#warning "GLFW Platform Layer is now deprecated as I work on my own input system that doesn't yet work with GLFW 
+
 #include <nl_platform.h>
 #include <nl_input.h>
 #include <nl_key.h>
 #include <nl_debug.h>
+
 
 #include <GLFW/glfw3.h>
 #undef near
@@ -41,6 +45,8 @@ CreatePlatform(int width, int height, const char* title)
                            
                            HandleAction((KeyState)action, (Key)key);
                        });
+
+    // Cursor move and m
     
     return platform;
 }

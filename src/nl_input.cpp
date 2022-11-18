@@ -20,7 +20,17 @@ void AddAxisCallback(void* user_data, InputAxisCallback callback)
     ic.user_data = user_data;
     ic.axis = callback;
 
-    g_input.actions.push_back(ic);
+    g_input.axese.push_back(ic);
+}
+
+void AddMouseCallback(void* user_data, MouseInputCallback callback)
+{
+    InputCommand ic = {};
+
+    ic.user_data = user_data;
+    ic.mouse = callback;
+
+    g_input.mouse.push_back(ic);
 }
 
 void HandleAction(KeyState state, Key key_code)
@@ -40,5 +50,13 @@ void HandleAxis(float value)
     for (auto& callback : g_input.axese)
     {
         callback.axis(value, callback.user_data);
+    }
+}
+
+void HandleMouse(int mouse_button, int state, int mouse_x, int mouse_y)
+{
+    for (auto& callback : g_input.mouse)
+    {
+        callback.mouse(mouse_button, state, mouse_x, mouse_y, callback.user_data);
     }
 }

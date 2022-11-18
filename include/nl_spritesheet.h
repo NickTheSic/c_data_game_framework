@@ -50,20 +50,20 @@ struct SpriteSheet
 };
 
 void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
+void CleanupSpriteSheet(SpriteSheet* sheet);
+
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path);
 void AddSpriteToRender(SpriteSheet* sheet, SpriteHandle spriteHandle, const v3f& pos);
+
 void SpriteSheetBeginRender(SpriteSheet* sheet);
 void SpriteSheetEndRender(SpriteSheet* sheet);
 
 Sprite& GetSprite(SpriteHandle handle);
 
-void CleanupSpriteSheet(SpriteSheet* sheet);
-
 void InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed = 1.0f);
 void UpdateSpriteAnimation(SpriteAnimation* anim, float deltaTime);
 void CleanupSpriteAnimation(SpriteAnimation* anim);
 void RenderSpriteAnimationFrame(SpriteSheet* sheet, SpriteAnimation* anim, const v3f& pos);
-
 
 // Debug to see what is currently loaded into texture memory 
 // Currently only handles 1 texture ID 
