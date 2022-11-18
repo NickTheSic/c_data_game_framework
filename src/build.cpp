@@ -24,8 +24,8 @@
 #include "nl_platform_glfw.cpp"
 #elif defined(_WIN32)
 #include "nl_platform_win32.cpp"
-#elif __EMSCRIPTEN__
+#elif defined(__EMSCRIPTEN__)
 #include "nl_platform_web.cpp"
 #else
-#error "Incomplete Platform"
+#error "Incomplete Platform or Unregistered platform layer"
 #endif

@@ -4,6 +4,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <Windowsx.h>
 #undef near
 #undef far
 
@@ -11,6 +12,11 @@ static LRESULT CALLBACK
 WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     LRESULT result = {};
+
+	//NOTE Only windows that have the CS_DBLCLKS style can receive WM_(L/R/M)BUTTONDBLCLK messages
+
+	int mouse_x_pos = GET_X_LPARAM(lParam);
+	int mouse_y_pos = GET_Y_LPARAM(lParam);
 
     switch(msg)
     {
@@ -35,6 +41,30 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				NLSetWindowShouldClose(0);
 			}
+		} break;
+
+		case WM_MOUSEMOVE:
+		{
+			// Handle Mouse Move Separately?
+			HandleMouse(MouseButton::NONE, -1, mouse_x_pos, mouse_y_pos);
+		} break;
+
+		case WM_LBUTTONUP:
+		case WM_LBUTTONDOWN:
+		{
+			HandleMouse(MouseButton::Left, (wParam&0x0001) > 0, mouse_x_pos, mouse_y_pos);
+		} break;
+
+		case WM_MBUTTONUP:
+		case WM_MBUTTONDOWN:
+		{
+			HandleMouse(MouseButton::Middle, (wParam&0x0010) > 0, mouse_x_pos, mouse_y_pos);
+		} break;
+
+		case WM_RBUTTONUP:
+		case WM_RBUTTONDOWN:
+		{
+			HandleMouse(MouseButton::Right, (wParam&0x0002) > 0, mouse_x_pos, mouse_y_pos);
 		} break;
 
         default:

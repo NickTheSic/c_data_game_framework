@@ -10,7 +10,6 @@ struct NLPlatform
     void* device;
     void* context;
 #endif
-
 };
 
 NLPlatform* CreatePlatform(int width, int height, const char* title);

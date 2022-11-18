@@ -35,6 +35,6 @@ void AddMouseCallback(void* user_data, MouseInputCallback callback);
 
 void HandleAction(KeyState state, Key key_code);
 void HandleAxis(float value);
-void HandleMouse(int mouse_button, int state, int mouse_x, int mouse_y);
+void HandleMouse(MouseButton mouse_button, int state, int mouse_x, int mouse_y);
 
 #endif //NL_INPUT_H_

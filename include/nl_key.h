@@ -12,13 +12,22 @@
 # error Incomplete Platform Keys
 #endif
 
-enum class KeyState
+enum class MouseButton : char
+{
+    NONE = -1,
+    Left = 0,
+    Middle,
+    Right
+};
+
+enum class KeyState : unsigned char
 {
     Up = 0, 
     Down = 1,
     Repeat,
 };
 
+// Make this an unsigned char or short?
 enum class Key
 {
 #ifdef GLFW_PLATFORM_LAYER

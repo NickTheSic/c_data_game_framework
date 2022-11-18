@@ -53,10 +53,11 @@ void HandleAxis(float value)
     }
 }
 
-void HandleMouse(int mouse_button, int state, int mouse_x, int mouse_y)
+void HandleMouse(MouseButton mouse_button, int state, int mouse_x, int mouse_y)
 {
     for (auto& callback : g_input.mouse)
     {
-        callback.mouse(mouse_button, state, mouse_x, mouse_y, callback.user_data);
+        #warning Casting to an int from the mouse button state
+        callback.mouse((int)mouse_button, state, mouse_x, mouse_y, callback.user_data);
     }
 }

@@ -1,5 +1,8 @@
 #include <nl_game.h>
+
 #include <nl_camera.h>
+#include <nl_debug.h>
+#include <nl_framework.h>
 #include <nl_gl.h>
 #include <nl_input.h>
 #include <nl_key.h>
@@ -10,19 +13,23 @@
 //TODO: Camera Spritesheet and Shader can probably be their own outside of the game
 // The shader would use the camera view but the camera view would change
 // the renderer can also change based on what is required at the time
+
+struct Player
+{
+    v3f pos;
+    v2f velocity;
+    SpriteAnimation animations[2];
+    int active_anim;
+};
+
 struct GameData
 {
-    Camera camera;
-    SpriteSheet sprite_sheet;
-    Shader shader;
+    Framework fw;
     
-    SpriteAnimation player_animations[2];
-    v3f player_pos;
-    v2f player_velocity;
+    Player player;
     
     SpriteHandle sprite_handle1;
     SpriteHandle sprite_handle2;
-    int active_player_anim;
 };
 
 static void
@@ -30,7 +37,7 @@ UnAttackAnim(void* data)
 {
     if (data != 0)
     {
-        ((GameData*)data)->active_player_anim = 0;
+        ((GameData*)data)->player.active_anim = 0;
     }
 }
 
@@ -78,40 +85,49 @@ PlayerMove(KeyState action, Key code, void* data)
     }
 }
 
+static void
+mouse_callback(int mouse, int state, int pos_x, int pos_y, void* data)
+{
+    UNUSED(data);
+    LOG("Mouse: %d, State: %s, X: %d, Y: %d\n", mouse, state == 1 ? "Down" : "Up", pos_x, pos_y);
+}
+
+static void
+mouse_on_player(int mouse, int state, int pos_x, int pos_y, void* data)
+{
+    Player* p = static_cast<Player*>(data);
+}
+
 GameData* 
 GameInitialize()
 {
     GameData* data = new GameData();
 
-    data->player_pos.z = 0.f;
-    InitializeRenderer(&data->sprite_sheet.renderer, 8, sizeof(SpriteVertexData));
-    InitializeSpriteSheet(&data->sprite_sheet, 512, 512);
-    data->camera.size.x = 200.f;
-    data->camera.size.y = 200.f;
-    CreateViewMatrixFollow(&data->camera, data->player_pos);
-    CompileSpriteShaderProgram(&data->sprite_sheet.renderer);
-    data->shader.program = data->sprite_sheet.renderer.shader_program;
-    SetUniform(&data->shader, "view", data->camera.view);
-    
-    InitializeSpriteAnim(&data->player_animations[0], 4, 5);
-    data->player_animations[0].sprite_handles[0] = LoadSprite(&data->sprite_sheet, "data/testanim-01.png");
-    data->player_animations[0].sprite_handles[1] = LoadSprite(&data->sprite_sheet, "data/testanim-02.png");
-    data->player_animations[0].sprite_handles[2] = LoadSprite(&data->sprite_sheet, "data/testanim-03.png");
-    data->player_animations[0].sprite_handles[3] = LoadSprite(&data->sprite_sheet, "data/testanim-04.png");
-    
-    data->sprite_handle1 = LoadSprite(&data->sprite_sheet, "data/blue64.png");
-    
-    InitializeSpriteAnim(&data->player_animations[1], 3, 10.f);
-    data->player_animations[1].sprite_handles[0] = LoadSprite(&data->sprite_sheet, "data/testanimattack-01.png");
-    data->player_animations[1].sprite_handles[1] = LoadSprite(&data->sprite_sheet, "data/testanimattack-02.png");
-    data->player_animations[1].sprite_handles[2] = LoadSprite(&data->sprite_sheet, "data/testanimattack-03.png");
-    data->player_animations[1].user_data = data;
-    data->player_animations[1].callback = &UnAttackAnim;
-    
-    data->sprite_handle2 = LoadSprite(&data->sprite_sheet, "data/blue64.png");
+    data->player.pos = {0.f, 0.f, 0.f};
 
-    AddActionCallback(&data->active_player_anim, &PlayerAttack);
-    AddActionCallback(&data->player_velocity, &PlayerMove);
+    InitializeFramework(&data->fw, {512,512}, {200.f, 200.f}, data->player.pos, 12);
+
+    InitializeSpriteAnim(&data->player.animations[0], 4, 5);
+    data->player.animations[0].sprite_handles[0] = LoadSprite(&data->fw.sprite_sheet, "data/testanim-01.png");
+    data->player.animations[0].sprite_handles[1] = LoadSprite(&data->fw.sprite_sheet, "data/testanim-02.png");
+    data->player.animations[0].sprite_handles[2] = LoadSprite(&data->fw.sprite_sheet, "data/testanim-03.png");
+    data->player.animations[0].sprite_handles[3] = LoadSprite(&data->fw.sprite_sheet, "data/testanim-04.png");
+    
+    data->sprite_handle1 = LoadSprite(&data->fw.sprite_sheet, "data/blue64.png");
+    
+    InitializeSpriteAnim(&data->player.animations[1], 3, 10.f);
+    data->player.animations[1].sprite_handles[0] = LoadSprite(&data->fw.sprite_sheet, "data/testanimattack-01.png");
+    data->player.animations[1].sprite_handles[1] = LoadSprite(&data->fw.sprite_sheet, "data/testanimattack-02.png");
+    data->player.animations[1].sprite_handles[2] = LoadSprite(&data->fw.sprite_sheet, "data/testanimattack-03.png");
+    data->player.animations[1].user_data = data;
+    data->player.animations[1].callback = &UnAttackAnim;
+    
+    data->sprite_handle2 = LoadSprite(&data->fw.sprite_sheet, "data/blue64.png");
+
+    AddActionCallback(&data->player.active_anim, &PlayerAttack);
+    AddActionCallback(&data->player.velocity, &PlayerMove);
+    AddMouseCallback(nullptr, &mouse_callback);
+    AddMouseCallback(&data->player, &mouse_on_player);
 
     return data;
 }
@@ -119,39 +135,39 @@ GameInitialize()
 void 
 GameUpdate(GameData* data, float delta_time)
 {
-    UpdateSpriteAnimation(&data->player_animations[data->active_player_anim], delta_time);
+    UpdateSpriteAnimation(&data->player.animations[data->player.active_anim], delta_time);
 
-    data->player_pos.x += data->player_velocity.x * delta_time;
-    data->player_pos.y += data->player_velocity.y * delta_time;
+    data->player.pos.x += data->player.velocity.x * delta_time;
+    data->player.pos.y += data->player.velocity.y * delta_time;
 
-    CreateViewMatrixFollow(&data->camera, data->player_pos);
+    CreateViewMatrixFollow(&data->fw.main_camera, data->player.pos);
 }
 
 void 
 GameRender(GameData* data)
 {
-    SetUniform(&data->shader, "view", data->camera.view);
+    SetUniform(&data->fw.shader, "view", data->fw.main_camera.view);
 
-    SpriteSheetBeginRender(&data->sprite_sheet);
+    SpriteSheetBeginRender(&data->fw.sprite_sheet);
     
-    RenderSpriteAnimationFrame(&data->sprite_sheet, &data->player_animations[data->active_player_anim], data->player_pos);
+    RenderSpriteAnimationFrame(&data->fw.sprite_sheet, &data->player.animations[data->player.active_anim], data->player.pos);
     
     float offset_pos = 30;
-    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle1, v3f{-offset_pos, -offset_pos, -1.0});
-    AddSpriteToRender(&data->sprite_sheet, data->sprite_handle2, v3f{ offset_pos,  offset_pos,  1.0});
+    AddSpriteToRender(&data->fw.sprite_sheet, data->sprite_handle1, v3f{-offset_pos, -offset_pos, -1.0});
+    AddSpriteToRender(&data->fw.sprite_sheet, data->sprite_handle2, v3f{ offset_pos,  offset_pos,  1.0});
     
-    DisplayEntireSheet(&data->sprite_sheet, {0.f,0.f, 0.0f}, {400.4f,400.4f});
+    DisplayEntireSheet(&data->fw.sprite_sheet, {0.f,0.f, 0.0f}, {400.4f,400.4f});
     
-    EndRender(&data->sprite_sheet.renderer);
+    EndRender(&data->fw.sprite_sheet.renderer);
 }
 
 void
 GameCleanup(GameData*& data)
 {
-    CleanupSpriteAnimation(&data->player_animations[0]);
-    CleanupSpriteAnimation(&data->player_animations[1]);
-    CleanupRenderer(&data->sprite_sheet.renderer);
-    CleanupSpriteSheet(&data->sprite_sheet);
+    CleanupSpriteAnimation(&data->player.animations[0]);
+    CleanupSpriteAnimation(&data->player.animations[1]);
+
+    CleanupFramework(&data->fw);
 
     delete data;
     data = 0;

@@ -15,15 +15,7 @@ struct Framework
     Shader shader;
 };
 
-struct FrameworkInitializationData
-{
-    v2i sheet_size;
-    v2f camera_size;
-    v3f starting_camera_position;
-    unsigned int batch_count;
-};
-
-Framework* InitializeFramework(const FrameworkInitializationData& fw_data);
+void InitializeFramework(Framework* fw, v2i sheet_size, v2f camera_size, v3f starting_camera_position, unsigned int batch_count);
 void CleanupFramework(Framework* fw);
 
 #endif //NL_FRAMEWORK_H_
