@@ -11,4 +11,11 @@
 #define UNUSED_VARIABLE(v) (void)(v);
 #endif
 
+#ifdef LOG
+#warning LOG is already defined somewhere
+#endif
+#ifndef LOG
+#define LOG(m, ...) fprintf(stdout, m,##__VA_ARGS__);
+#endif
+
 #endif //NL_DEBUG_H
