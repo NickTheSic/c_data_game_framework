@@ -14,18 +14,20 @@
 
 enum class MouseButton : char
 {
-    NONE = -1,
+    NONE = -1, //TODO: Can remove this maybe later
     Left = 0,
     Middle,
     Right
 };
 
-enum class KeyState : unsigned char
+//Rename to Button state and use for mouse and keys?
+enum class ButtonState : unsigned char
 {
     Up = 0, 
     Down = 1,
     Repeat,
 };
+typedef ButtonState KeyState;
 
 // Make this an unsigned char or short?
 enum class Key

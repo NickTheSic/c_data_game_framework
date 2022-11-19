@@ -15,9 +15,6 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	//NOTE Only windows that have the CS_DBLCLKS style can receive WM_(L/R/M)BUTTONDBLCLK messages
 
-	int mouse_x_pos = GET_X_LPARAM(lParam);
-	int mouse_y_pos = GET_Y_LPARAM(lParam);
-
     switch(msg)
     {
 		case WM_DESTROY:
@@ -34,7 +31,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			if (was_down != is_down)
 			{
-				HandleAction((KeyState)is_down, (Key)wParam);
+				UpdateKeyState(static_cast<Key>(wParam), static_cast<ButtonState>(is_down));
 			}
 
 			if (is_down && wParam == VK_ESCAPE)
@@ -45,25 +42,38 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case WM_MOUSEMOVE:
 		{
+			int mouse_x_pos = GET_X_LPARAM(lParam);
+			int mouse_y_pos = GET_Y_LPARAM(lParam);
+			
 			// Handle Mouse Move Separately?
 			HandleMouse(MouseButton::NONE, -1, mouse_x_pos, mouse_y_pos);
+			UpdateMousePosition(mouse_x_pos, mouse_y_pos);
 		} break;
 
 		case WM_LBUTTONUP:
 		case WM_LBUTTONDOWN:
 		{
+			int mouse_x_pos = GET_X_LPARAM(lParam);
+			int mouse_y_pos = GET_Y_LPARAM(lParam);
+
 			HandleMouse(MouseButton::Left, (wParam&0x0001) > 0, mouse_x_pos, mouse_y_pos);
 		} break;
 
 		case WM_MBUTTONUP:
 		case WM_MBUTTONDOWN:
 		{
+			int mouse_x_pos = GET_X_LPARAM(lParam);
+			int mouse_y_pos = GET_Y_LPARAM(lParam);
+
 			HandleMouse(MouseButton::Middle, (wParam&0x0010) > 0, mouse_x_pos, mouse_y_pos);
 		} break;
 
 		case WM_RBUTTONUP:
 		case WM_RBUTTONDOWN:
 		{
+			int mouse_x_pos = GET_X_LPARAM(lParam);
+			int mouse_y_pos = GET_Y_LPARAM(lParam);
+
 			HandleMouse(MouseButton::Right, (wParam&0x0002) > 0, mouse_x_pos, mouse_y_pos);
 		} break;
 

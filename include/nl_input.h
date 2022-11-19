@@ -29,6 +29,18 @@ struct InputCallbacks
     std::vector<InputCommand> mouse;
 };
 
+struct Inputs
+{
+    v2i mouse_pos, prev_mouse_pos;
+    //TODO: this should be okay but I know some key values go above 256
+    KeyState keys[256]; 
+    KeyState mouse_button[3];
+};
+
+void UpdateMousePosition(int mouse_x, int mouse_y);
+void UpdateKeyState(Key key, ButtonState state);
+void UpdateMouseState(MouseButton button, ButtonState state);
+
 void AddActionCallback(void* user_data, InputActionCallback callback);
 void AddAxisCallback(void* user_data, InputAxisCallback callback);
 void AddMouseCallback(void* user_data, MouseInputCallback callback);

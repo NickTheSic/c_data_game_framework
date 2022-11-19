@@ -11,10 +11,6 @@
 #include <nl_spritesheet.h>
 #include <nl_utils.h>
 
-//TODO: Camera Spritesheet and Shader can probably be their own outside of the game
-// The shader would use the camera view but the camera view would change
-// the renderer can also change based on what is required at the time
-
 struct Player
 {
     v3f pos;
@@ -97,6 +93,9 @@ mouse_callback(int mouse, int state, int pos_x, int pos_y, void* data)
 static void
 mouse_on_player(int mouse, int state, int pos_x, int pos_y, void* data)
 {
+    UNUSED(mouse);
+    UNUSED(state);
+
     Player* p = static_cast<Player*>(data);
 
     if (PointInRect({static_cast<float>(pos_x), static_cast<float>(pos_y)}, {p->pos.x, p->pos.y}, {p->pos.x +32, p->pos.y + 32}))

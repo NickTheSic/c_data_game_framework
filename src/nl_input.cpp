@@ -1,8 +1,38 @@
 #include <nl_input.h>
+#include <nl_debug.h>
+
+Inputs g_inputs;
+
+void UpdateMousePosition(int mouse_x, int mouse_y)
+{
+    g_inputs.prev_mouse_pos.x = g_inputs.mouse_pos.x;
+    g_inputs.prev_mouse_pos.y = g_inputs.mouse_pos.y;
+    g_inputs.mouse_pos.x = mouse_x;
+    g_inputs.mouse_pos.y = mouse_y;
+}
+
+void UpdateKeyState(Key key, ButtonState state)
+{
+    // By using a unsigned char it should always be in range
+    g_inputs.keys[(unsigned char)key] = state;
+
+    HandleAction(state, key);
+}
+
+void UpdateMouseState(MouseButton button, ButtonState state)
+{
+    unsigned char mv = (unsigned char)button;
+    if (mv < 0 || mv > 3)
+    {
+        LOG("Mouse Value was out of range: %d", mv);
+    }
+
+    g_inputs.mouse_button[mv] = state;
+}
+
 
 InputCallbacks g_input;
 
-// Probably need to remove these too at some point
 void AddActionCallback(void* user_data, InputActionCallback callback)
 {
     InputCommand ic = {};

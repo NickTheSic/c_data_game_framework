@@ -20,8 +20,17 @@ struct SpriteVertexData
 
 struct Sprite
 {
+    // position in the game world
+    v3f position;
+
+    // game size
     v2f size;
+
+    // Texture Coords
     v2f bl_coord, ur_coord;
+
+    // for when we have multiple sheets
+    // int texture_id;
 };
 
 struct SpriteAnimation
