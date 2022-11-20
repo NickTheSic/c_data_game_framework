@@ -1,7 +1,7 @@
 #include <nl_input.h>
 #include <nl_debug.h>
 
-Inputs g_inputs;
+Input g_inputs;
 
 void UpdateMousePosition(int mouse_x, int mouse_y)
 {
@@ -30,9 +30,6 @@ void UpdateMouseState(MouseButton button, ButtonState state)
     g_inputs.mouse_button[mv] = state;
 }
 
-
-InputCallbacks g_input;
-
 void AddActionCallback(void* user_data, InputActionCallback callback)
 {
     InputCommand ic = {};
@@ -40,7 +37,7 @@ void AddActionCallback(void* user_data, InputActionCallback callback)
     ic.user_data = user_data;
     ic.action = callback;
 
-    g_input.actions.push_back(ic);
+    g_inputs.callbacks.actions.push_back(ic);
 }
 
 void AddAxisCallback(void* user_data, InputAxisCallback callback)
@@ -50,7 +47,7 @@ void AddAxisCallback(void* user_data, InputAxisCallback callback)
     ic.user_data = user_data;
     ic.axis = callback;
 
-    g_input.axese.push_back(ic);
+    g_inputs.callbacks.axese.push_back(ic);
 }
 
 void AddMouseCallback(void* user_data, MouseInputCallback callback)
@@ -60,7 +57,7 @@ void AddMouseCallback(void* user_data, MouseInputCallback callback)
     ic.user_data = user_data;
     ic.mouse = callback;
 
-    g_input.mouse.push_back(ic);
+    g_inputs.callbacks.mouse.push_back(ic);
 }
 
 void HandleAction(KeyState state, Key key_code)
@@ -69,7 +66,7 @@ void HandleAction(KeyState state, Key key_code)
     // Maybe I can separate these callbacks into a press and release section so that there are less
     // even though I probably won't have a lot anyway.
     // fprintf(stdout, TEXT("Running Input callback\n"));
-    for (auto& callback : g_input.actions)
+    for (auto& callback : g_inputs.callbacks.actions)
     {   
         callback.action(state, key_code, callback.user_data);
     }
@@ -77,7 +74,7 @@ void HandleAction(KeyState state, Key key_code)
 
 void HandleAxis(float value)
 {
-    for (auto& callback : g_input.axese)
+    for (auto& callback : g_inputs.callbacks.axese)
     {
         callback.axis(value, callback.user_data);
     }
@@ -85,7 +82,7 @@ void HandleAxis(float value)
 
 void HandleMouse(MouseButton mouse_button, int state, int mouse_x, int mouse_y)
 {
-    for (auto& callback : g_input.mouse)
+    for (auto& callback : g_inputs.callbacks.mouse)
     {
         #warning Casting to an int from the mouse button state
         callback.mouse((int)mouse_button, state, mouse_x, mouse_y, callback.user_data);

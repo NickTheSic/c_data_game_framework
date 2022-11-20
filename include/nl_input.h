@@ -29,8 +29,11 @@ struct InputCallbacks
     std::vector<InputCommand> mouse;
 };
 
-struct Inputs
+struct Input
 {
+    InputCallbacks callbacks;
+
+
     v2i mouse_pos, prev_mouse_pos;
     //TODO: this should be okay but I know some web key values go above 256
     KeyState keys[256]; 
