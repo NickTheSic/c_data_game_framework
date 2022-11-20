@@ -24,7 +24,7 @@ void UpdateMousePosition(int mouse_x, int mouse_y)
     g_inputs.mouse_pos.x = mouse_x;
     g_inputs.mouse_pos.y = mouse_y;
 
-    LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
+    //LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
 }
 
 void UpdateKeyState(Key key, ButtonState state)
