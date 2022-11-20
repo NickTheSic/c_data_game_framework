@@ -214,21 +214,21 @@ CreatePlatform(int width, int height, const char* title)
 		if (rendererString) fprintf(stderr, TEXT("%s\n"), rendererString);
 	}
 
-	//// calculate DPI for scaling
-	//{
-	//	SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-	//	
-	//	const UINT dpi = GetDpiForWindow((HWND)platform->window);
-	//	AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
-	//	SetWindowPos(
-	//		(HWND)platform->window,
-	//		0,
-	//		window_rect.left,
-	//		window_rect.top,
-	//		window_rect.right - window_rect.left,
-	//		window_rect.bottom - window_rect.top,
-	//		0);
-	//}
+	// calculate DPI for scaling
+	{
+		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+		
+		const UINT dpi = GetDpiForWindow((HWND)platform->window);
+		AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
+		SetWindowPos(
+			(HWND)platform->window,
+			0,
+			window_rect.left,
+			window_rect.top,
+			window_rect.right - window_rect.left,
+			window_rect.bottom - window_rect.top,
+			SWP_NOMOVE);
+	}
 
 	ShowWindow((HWND)platform->window, SW_SHOW);
 	SetForegroundWindow((HWND)platform->window);

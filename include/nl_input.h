@@ -32,7 +32,7 @@ struct InputCallbacks
 struct Inputs
 {
     v2i mouse_pos, prev_mouse_pos;
-    //TODO: this should be okay but I know some key values go above 256
+    //TODO: this should be okay but I know some web key values go above 256
     KeyState keys[256]; 
     KeyState mouse_button[3];
 };

@@ -1,5 +1,4 @@
 
-#error "Deprecated for the time being"
 #warning "GLFW Platform Layer is now deprecated as I work on my own input system that doesn't yet work with GLFW 
 
 #include <nl_platform.h>
