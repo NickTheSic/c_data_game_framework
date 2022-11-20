@@ -18,6 +18,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 	int mouse_x_pos = GET_X_LPARAM(lParam);
 	int mouse_y_pos = GET_Y_LPARAM(lParam);
 	int old_screen_x, old_screen_sy;
+	//TODO: Screen Size might not be enough
 	Input_GetScreenSize(&old_screen_x, &old_screen_sy);
 	mouse_y_pos = old_screen_sy - mouse_y_pos;
 
@@ -58,6 +59,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case WM_MOUSEMOVE:
 		{
+			//TODO: Needs to Screen Size into account as well as the position of the camera!
 			UpdateMousePosition(mouse_x_pos, mouse_y_pos);
 		} break;
 
