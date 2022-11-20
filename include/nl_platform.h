@@ -2,7 +2,7 @@
 #ifndef NL_PLATFORM_H_
 #define NL_PLATFORM_H_
 
-struct NLPlatform
+struct Platform
 {
     void* window;
 
@@ -11,6 +11,8 @@ struct NLPlatform
     void* context;
 #endif
 };
+
+typedef Platform NLPlatform;
 
 NLPlatform* CreatePlatform(int width, int height, const char* title);
 void DestroyPlatform(NLPlatform* platform);

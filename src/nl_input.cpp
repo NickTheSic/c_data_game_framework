@@ -3,12 +3,28 @@
 
 Input g_inputs;
 
+void UpdateScreenSize(int sx, int sy)
+{
+    LOG("SX: %d, SY: %d\n", sx, sy);
+
+    g_inputs.screen_size.x = sx;
+    g_inputs.screen_size.y = sy;
+}
+
+void Input_GetScreenSize(int* sx, int* sy)
+{
+    *sx = g_inputs.screen_size.x;
+    *sy = g_inputs.screen_size.y;
+}
+
 void UpdateMousePosition(int mouse_x, int mouse_y)
 {
     g_inputs.prev_mouse_pos.x = g_inputs.mouse_pos.x;
     g_inputs.prev_mouse_pos.y = g_inputs.mouse_pos.y;
     g_inputs.mouse_pos.x = mouse_x;
     g_inputs.mouse_pos.y = mouse_y;
+
+    LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
 }
 
 void UpdateKeyState(Key key, ButtonState state)
@@ -80,7 +96,7 @@ void HandleAxis(float value)
     }
 }
 
-void HandleMouse(MouseButton mouse_button, int state, int mouse_x, int mouse_y)
+void HandleMouseButton(MouseButton mouse_button, int state, int mouse_x, int mouse_y)
 {
     for (auto& callback : g_inputs.callbacks.mouse)
     {

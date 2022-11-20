@@ -33,12 +33,21 @@ struct Input
 {
     InputCallbacks callbacks;
 
+    // here for now since it is used to calculate the on screen mouse position
+    // Less input and more of a screen thing
+    v2i screen_size;
 
+//Make this its own struct of data for asier passing around?
     v2i mouse_pos, prev_mouse_pos;
     //TODO: this should be okay but I know some web key values go above 256
     KeyState keys[256]; 
     KeyState mouse_button[3];
+
+    //Mouse Scroll value?
 };
+
+void UpdateScreenSize(int sx, int sy);
+void Input_GetScreenSize(int* sx, int* sy);
 
 void UpdateMousePosition(int mouse_x, int mouse_y);
 void UpdateKeyState(Key key, ButtonState state);
@@ -50,6 +59,6 @@ void AddMouseCallback(void* user_data, MouseInputCallback callback);
 
 void HandleAction(KeyState state, Key key_code);
 void HandleAxis(float value);
-void HandleMouse(MouseButton mouse_button, int state, int mouse_x, int mouse_y);
+void HandleMouseButton(MouseButton mouse_button, int state, int mouse_x, int mouse_y);
 
 #endif //NL_INPUT_H_

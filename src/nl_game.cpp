@@ -87,7 +87,7 @@ static void
 mouse_callback(int mouse, int state, int pos_x, int pos_y, void* data)
 {
     UNUSED(data);
-    LOG("Mouse: %d, State: %s, X: %d, Y: %d\n", mouse, state == 1 ? "Down" : "Up", pos_x, pos_y);
+    //LOG("Mouse: %d, State: %s, X: %d, Y: %d\n", mouse, state == 1 ? "Down" : "Up", pos_x, pos_y);
 }
 
 static void

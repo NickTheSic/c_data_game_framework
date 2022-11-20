@@ -4,6 +4,7 @@
 #include <string>
 
 #include <nl_camera.h>
+#include <nl_core.h>
 #include <nl_game.h>
 #include <nl_gl.h>
 #include <nl_input.h>
