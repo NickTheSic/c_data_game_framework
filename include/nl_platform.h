@@ -6,7 +6,7 @@ struct Platform
 {
     void* window;
 
-#ifndef GLFW_PLATFORM_LAYER
+#ifndef GLFW_PLATFORM_LAYER // A GLFWwindow is basically everything that my platform would be
     void* device;
     void* context;
 #endif

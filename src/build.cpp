@@ -9,7 +9,7 @@
 #include "nl_shader.cpp"
 #include "nl_spritesheet.cpp"
 #include "nl_timer.cpp"
-
+#include "nl_viewport.cpp"
 
 // Game
 #ifdef NL_CARD_GAME

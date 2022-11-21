@@ -96,15 +96,15 @@ mouse_on_player(int mouse, int state, int pos_x, int pos_y, void* data)
     UNUSED(mouse);
     UNUSED(state);
 
-    // TODO: Remove the hard coded values since it won't work if the camera moves
-    float fpos_x = (pos_x - 400.f) * 0.5f;
-    float fpos_y = (pos_y - 400.f) * 0.5f;
-
     Player* p = static_cast<Player*>(data);
+
+    // TODO: Remove the hard coded values since it won't work if the camera moves
+    float fpos_x = ((pos_x - 400.f) * 0.5f) + p->pos.x;
+    float fpos_y = ((pos_y - 400.f) * 0.5f) + p->pos.y;
 
     if (PointInRect({fpos_x, fpos_y}, {p->pos.x, p->pos.y}, {p->pos.x +32, p->pos.y + 32}))
     {
-        LOG("Yes?");
+        LOG("Yes?\n");
     }
 }
 
