@@ -6,7 +6,6 @@
 #include <nl_key.h>
 #include <nl_debug.h>
 
-
 #include <GLFW/glfw3.h>
 #undef near
 #undef far

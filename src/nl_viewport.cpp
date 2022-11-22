@@ -1,5 +1,13 @@
 #include <nl_viewport.h>
 
+void UpdateScreenSize(Viewport* viewport, int sx, int sy)
+{
+    viewport->screen_size.x = sx;
+    viewport->screen_size.y = sy;
+    viewport->screen_center.x = sx >> 2;
+    viewport->screen_center.y = sy >> 2;
+}
+
 void GetMouseInViewportWithCamera(v2f* out_pos, Viewport* viewport, Camera* camera, v2i mouse_pos)
 {
     const float camera_size_x = camera->size.x*2;

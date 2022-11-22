@@ -2,14 +2,22 @@
 #ifndef NL_PLATFORM_H_
 #define NL_PLATFORM_H_
 
+#include <nl_framework.h>
+#include <nl_input.h>
+#include <nl_viewport.h>
+
 struct Platform
 {
     void* window;
 
-#ifndef GLFW_PLATFORM_LAYER // A GLFWwindow is basically everything that my platform would be
+    #ifndef GLFW_PLATFORM_LAYER // A GLFWwindow is basically everything that my platform would be
     void* device;
     void* context;
-#endif
+
+    Framework fw;
+    Input inputs;
+    Viewport viewport;
+    #endif
 };
 
 typedef Platform NLPlatform;

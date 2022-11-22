@@ -35,7 +35,6 @@ struct Input
 
     // here for now since it is used to calculate the on screen mouse position
     // Less input and more of a screen thing
-    v2i screen_size;
 
 //Make this its own struct of data for asier passing around?
     v2i mouse_pos, prev_mouse_pos;
@@ -46,19 +45,16 @@ struct Input
     //Mouse Scroll value?
 };
 
-void UpdateScreenSize(int sx, int sy);
-void Input_GetScreenSize(int* sx, int* sy);
+void UpdateMousePosition(Input* input, int mouse_x, int mouse_y);
+void UpdateKeyState(Input* input, Key key, ButtonState state);
+void UpdateMouseState(Input* input, MouseButton button, ButtonState state);
 
-void UpdateMousePosition(int mouse_x, int mouse_y);
-void UpdateKeyState(Key key, ButtonState state);
-void UpdateMouseState(MouseButton button, ButtonState state);
+void AddActionCallback(Input* input, void* user_data, InputActionCallback callback);
+void AddAxisCallback(Input* input, void* user_data, InputAxisCallback callback);
+void AddMouseCallback(Input* input, void* user_data, MouseInputCallback callback);
 
-void AddActionCallback(void* user_data, InputActionCallback callback);
-void AddAxisCallback(void* user_data, InputAxisCallback callback);
-void AddMouseCallback(void* user_data, MouseInputCallback callback);
-
-void HandleAction(KeyState state, Key key_code);
-void HandleAxis(float value);
-void HandleMouseButton(MouseButton mouse_button, int state, int mouse_x, int mouse_y);
+void HandleAction(Input* input, KeyState state, Key key_code);
+void HandleAxis(Input* input, float value);
+void HandleMouseButton(Input* input, MouseButton mouse_button, int state, int mouse_x, int mouse_y);
 
 #endif //NL_INPUT_H_

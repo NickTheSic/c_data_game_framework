@@ -21,8 +21,6 @@ struct Player
 
 struct GameData
 {
-    Framework fw;
-    
     Player player;
     
     SpriteHandle sprite_handle1;

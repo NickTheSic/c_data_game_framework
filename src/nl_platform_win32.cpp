@@ -13,6 +13,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     LRESULT result = {};
 
+	Platform* platform = (Platform*)(GetWindowLongPtr(window, GWLP_USERDATA));
 	//NOTE Only windows that have the CS_DBLCLKS style can receive WM_(L/R/M)BUTTONDBLCLK messages
 
 	int mouse_x_pos = GET_X_LPARAM(lParam);
@@ -24,6 +25,14 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
     switch(msg)
     {
+		case WM_CREATE:
+		{
+			LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
+			platform = (Platform*)pcs->lpCreateParams;
+			SetWindowLongPtr(window, GWLP_USERDATA, (LONG_PTR)(platform));
+			result = 1;
+		} break;
+
 		case WM_DESTROY:
 		case WM_QUIT:
 		{
@@ -37,7 +46,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 			
 			glViewport(0,0, width, height);
 			
-			UpdateScreenSize(width, height);
+			UpdateScreenSize(&platform->viewport, width, height);
 		} break;
 		
 		case WM_KEYUP:
@@ -48,7 +57,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			if (was_down != is_down)
 			{
-				UpdateKeyState(static_cast<Key>(wParam), static_cast<ButtonState>(is_down));
+				UpdateKeyState(&platform->input, static_cast<Key>(wParam), static_cast<ButtonState>(is_down));
 			}
 
 			if (is_down && wParam == VK_ESCAPE)
@@ -59,26 +68,26 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case WM_MOUSEMOVE:
 		{
-			//TODO: Needs to Screen Size into account as well as the position of the camera!
-			UpdateMousePosition(mouse_x_pos, mouse_y_pos);
+			// Handling the raw position and letting the viewport/camera calculate the proper position in game
+			UpdateMousePosition(&platform->input, mouse_x_pos, platform->viewport.screen_size.y - mouse_y_pos);
 		} break;
 
 		case WM_LBUTTONUP:
 		case WM_LBUTTONDOWN:
 		{
-			HandleMouseButton(MouseButton::Left, (wParam&0x0001) > 0, mouse_x_pos, mouse_y_pos);
+			HandleMouseButton(&platform->input, MouseButton::Left, (wParam&0x0001) > 0, mouse_x_pos, mouse_y_pos);
 		} break;
 
 		case WM_MBUTTONUP:
 		case WM_MBUTTONDOWN:
 		{
-			HandleMouseButton(MouseButton::Middle, (wParam&0x0010) > 0, mouse_x_pos, mouse_y_pos);
+			HandleMouseButton(&platform->input, MouseButton::Middle, (wParam&0x0010) > 0, mouse_x_pos, mouse_y_pos);
 		} break;
 
 		case WM_RBUTTONUP:
 		case WM_RBUTTONDOWN:
 		{
-			HandleMouseButton(MouseButton::Right, (wParam&0x0002) > 0, mouse_x_pos, mouse_y_pos);
+			HandleMouseButton(&platform->input, MouseButton::Right, (wParam&0x0002) > 0, mouse_x_pos, mouse_y_pos);
 		} break;
 
         default:
