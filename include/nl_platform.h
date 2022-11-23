@@ -22,6 +22,10 @@ struct Platform
 
 typedef Platform NLPlatform;
 
+// Helper functions if I want to retrieve the pointer 
+Platform* GetGlobalPlatform();
+void SetGlobalPlatform(Platform* platform);
+
 NLPlatform* CreatePlatform(int width, int height, const char* title);
 void DestroyPlatform(NLPlatform* platform);
 

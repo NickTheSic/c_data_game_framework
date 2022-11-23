@@ -39,6 +39,9 @@ main()
 {
     NLPlatform* platform = CreatePlatform(800, 800, "TEST");
     if (platform == 0) return 1;
+    GetGlobalPlatform();
+    SetGlobalPlatform(platform);
+
     if (!LoadGLExtensions()) return 2;
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

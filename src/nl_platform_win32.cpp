@@ -8,6 +8,20 @@
 #undef near
 #undef far
 
+static Platform* g_platform = nullptr;
+
+Platform* GetGlobalPlatform()
+{
+	// Debug?
+	*g_platform;
+	return g_platform;
+}
+
+void SetGlobalPlatform(Platform* platform)
+{
+	g_platform = platform;
+}
+
 static LRESULT CALLBACK
 WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -18,10 +32,6 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	int mouse_x_pos = GET_X_LPARAM(lParam);
 	int mouse_y_pos = GET_Y_LPARAM(lParam);
-	int old_screen_x, old_screen_sy;
-	//TODO: Screen Size might not be enough
-	GetScreenSize(&platform->viewport, &old_screen_x, &old_screen_sy);
-	mouse_y_pos = old_screen_sy - mouse_y_pos;
 
     switch(msg)
     {
@@ -68,6 +78,11 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case WM_MOUSEMOVE:
 		{
+			int old_screen_x, old_screen_sy;
+			//TODO: Screen Size might not be enough
+			GetScreenSize(&platform->viewport, &old_screen_x, &old_screen_sy);
+			mouse_y_pos = old_screen_sy - mouse_y_pos;
+
 			// Handling the raw position and letting the viewport/camera calculate the proper position in game
 			UpdateMousePosition(&platform->input, mouse_x_pos, platform->viewport.screen_size.y - mouse_y_pos);
 		} break;
