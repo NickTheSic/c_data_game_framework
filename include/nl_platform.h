@@ -15,7 +15,7 @@ struct Platform
     void* context;
 
     Framework fw;
-    Input inputs;
+    Input input;
     Viewport viewport;
     #endif
 };

@@ -7,9 +7,9 @@
 
 // NOTE: I think this immediately falls apart if I start using a vector as the pointer would change
 
-typedef void(*InputActionCallback)(KeyState state, Key key, void* data);
+typedef void(*InputActionCallback)(Key key, ButtonState state, void* data);
 typedef void(*InputAxisCallback)(float val, void* data);
-typedef void(*MouseInputCallback)(int mouse_button, int mouse_state, int mouse_x, int mouse_y, void* data);
+typedef void(*MouseInputCallback)(MouseButton mouse_button, ButtonState mouse_state, int mouse_x, int mouse_y, void* data);
 
 struct InputCommand
 {
@@ -39,8 +39,8 @@ struct Input
 //Make this its own struct of data for asier passing around?
     v2i mouse_pos, prev_mouse_pos;
     //TODO: this should be okay but I know some web key values go above 256
-    KeyState keys[256]; 
-    KeyState mouse_button[3];
+    ButtonState keys[256]; 
+    ButtonState mouse_button[3];
 
     //Mouse Scroll value?
 };
@@ -53,7 +53,7 @@ void AddActionCallback(Input* input, void* user_data, InputActionCallback callba
 void AddAxisCallback(Input* input, void* user_data, InputAxisCallback callback);
 void AddMouseCallback(Input* input, void* user_data, MouseInputCallback callback);
 
-void HandleAction(Input* input, KeyState state, Key key_code);
+void HandleAction(Input* input, ButtonState state, Key key_code);
 void HandleAxis(Input* input, float value);
 void HandleMouseButton(Input* input, MouseButton mouse_button, int state, int mouse_x, int mouse_y);
 

@@ -47,8 +47,6 @@ typedef glm::mat4 mat4f;
 void CreateIdentityMartix(mat4f& matrix);
 void CreateOrtho(mat4f& matrix, float left, float right, float bottom, float top, float near_z, float far_z);
 
-
-
 static unsigned int g_random_seed = 42069;
 static unsigned int 
 XORRandom(unsigned int seed = g_random_seed)

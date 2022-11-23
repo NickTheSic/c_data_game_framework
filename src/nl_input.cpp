@@ -1,21 +1,8 @@
 #include <nl_input.h>
 #include <nl_debug.h>
 
-void UpdateScreenSize(Input* input, int sx, int sy)
-{
-    LOG("SX: %d, SY: %d\n", sx, sy);
-
-    input->screen_size.x = sx;
-    input->screen_size.y = sy;
-}
-
-void Input_GetScreenSize(Input* input, int* sx, int* sy)
-{
-    *sx = input->screen_size.x;
-    *sy = input->screen_size.y;
-}
-
-void UpdateMousePosition(Input* input, int mouse_x, int mouse_y)
+void 
+UpdateMousePosition(Input* input, int mouse_x, int mouse_y)
 {
     input->prev_mouse_pos.x = input->mouse_pos.x;
     input->prev_mouse_pos.y = input->mouse_pos.y;
@@ -25,15 +12,17 @@ void UpdateMousePosition(Input* input, int mouse_x, int mouse_y)
     //LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
 }
 
-void UpdateKeyState(Input* input, Key key, ButtonState state)
+void 
+UpdateKeyState(Input* input, Key key, ButtonState state)
 {
     // By using a unsigned char it should always be in range
     input->keys[(unsigned char)key] = state;
 
-    HandleAction(state, key);
+    HandleAction(input, state, key);
 }
 
-void UpdateMouseState(Input* input, MouseButton button, ButtonState state)
+void 
+UpdateMouseState(Input* input, MouseButton button, ButtonState state)
 {
     unsigned char mv = (unsigned char)button;
     if (mv < 0 || mv > 3)
@@ -44,7 +33,8 @@ void UpdateMouseState(Input* input, MouseButton button, ButtonState state)
     input->mouse_button[mv] = state;
 }
 
-void AddActionCallback(Input* input, void* user_data, InputActionCallback callback)
+void 
+AddActionCallback(Input* input, void* user_data, InputActionCallback callback)
 {
     InputCommand ic = {};
 
@@ -54,7 +44,8 @@ void AddActionCallback(Input* input, void* user_data, InputActionCallback callba
     input->callbacks.actions.push_back(ic);
 }
 
-void AddAxisCallback(Input* input, void* user_data, InputAxisCallback callback)
+void 
+AddAxisCallback(Input* input, void* user_data, InputAxisCallback callback)
 {
     InputCommand ic = {};
     
@@ -64,7 +55,8 @@ void AddAxisCallback(Input* input, void* user_data, InputAxisCallback callback)
     input->callbacks.axese.push_back(ic);
 }
 
-void AddMouseCallback(Input* input, void* user_data, MouseInputCallback callback)
+void 
+AddMouseCallback(Input* input, void* user_data, MouseInputCallback callback)
 {
     InputCommand ic = {};
 
@@ -74,7 +66,8 @@ void AddMouseCallback(Input* input, void* user_data, MouseInputCallback callback
     input->callbacks.mouse.push_back(ic);
 }
 
-void HandleAction(Input* input, KeyState state, Key key_code)
+void 
+HandleAction(Input* input, ButtonState state, Key key_code)
 {
     // This runs during Repeat with GLFW and I am not sure that I want this too
     // Maybe I can separate these callbacks into a press and release section so that there are less
@@ -82,11 +75,12 @@ void HandleAction(Input* input, KeyState state, Key key_code)
     // fprintf(stdout, TEXT("Running Input callback\n"));
     for (auto& callback : input->callbacks.actions)
     {   
-        callback.action(state, key_code, callback.user_data);
+        callback.action(key_code, state, callback.user_data);
     }
 }
 
-void HandleAxis(Input* input, float value)
+void 
+HandleAxis(Input* input, float value)
 {
     for (auto& callback : input->callbacks.axese)
     {
@@ -94,11 +88,11 @@ void HandleAxis(Input* input, float value)
     }
 }
 
-void HandleMouseButton(Input* input, MouseButton mouse_button, int state, int mouse_x, int mouse_y)
+void 
+HandleMouseButton(Input* input, MouseButton mouse_button, int state, int mouse_x, int mouse_y)
 {
     for (auto& callback : input->callbacks.mouse)
     {
-        #warning Casting to an int from the mouse button state
-        callback.mouse((int)mouse_button, state, mouse_x, mouse_y, callback.user_data);
+        callback.mouse(mouse_button, static_cast<ButtonState>(state), mouse_x, mouse_y, callback.user_data);
     }
 }

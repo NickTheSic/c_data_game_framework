@@ -20,7 +20,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 	int mouse_y_pos = GET_Y_LPARAM(lParam);
 	int old_screen_x, old_screen_sy;
 	//TODO: Screen Size might not be enough
-	Input_GetScreenSize(&old_screen_x, &old_screen_sy);
+	GetScreenSize(&platform->viewport, &old_screen_x, &old_screen_sy);
 	mouse_y_pos = old_screen_sy - mouse_y_pos;
 
     switch(msg)
@@ -255,6 +255,9 @@ DestroyPlatform(NLPlatform* platform)
 {
     if (platform)
     {
+		// Assume that this is valid even though we let the game decide the resources
+		CleanupFramework(&platform->fw);
+
         // free window, release DC
         ReleaseDC((HWND)platform->window, (HDC)platform->device);
         delete platform;

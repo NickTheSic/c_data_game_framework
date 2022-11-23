@@ -11,6 +11,7 @@ struct Viewport
 };
 
 void UpdateScreenSize(Viewport* viewport, int sx, int sy);
+void GetScreenSize(Viewport* veiwport, int* sx, int* sy);
 void GetMouseInViewportWithCamera(v2f* out_pos, Viewport* viewport, Camera* camera, v2i mouse_pos);
 
 #endif

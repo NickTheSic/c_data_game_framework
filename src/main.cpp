@@ -19,7 +19,8 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
-void em_run(void* data)
+void 
+em_run(void* data)
 {
     GameData* game_data = (GameData*)data;
 
@@ -50,7 +51,7 @@ main()
 
     InitTime();
 
-    GameData* game_data = GameInitialize();
+    GameData* game_data = GameInitialize(platform);
 
     if (game_data == 0)
     {
@@ -63,11 +64,12 @@ main()
     {
         const float delta_time = GetTime();
         
-        GameUpdate(game_data, delta_time);
+        GameUpdate(platform, game_data, delta_time);
 
-        // custom render code
+        // Might want to let the sprites render themselves if they are active,
+        // Loaded sprites are different than draw sprites, drawn sprites re use loaded sprites
         {
-            GameRender(game_data);
+            GameRender(platform, game_data);
         }
         
         NLSwapBuffers(platform);

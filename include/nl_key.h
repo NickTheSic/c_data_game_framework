@@ -3,7 +3,7 @@
 #define NL_KEY_H_
 
 #ifdef GLFW_PLATFORM_LAYER
-#include <GLFW/glfw3.h>
+# include <GLFW/glfw3.h>
 #elif defined(_WIN32)
 
 #elif defined(__EMSCRIPTEN__)
@@ -12,9 +12,8 @@
 # error Incomplete Platform Keys
 #endif
 
-enum class MouseButton : char
+enum class MouseButton : unsigned char
 {
-    NONE = -1, //TODO: Can remove this maybe later
     Left = 0,
     Middle,
     Right
@@ -27,7 +26,6 @@ enum class ButtonState : unsigned char
     Down = 1,
     Repeat,
 };
-typedef ButtonState KeyState;
 
 // Make this an unsigned char or short?
 enum class Key
