@@ -7,9 +7,11 @@
 
 // NOTE: I think this immediately falls apart if I start using a vector as the pointer would change
 
+// TODO: Could start defining parameters so I only have to change them in 1 spot
+
 typedef void(*InputActionCallback)(Key key, ButtonState state, void* data);
 typedef void(*InputAxisCallback)(float val, void* data);
-typedef void(*MouseInputCallback)(MouseButton mouse_button, ButtonState mouse_state, int mouse_x, int mouse_y, void* data);
+typedef void(*MouseInputCallback)(MouseButton mouse_button, ButtonState mouse_state, void* data);
 
 struct InputCommand
 {
@@ -55,6 +57,6 @@ void AddMouseCallback(Input* input, void* user_data, MouseInputCallback callback
 
 void HandleAction(Input* input, ButtonState state, Key key_code);
 void HandleAxis(Input* input, float value);
-void HandleMouseButton(Input* input, MouseButton mouse_button, int state, int mouse_x, int mouse_y);
+void HandleMouseButton(Input* input, MouseButton mouse_button, int state);
 
 #endif //NL_INPUT_H_

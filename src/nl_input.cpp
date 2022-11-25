@@ -9,7 +9,7 @@ UpdateMousePosition(Input* input, int mouse_x, int mouse_y)
     input->mouse_pos.x = mouse_x;
     input->mouse_pos.y = mouse_y;
 
-    //LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
+    LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
 }
 
 void 
@@ -89,10 +89,10 @@ HandleAxis(Input* input, float value)
 }
 
 void 
-HandleMouseButton(Input* input, MouseButton mouse_button, int state, int mouse_x, int mouse_y)
+HandleMouseButton(Input* input, MouseButton mouse_button, int state)
 {
     for (auto& callback : input->callbacks.mouse)
     {
-        callback.mouse(mouse_button, static_cast<ButtonState>(state), mouse_x, mouse_y, callback.user_data);
+        callback.mouse(mouse_button, static_cast<ButtonState>(state), callback.user_data);
     }
 }

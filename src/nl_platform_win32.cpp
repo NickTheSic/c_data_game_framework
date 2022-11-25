@@ -30,17 +30,18 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 	Platform* platform = (Platform*)(GetWindowLongPtr(window, GWLP_USERDATA));
 	//NOTE Only windows that have the CS_DBLCLKS style can receive WM_(L/R/M)BUTTONDBLCLK messages
 
-	int mouse_x_pos = GET_X_LPARAM(lParam);
-	int mouse_y_pos = GET_Y_LPARAM(lParam);
-
     switch(msg)
     {
+		case WM_NCCREATE:
+		{
+			result = DefWindowProc(window, msg, wParam, lParam);
+		} break;
 		case WM_CREATE:
 		{
 			LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
 			platform = (Platform*)pcs->lpCreateParams;
 			SetWindowLongPtr(window, GWLP_USERDATA, (LONG_PTR)(platform));
-			result = 1;
+			result = DefWindowProc(window, msg, wParam, lParam);
 		} break;
 
 		case WM_DESTROY:
@@ -78,10 +79,8 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case WM_MOUSEMOVE:
 		{
-			int old_screen_x, old_screen_sy;
-			//TODO: Screen Size might not be enough
-			GetScreenSize(&platform->viewport, &old_screen_x, &old_screen_sy);
-			mouse_y_pos = old_screen_sy - mouse_y_pos;
+			int mouse_x_pos = GET_X_LPARAM(lParam);
+			int mouse_y_pos = GET_Y_LPARAM(lParam);
 
 			// Handling the raw position and letting the viewport/camera calculate the proper position in game
 			UpdateMousePosition(&platform->input, mouse_x_pos, platform->viewport.screen_size.y - mouse_y_pos);
@@ -90,19 +89,19 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_LBUTTONUP:
 		case WM_LBUTTONDOWN:
 		{
-			HandleMouseButton(&platform->input, MouseButton::Left, (wParam&0x0001) > 0, mouse_x_pos, mouse_y_pos);
+			HandleMouseButton(&platform->input, MouseButton::Left, (wParam&0x0001) > 0);
 		} break;
 
 		case WM_MBUTTONUP:
 		case WM_MBUTTONDOWN:
 		{
-			HandleMouseButton(&platform->input, MouseButton::Middle, (wParam&0x0010) > 0, mouse_x_pos, mouse_y_pos);
+			HandleMouseButton(&platform->input, MouseButton::Middle, (wParam&0x0010) > 0);
 		} break;
 
 		case WM_RBUTTONUP:
 		case WM_RBUTTONDOWN:
 		{
-			HandleMouseButton(&platform->input, MouseButton::Right, (wParam&0x0002) > 0, mouse_x_pos, mouse_y_pos);
+			HandleMouseButton(&platform->input, MouseButton::Right, (wParam&0x0002) > 0);
 		} break;
 
         default:
@@ -158,7 +157,7 @@ CreatePlatform(int width, int height, const char* title)
 		(window_rect.right - window_rect.left),
 		(window_rect.bottom - window_rect.top),
 		NULL, NULL, GetModuleHandle(0),
-		nullptr // User Data - Needs to be parameter
+		platform
     );
 
     if (platform->window == nullptr)
