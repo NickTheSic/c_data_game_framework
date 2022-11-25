@@ -12,8 +12,6 @@ static Platform* g_platform = nullptr;
 
 Platform* GetGlobalPlatform()
 {
-	// Debug?
-	*g_platform;
 	return g_platform;
 }
 

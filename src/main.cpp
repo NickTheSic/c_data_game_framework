@@ -38,8 +38,8 @@ int
 main()
 {
     NLPlatform* platform = CreatePlatform(800, 800, "TEST");
+    
     if (platform == 0) return 1;
-    GetGlobalPlatform();
     SetGlobalPlatform(platform);
 
     if (!LoadGLExtensions()) return 2;
@@ -50,7 +50,7 @@ main()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glViewport(0, 0, 800, 800);
-    glClearColor(0.1,0.2,0.2,1.0);
+    glClearColor(0.1,0.2,0.4,1.0);
 
     InitTime();
 

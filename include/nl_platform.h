@@ -8,16 +8,21 @@
 
 struct Platform
 {
+#ifdef _WIN32
     void* window;
-
-    #ifndef GLFW_PLATFORM_LAYER // A GLFWwindow is basically everything that my platform would be
     void* device;
     void* context;
+#endif
+
+#ifdef __EMSCRIPTEN__
+    EGLDisplay display;
+    EGLSurface surface;
+    EGLContext context;
+#endif
 
     Framework fw;
     Input input;
     Viewport viewport;
-    #endif
 };
 
 typedef Platform NLPlatform;
@@ -26,12 +31,12 @@ typedef Platform NLPlatform;
 Platform* GetGlobalPlatform();
 void SetGlobalPlatform(Platform* platform);
 
-NLPlatform* CreatePlatform(int width, int height, const char* title);
-void DestroyPlatform(NLPlatform* platform);
+Platform* CreatePlatform(int width, int height, const char* title);
+void DestroyPlatform(Platform* platform);
 
-bool NLPollEvents(NLPlatform* platform);
-void NLSwapBuffers(NLPlatform* platform);
+bool NLPollEvents(Platform* platform);
+void NLSwapBuffers(Platform* platform);
 
-void NLSetWindowShouldClose(NLPlatform* platform);
+void NLSetWindowShouldClose(Platform* platform);
 
 #endif //NL_PLATFORM_H_
