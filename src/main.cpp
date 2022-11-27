@@ -13,6 +13,7 @@
 #include <nl_renderer.h>
 #include <nl_shader.h>
 #include <nl_timer.h>
+#include <nl_ui.h>
 
 #ifdef __EMSCRIPTEN__
 
@@ -37,7 +38,7 @@ em_run(void* data)
 int 
 main()
 {
-    NLPlatform* platform = CreatePlatform(800, 800, "TEST");
+    Platform* platform = CreatePlatform(800, 800, "TEST");
     
     if (platform == 0) return 1;
     SetGlobalPlatform(platform);
@@ -60,6 +61,8 @@ main()
     {
         return -42069;
     }
+
+    CopyCameraToFrom(&platform->ui.cam, &platform->fw.main_camera);
     
 #ifndef __EMSCRIPTEN__
 
@@ -73,11 +76,13 @@ main()
         #endif
         
         GameUpdate(platform, game_data, delta_time);
+        UpdateUI(&platform->ui, platform);
 
         // Might want to let the sprites render themselves if they are active,
         // Loaded sprites are different than draw sprites, drawn sprites re use loaded sprites
         {
             GameRender(platform, game_data);
+            RenderUI(&platform->ui, &platform->fw.sprite_sheet);
         }
         
         NLSwapBuffers(platform);

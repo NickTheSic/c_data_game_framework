@@ -4,6 +4,7 @@
 
 #include <nl_framework.h>
 #include <nl_input.h>
+#include <nl_ui.h>
 #include <nl_viewport.h>
 
 struct Platform
@@ -22,6 +23,7 @@ struct Platform
 
     Framework fw;
     Input input;
+    UI ui;
     Viewport viewport;
 };
 

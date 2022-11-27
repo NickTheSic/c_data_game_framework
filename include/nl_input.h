@@ -6,7 +6,6 @@
 #include <vector>
 
 // NOTE: I think this immediately falls apart if I start using a vector as the pointer would change
-
 // TODO: Could start defining parameters so I only have to change them in 1 spot
 
 typedef void(*InputActionCallback)(Key key, ButtonState state, void* data);

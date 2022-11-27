@@ -8,6 +8,7 @@
 #include <nl_shader.h>
 #include <nl_spritesheet.h>
 
+// Should the UI be part of the framework?
 struct Framework
 {
     Camera main_camera;

@@ -9,20 +9,14 @@
 #include "nl_shader.cpp"
 #include "nl_spritesheet.cpp"
 #include "nl_timer.cpp"
+#include "nl_ui.cpp"
 #include "nl_viewport.cpp"
 
 // Game
-#ifdef NL_CARD_GAME
-#include "nl_card_game.cpp"
-#else
 #include "nl_game.cpp"
-#endif
-
 
 // Platform
-#ifdef GLFW_PLATFORM_LAYER
-#include "nl_platform_glfw.cpp"
-#elif defined(_WIN32)
+#if defined(_WIN32) || defined(PLATFORM_WINDOWS)
 #include "nl_platform_win32.cpp"
 #elif defined(__EMSCRIPTEN__)
 #include "nl_platform_web.cpp"

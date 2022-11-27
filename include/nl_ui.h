@@ -2,11 +2,14 @@
 #ifndef NL_UI_H_
 #define NL_UI_H_
 
+#include <nl_camera.h>
+#include <nl_math.h>
 #include <nl_utils.h>
 
 typedef void(*ButtonPressCallback)();
 
-enum class ButtonState
+// Name overlaps with the input
+enum class UIButtonState : unsigned char
 {
     Inactive, Hovered, Pressed
 };
@@ -15,40 +18,24 @@ struct Button
 {
     ButtonPressCallback press_callback;
 
+    // are these screen coords or sprite coords?
+    // TODO: figure this out
+    // I would rather have a pos + size instead of this I think
+    // The UI can draw a button as a button from the normal sprite sheet?
     v2f bl_coord;
     v2f ur_coord;
 
-    ButtonState active_state;
+    UIButtonState active_state;
 };
 
-
-//TODO REMOVE this variable once I have a proper way to get the mouse position
-static v2f mouse_pos = {};
-
-void 
-HandleButton(Button* button)
+struct UI
 {
-    switch(button->active_state)
-    {
-        case ButtonState::Inactive:
-        {
-            if (PointInRect(mouse_pos, button->bl_coord, button->ur_coord))
-            {
-                button->active_state == ButtonState::Hovered;
-            }
-        } break;
+    Camera cam;
+    std::vector<Button> buttons;    
+};
 
-        case State::Hovered:
-        {
-            if (!PointInRect(mouse_pos, button->bl_coord, button->ur_coord))
-            {
-                button->active_state == ButtonState::Inactive;
-            }
-            // else Was mouse Pressed?
-            // State = pressed
-            // button->press_callback();
-        } break;
-    }
-}
+void UpdateUI(UI* ui, struct Platform* platform);
+void RenderUI(UI* ui, struct SpriteSheet* sprite_sheet);
+void HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down);
 
 #endif //NL_UI_H_
