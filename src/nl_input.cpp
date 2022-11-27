@@ -91,6 +91,7 @@ HandleAxis(Input* input, float value)
 void 
 HandleMouseButton(Input* input, MouseButton mouse_button, int state)
 {
+    input->mouse_button[(unsigned char)mouse_button] = (ButtonState)state;
     for (auto& callback : input->callbacks.mouse)
     {
         callback.mouse(mouse_button, static_cast<ButtonState>(state), callback.user_data);

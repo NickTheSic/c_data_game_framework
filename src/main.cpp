@@ -62,7 +62,11 @@ main()
         return -42069;
     }
 
-    CopyCameraToFrom(&platform->ui.cam, &platform->fw.main_camera);
+    InitUI(&platform->ui, platform);
+    platform->ui.buttons.push_back({[](){LOG("Button Pressed")}, 
+                                    {0.f,0.f}, 
+                                    {32.f,32.f}, 
+                                    UIButtonState::Inactive});
     
 #ifndef __EMSCRIPTEN__
 
@@ -80,10 +84,12 @@ main()
 
         // Might want to let the sprites render themselves if they are active,
         // Loaded sprites are different than draw sprites, drawn sprites re use loaded sprites
+        SpriteSheetBeginRender(&platform->fw.sprite_sheet);
         {
             GameRender(platform, game_data);
             RenderUI(&platform->ui, &platform->fw.sprite_sheet);
         }
+        SpriteSheetEndRender(&platform->fw.sprite_sheet);
         
         NLSwapBuffers(platform);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

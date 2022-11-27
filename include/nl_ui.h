@@ -4,6 +4,7 @@
 
 #include <nl_camera.h>
 #include <nl_math.h>
+#include <nl_spritesheet.h>
 #include <nl_utils.h>
 
 typedef void(*ButtonPressCallback)();
@@ -11,7 +12,8 @@ typedef void(*ButtonPressCallback)();
 // Name overlaps with the input
 enum class UIButtonState : unsigned char
 {
-    Inactive, Hovered, Pressed
+    Inactive = 0, Hovered, Pressed,
+    COUNT
 };
 
 struct Button
@@ -28,12 +30,18 @@ struct Button
     UIButtonState active_state;
 };
 
+// considering having my own UI sprite sheet
 struct UI
 {
     Camera cam;
+
+    // Rendering Stuff
+    SpriteHandle button_sprites[(unsigned long long)UIButtonState::COUNT];
+
     std::vector<Button> buttons;    
 };
 
+void InitUI(UI* ui, struct Platform* platform);
 void UpdateUI(UI* ui, struct Platform* platform);
 void RenderUI(UI* ui, struct SpriteSheet* sprite_sheet);
 void HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down);

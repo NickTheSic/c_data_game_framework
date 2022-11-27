@@ -5,10 +5,23 @@
 #include <nl_viewport.h>
 
 void 
+InitUI(UI* ui, struct Platform* platform)
+{
+    ui->button_sprites[(unsigned char)UIButtonState::Inactive] = LoadSprite(&platform->fw.sprite_sheet, "data/button_inactive.png");
+    ui->button_sprites[(unsigned char)UIButtonState::Hovered] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
+    ui->button_sprites[(unsigned char)UIButtonState::Pressed] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
+
+    CopyCameraToFrom(&ui->cam, &platform->fw.main_camera);
+}
+
+void 
 UpdateUI(UI* ui, struct Platform* platform)
 {
     v2f mouse_pos = {};
-    GetMouseInViewportWithCamera(&mouse_pos, &platform->viewport, &ui->cam, platform->input.mouse_pos);
+    mouse_pos.x = platform->input.mouse_pos.x;
+    mouse_pos.y = platform->input.mouse_pos.y;
+    
+    //GetMouseInViewportWithCamera(&mouse_pos, &platform->viewport, &ui->cam, platform->input.mouse_pos);
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
 
     for (auto& button : ui->buttons)
@@ -20,7 +33,12 @@ UpdateUI(UI* ui, struct Platform* platform)
 void 
 RenderUI(UI* ui, struct SpriteSheet* sprite_sheet)
 {
-
+    const float UI_TOP_POS = 1.0f;
+    for (auto& button : ui->buttons)
+    {
+        AddSizedSpriteToRender(sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
+                              {button.bl_coord.x, button.bl_coord.y, UI_TOP_POS}, button.ur_coord);
+    }
 }
 
 void 
@@ -59,5 +77,9 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
                 button->press_callback();
             }
         } break;
+
+        case UIButtonState::COUNT:
+        // Intentionally empty to surpress warning
+        break;
     }
 }
