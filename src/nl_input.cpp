@@ -27,7 +27,8 @@ UpdateMouseState(Input* input, MouseButton button, ButtonState state)
     unsigned char mv = (unsigned char)button;
     if (mv < 0 || mv > 3)
     {
-        LOG("Mouse Value was out of range: %d", mv);
+        LOG("Mouse Value was not handled: %d", mv);
+        return; // We don't handle this button
     }
 
     input->mouse_button[mv] = state;

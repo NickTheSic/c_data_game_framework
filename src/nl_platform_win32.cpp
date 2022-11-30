@@ -87,19 +87,19 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_LBUTTONUP:
 		case WM_LBUTTONDOWN:
 		{
-			UpdateMouseState(&platform->input, MouseButton::Left, (wParam&0x0001) ? ButtonState::Up : ButtonState::Down);
+			UpdateMouseState(&platform->input, MouseButton::Left, (wParam&0x0001) ? ButtonState::Down : ButtonState::Up);
 		} break;
 
 		case WM_MBUTTONUP:
 		case WM_MBUTTONDOWN:
 		{
-			UpdateMouseState(&platform->input, MouseButton::Middle, (wParam&0x0010) ? ButtonState::Up : ButtonState::Down);
+			UpdateMouseState(&platform->input, MouseButton::Middle, (wParam&0x0010) ? ButtonState::Down : ButtonState::Up);
 		} break;
 
 		case WM_RBUTTONUP:
 		case WM_RBUTTONDOWN:
 		{
-			UpdateMouseState(&platform->input, MouseButton::Right, (wParam&0x0002) ? ButtonState::Up : ButtonState::Down);
+			UpdateMouseState(&platform->input, MouseButton::Right, (wParam&0x0002) ? ButtonState::Down : ButtonState::Up);
 		} break;
 
         default:

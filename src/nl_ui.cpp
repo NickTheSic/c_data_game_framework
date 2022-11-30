@@ -1,6 +1,7 @@
 #include <nl_ui.h>
 #include <nl_input.h>
 #include <nl_platform.h>
+#include <nl_shader.h>
 #include <nl_spritesheet.h>
 #include <nl_viewport.h>
 
@@ -22,11 +23,20 @@ UpdateUI(UI* ui, struct Platform* platform)
     mouse_pos.y = platform->input.mouse_pos.y;
     
     //GetMouseInViewportWithCamera(&mouse_pos, &platform->viewport, &ui->cam, platform->input.mouse_pos);
+
+    //  Might need a Down/Pressed/Released state instead of just down or up
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
 
     for (auto& button : ui->buttons)
     {
-        HandleButton(&button, mouse_pos, mouse_down);
+        if (!HandleButton(&button, mouse_pos, mouse_down))
+        {
+            continue;
+        }
+        else
+        {
+            break;
+        }
     }
 }
 
@@ -41,9 +51,10 @@ RenderUI(UI* ui, struct SpriteSheet* sprite_sheet)
     }
 }
 
-void 
+bool  
 HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 {
+    bool mouse_handled = false;
     switch(button->active_state)
     {
         case UIButtonState::Inactive:
@@ -51,6 +62,7 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
             if (PointInRect(mouse_pos, button->bl_coord, button->ur_coord))
             {
                 button->active_state = UIButtonState::Hovered;
+                mouse_handled = true;
             }
         } break;
 
@@ -63,6 +75,7 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
             else if (mouse_button_down)
             {
                 button->active_state = UIButtonState::Pressed;
+                mouse_handled = true;
             }
         } break;
 
@@ -74,12 +87,21 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
             }
             else if (!mouse_button_down)
             {
-                button->press_callback();
+                button->active_state = UIButtonState::Released;
+                mouse_handled = true;
             }
+        } break;
+
+        case UIButtonState::Released:
+        {
+            button->active_state = UIButtonState::Inactive;
+            mouse_handled = true;
         } break;
 
         case UIButtonState::COUNT:
         // Intentionally empty to surpress warning
         break;
     }
+
+    return mouse_handled;
 }
