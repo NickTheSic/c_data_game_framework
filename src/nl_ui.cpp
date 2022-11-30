@@ -1,4 +1,5 @@
 #include <nl_ui.h>
+#include <nl_framework.h>
 #include <nl_input.h>
 #include <nl_platform.h>
 #include <nl_shader.h>
@@ -22,7 +23,9 @@ UpdateUI(UI* ui, struct Platform* platform)
     mouse_pos.x = platform->input.mouse_pos.x;
     mouse_pos.y = platform->input.mouse_pos.y;
     
-    //GetMouseInViewportWithCamera(&mouse_pos, &platform->viewport, &ui->cam, platform->input.mouse_pos);
+    Camera& cam = platform->fw.main_camera;
+    //Camera& cam = ui->cam;
+    GetMouseInViewportWithCamera(&mouse_pos, &platform->viewport, &cam, platform->input.mouse_pos);
 
     //  Might need a Down/Pressed/Released state instead of just down or up
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
@@ -41,12 +44,12 @@ UpdateUI(UI* ui, struct Platform* platform)
 }
 
 void 
-RenderUI(UI* ui, struct SpriteSheet* sprite_sheet)
+RenderUI(UI* ui,  struct Framework* fw)
 {
     const float UI_TOP_POS = 1.0f;
     for (auto& button : ui->buttons)
     {
-        AddSizedSpriteToRender(sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
+        AddSizedSpriteToRender(&fw->sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
                               {button.bl_coord.x, button.bl_coord.y, UI_TOP_POS}, button.ur_coord);
     }
 }

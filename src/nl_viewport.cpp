@@ -5,6 +5,8 @@ UpdateScreenSize(Viewport* viewport, int sx, int sy)
 {
     viewport->screen_size.x = sx;
     viewport->screen_size.y = sy;
+    
+    //Are't used anywhere else at the moment
     viewport->screen_center.x = sx >> 2;
     viewport->screen_center.y = sy >> 2;
 }

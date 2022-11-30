@@ -91,7 +91,7 @@ main()
         SpriteSheetBeginRender(&platform->fw.sprite_sheet);
         {
             GameRender(platform, game_data);
-            RenderUI(&platform->ui, &platform->fw.sprite_sheet);
+            RenderUI(&platform->ui, &platform->fw);
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
         

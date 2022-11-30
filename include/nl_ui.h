@@ -7,6 +7,10 @@
 #include <nl_spritesheet.h>
 #include <nl_utils.h>
 
+// Not very immediate mode UI
+// Might want a 'do_button' function that makes and handles a button 
+// Also need to add the 'hot item', mainly for controller support
+
 typedef void(*ButtonPressCallback)();
 
 // Name overlaps with the input
@@ -43,7 +47,8 @@ struct UI
 
 void InitUI(UI* ui, struct Platform* platform);
 void UpdateUI(UI* ui, struct Platform* platform);
-void RenderUI(UI* ui, struct SpriteSheet* sprite_sheet);
+
+void RenderUI(UI* ui, struct Framework* fw);
 
 bool HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down);
 
