@@ -6,7 +6,7 @@
 
 // TODO: Note, this is no longer bottom left and upper right as I am trying to make it 'just work'
 // Refactor in the future
-static inline bool 
+static inline bool      // origin        size
 PointInRect(v2f point, v2f bl_coord, v2f ur_coord)
 {
     const bool ContainedWithin = 
