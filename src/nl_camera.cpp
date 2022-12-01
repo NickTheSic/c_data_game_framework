@@ -12,6 +12,16 @@ CreateViewMatrixFollow(Camera* camera,
     CreateOrtho(camera->view, left, right, bottom, top, 0.0f, 100.0f); 
 }
 
+void 
+GetMousePosInCamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
+{
+    const float camera_size_x = camera->size.x*2;
+    const float camera_size_y = camera->size.y*2;
+
+    out_pos->x = ((static_cast<float>(mouse_pos.x) - camera_size_x) * 0.5f);
+    out_pos->y = ((static_cast<float>(mouse_pos.y) - camera_size_y) * 0.5f);
+}
+
 void CopyCameraToFrom(Camera* cam1, Camera* cam2)
 {
     cam1->view.m11 = cam2->view.m11;  cam1->view.m12 = cam2->view.m12;  

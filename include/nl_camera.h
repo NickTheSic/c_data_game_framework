@@ -13,6 +13,8 @@ struct Camera
 // Regular camera to follow a position passed in
 void CreateViewMatrixFollow(Camera* camera, const v3f& position);
 
+void GetMousePosInCamera(Camera* camera, v2f* out_pos, v2i mouse_pos);
+
 // Possibly debug so I can copy cam2 into cam1
 void CopyCameraToFrom(Camera* cam1, Camera* cam2);
 

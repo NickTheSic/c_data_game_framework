@@ -22,10 +22,8 @@ UpdateUI(UI* ui, struct Platform* platform)
     v2f mouse_pos = {};
     mouse_pos.x = platform->input.mouse_pos.x;
     mouse_pos.y = platform->input.mouse_pos.y;
-    
-    Camera& cam = platform->fw.main_camera;
-    //Camera& cam = ui->cam;
-    GetMouseInViewportWithCamera(&mouse_pos, &platform->viewport, &cam, platform->input.mouse_pos);
+
+    GetMousePosInCamera(&ui->cam, &mouse_pos, platform->input.mouse_pos);
 
     //  Might need a Down/Pressed/Released state instead of just down or up
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
@@ -46,6 +44,8 @@ UpdateUI(UI* ui, struct Platform* platform)
 void 
 RenderUI(UI* ui,  struct Framework* fw)
 {
+    SetUniform(&fw->shader, "view", ui->cam.view);
+
     const float UI_TOP_POS = 1.0f;
     for (auto& button : ui->buttons)
     {
