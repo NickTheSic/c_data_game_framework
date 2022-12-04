@@ -24,17 +24,15 @@ struct Button
 {
     ButtonPressCallback press_callback;
 
-    // are these screen coords or sprite coords?
-    // TODO: figure this out
-    // I would rather have a pos + size instead of this I think
-    // The UI can draw a button as a button from the normal sprite sheet?
-    v2f bl_coord; // Make a position - doesn't need to be 3d though
-    v2f ur_coord;
+    // Currently a Rectangle like the sprites
+    v2f origin; 
+    v2f size; 
 
     UIButtonState active_state;
 };
 
-// considering having my own UI sprite sheet
+// considering having my own UI sprite sheet as I may need a UI shader
+// Can handle screen size separate than game size
 struct UI
 {
     Camera cam;

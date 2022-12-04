@@ -28,6 +28,7 @@ UpdateUI(UI* ui, struct Platform* platform)
     //  Might need a Down/Pressed/Released state instead of just down or up
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
 
+    // Can find mouse pos and loop through only the buttons that are near?
     for (auto& button : ui->buttons)
     {
         if (!HandleButton(&button, mouse_pos, mouse_down))
@@ -50,7 +51,7 @@ RenderUI(UI* ui,  struct Framework* fw)
     for (auto& button : ui->buttons)
     {
         AddSizedSpriteToRender(&fw->sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
-                              {button.bl_coord.x, button.bl_coord.y, UI_TOP_POS}, button.ur_coord);
+                              {button.origin.x, button.origin.y, UI_TOP_POS}, button.size);
     }
 }
 
@@ -62,7 +63,7 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
     {
         case UIButtonState::Inactive:
         {
-            if (PointInRect(mouse_pos, button->bl_coord, button->ur_coord))
+            if (PointInRect(mouse_pos, button->origin, button->size))
             {
                 button->active_state = UIButtonState::Hovered;
                 mouse_handled = true;
@@ -71,7 +72,7 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 
         case UIButtonState::Hovered:
         {
-            if (!PointInRect(mouse_pos, button->bl_coord, button->ur_coord))
+            if (!PointInRect(mouse_pos, button->origin, button->size))
             {
                 button->active_state = UIButtonState::Inactive;
             }
@@ -84,7 +85,7 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 
         case UIButtonState::Pressed:
         {
-            if (!PointInRect(mouse_pos, button->bl_coord, button->ur_coord))
+            if (!PointInRect(mouse_pos, button->origin, button->size))
             {
                 button->active_state = UIButtonState::Inactive;
             }
