@@ -2,9 +2,24 @@
 #include <nl_framework.h>
 #include <nl_input.h>
 #include <nl_platform.h>
+#include <nl_math.h>
 #include <nl_shader.h>
 #include <nl_spritesheet.h>
 #include <nl_viewport.h>
+
+static void 
+InitUICamera(UI* ui, const v2f& size)
+{
+    ui->cam.size.x = size.x;
+    ui->cam.size.y = size.y;
+    
+    const float left   = 0.f;
+    const float right  = ui->cam.size.x;
+    const float bottom = 0.f;
+    const float top    = ui->cam.size.y;
+
+    CreateOrtho(ui->cam.view, left, right, bottom, top, 0.0f, 100.0f); 
+}
 
 void 
 InitUI(UI* ui, struct Platform* platform)
@@ -13,7 +28,7 @@ InitUI(UI* ui, struct Platform* platform)
     ui->button_sprites[(unsigned char)UIButtonState::Hovered] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
     ui->button_sprites[(unsigned char)UIButtonState::Pressed] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
 
-    CopyCameraToFrom(&ui->cam, &platform->fw.main_camera);
+    InitUICamera(ui, {480.f, 480.f});
 }
 
 void 

@@ -64,7 +64,7 @@ main()
 
     InitUI(&platform->ui, platform);
     platform->ui.buttons.push_back({[](){LOG("Button 1 Pressed\n")}, 
-                                    {0.f,0.f}, 
+                                    {0.f,400.f}, 
                                     {32.f,32.f}, 
                                     UIButtonState::Inactive});
     
