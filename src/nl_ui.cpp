@@ -98,6 +98,10 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 
         case UIButtonState::Released:
         {
+            if (button->press_callback)
+            {
+                button->press_callback();
+            }
             button->active_state = UIButtonState::Inactive;
             mouse_handled = true;
         } break;
