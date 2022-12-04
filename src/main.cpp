@@ -67,10 +67,6 @@ main()
                                     {0.f,0.f}, 
                                     {32.f,32.f}, 
                                     UIButtonState::Inactive});
-    platform->ui.buttons.push_back({[](){LOG("Button 2 Pressed\n")}, 
-                                    {36.f,0.f}, 
-                                    {32.f,32.f}, 
-                                    UIButtonState::Inactive});
     
 #ifndef __EMSCRIPTEN__
 
@@ -94,6 +90,7 @@ main()
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
         
+        // UI Rendering, Calling begin and end so that I draw on the correct camera
         SpriteSheetBeginRender(&platform->fw.sprite_sheet);
         {
             RenderUI(&platform->ui, &platform->fw);
