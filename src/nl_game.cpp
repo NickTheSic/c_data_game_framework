@@ -42,6 +42,8 @@ GameUpdate(Platform* platform, GameData* data, float delta_time)
 {
     data->player_velocty.x = data->player_velocty.y = 0.f;
 
+    const float Speed = 100.f;
+
     if (platform->input.keys[(int)Key::W] == ButtonState::Down)
         data->player_velocty.y = 1.f;
     if (platform->input.keys[(int)Key::S] == ButtonState::Down)
@@ -51,8 +53,12 @@ GameUpdate(Platform* platform, GameData* data, float delta_time)
     if (platform->input.keys['D'] == ButtonState::Down)
         data->player_velocty.x = 1.f;
 
-    data->player_pos.x += data->player_velocty.x * delta_time;
-    data->player_pos.y += data->player_velocty.y * delta_time;
+    data->player_pos.x += data->player_velocty.x * Speed * delta_time;
+    data->player_pos.y += data->player_velocty.y * Speed * delta_time;
+
+
+    CreateViewMatrixFollow(&platform->fw.main_camera, data->player_pos);
+
 }
 
 void 

@@ -7,9 +7,7 @@
 #include <nl_spritesheet.h>
 #include <nl_utils.h>
 
-// Not very immediate mode UI
-// Might want a 'do_button' function that makes and handles a button 
-// Also need to add the 'hot item', mainly for controller support
+// Not very immediate mode UI, which is what I originally wanted
 
 typedef void(*ButtonPressCallback)(/*void* user_data*/);
 
