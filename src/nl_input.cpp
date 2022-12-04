@@ -8,8 +8,7 @@ UpdateMousePosition(Input* input, int mouse_x, int mouse_y)
     input->prev_mouse_pos.y = input->mouse_pos.y;
     input->mouse_pos.x = mouse_x;
     input->mouse_pos.y = mouse_y;
-
-    LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
+    //LOG("MX: %d,MY: %d\n", mouse_x, mouse_y);
 }
 
 void 

@@ -11,7 +11,7 @@
 // Might want a 'do_button' function that makes and handles a button 
 // Also need to add the 'hot item', mainly for controller support
 
-typedef void(*ButtonPressCallback)();
+typedef void(*ButtonPressCallback)(/*void* user_data*/);
 
 // Name overlaps with the input
 enum class UIButtonState : unsigned char
@@ -23,6 +23,7 @@ enum class UIButtonState : unsigned char
 struct Button
 {
     ButtonPressCallback press_callback;
+    // void* user_data;
 
     // Currently a Rectangle like the sprites
     v2f origin; 

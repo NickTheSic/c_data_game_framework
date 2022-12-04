@@ -108,6 +108,7 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 
         case UIButtonState::COUNT:
         // Intentionally empty to surpress warning
+        // Could do the pragma scope to surpress file warning
         break;
     }
 
