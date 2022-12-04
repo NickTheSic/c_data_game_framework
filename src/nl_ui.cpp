@@ -42,6 +42,14 @@ InitUI(UI* ui, struct Platform* platform)
     ui->button_sprites[(unsigned char)UIButtonState::Hovered] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
     ui->button_sprites[(unsigned char)UIButtonState::Pressed] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
 
+    char letter_filepaths[] = "data/font/#.png"; // 10th should be replaceable
+    for (char i = START_FONT_CHARACTERS; i < END_FONT_CHARACTERS; ++i)
+    {
+        letter_filepaths[10] = i;
+        LOG("%s", letter_filepaths);
+        LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
+    }
+
     InitUICamera(ui, {480.f, 480.f});
 }
 

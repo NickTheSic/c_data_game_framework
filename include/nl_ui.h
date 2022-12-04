@@ -30,6 +30,19 @@ struct Button
     UIButtonState active_state;
 };
 
+/*
+TODO: NOTES: Ascii 
+Space = 32 
+0 = 40
+A = 65
+a = 97
+z = 122 
+
+*/
+
+static const char START_FONT_CHARACTERS = ' ';
+static const char END_FONT_CHARACTERS = 'z';
+
 // considering having my own UI sprite sheet as I may need a UI shader
 // Can handle screen size separate than game size
 struct UI
@@ -38,6 +51,10 @@ struct UI
 
     // Rendering Stuff
     SpriteHandle button_sprites[(unsigned long long)UIButtonState::COUNT];
+
+    // Hold all the sprites for the letters of the alphabet
+    // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?
+    SpriteHandle letter_sprites[(unsigned long long)(END_FONT_CHARACTERS - START_FONT_CHARACTERS)];
 
     std::vector<Button> buttons;    
 };
