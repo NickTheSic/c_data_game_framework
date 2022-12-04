@@ -7,6 +7,7 @@
 #include <nl_spritesheet.h>
 #include <nl_viewport.h>
 
+// Make this a camera functuion?
 static void 
 InitUICamera(UI* ui, const v2f& size)
 {
@@ -19,6 +20,19 @@ InitUICamera(UI* ui, const v2f& size)
     const float top    = ui->cam.size.y;
 
     CreateOrtho(ui->cam.view, left, right, bottom, top, 0.0f, 100.0f); 
+}
+
+//TODO: This is wrong, as I made an original assumptionabout how my cameras were going to work
+static void
+GetMousePosInUICamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
+{
+    const float camera_size_x = camera->size.x;
+    const float camera_size_y = camera->size.y;
+
+    out_pos->x = ((static_cast<float>(mouse_pos.x) + camera_size_x) * 0.5f);
+    out_pos->y = ((static_cast<float>(mouse_pos.y) - camera_size_y) * 0.5f);
+
+    LOG("Mouse In Camera X: %f, Y: %f", out_pos->x, out_pos->y);
 }
 
 void 
@@ -38,7 +52,7 @@ UpdateUI(UI* ui, struct Platform* platform)
     mouse_pos.x = platform->input.mouse_pos.x;
     mouse_pos.y = platform->input.mouse_pos.y;
 
-    GetMousePosInCamera(&ui->cam, &mouse_pos, platform->input.mouse_pos);
+    GetMousePosInUICamera(&ui->cam, &mouse_pos, platform->input.mouse_pos);
 
     //  Might need a Down/Pressed/Released state instead of just down or up
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;

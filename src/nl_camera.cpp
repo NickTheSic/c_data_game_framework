@@ -20,6 +20,8 @@ GetMousePosInCamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
 
     out_pos->x = ((static_cast<float>(mouse_pos.x) - camera_size_x) * 0.5f);
     out_pos->y = ((static_cast<float>(mouse_pos.y) - camera_size_y) * 0.5f);
+
+    LOG("Mouse In Camera X: %f, Y: %f", out_pos->x, out_pos->y);
 }
 
 void CopyCameraToFrom(Camera* cam1, Camera* cam2)

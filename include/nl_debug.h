@@ -22,7 +22,7 @@ static const char* GREEN_CONSOLE_TEXT = "\33[32m";
 #endif
 #ifndef LOG
 #define LOG(m, ...) fprintf(stdout, "%s %s line: %d -%s-  ", YELLOW_CONSOLE_TEXT, __FILE__, __LINE__, WHITE_CONSOLE_TEXT); \
-                    fprintf(stdout, m,##__VA_ARGS__);
+                    fprintf(stdout, m,##__VA_ARGS__); fprintf(stdout, "\n");
 #endif
 
 #endif //NL_DEBUG_H
