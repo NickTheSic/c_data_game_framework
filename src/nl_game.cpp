@@ -24,7 +24,7 @@ GameData*
 GameInitialize(Platform* platform)
 {
     GameData* data = new GameData();
-    InitializeFramework(&platform->fw, {1024,512}, {200.f, 200.f}, {0.0f, 0.0f, 0.0f}, 12);
+    InitializeFramework(&platform->fw, {512,512}, {200.f, 200.f}, {0.0f, 0.0f, 0.0f}, 30);
 
     data->player_pos.x = 0.f;
     data->player_pos.y = 0.f;
@@ -66,6 +66,8 @@ GameRender(Platform* platform, GameData* data)
 { 
     SetUniform(&platform->fw.shader, "view", platform->fw.main_camera.view);
     AddSpriteToRender(&platform->fw.sprite_sheet, data->player_sprite, data->player_pos);
+
+    DisplayEntireSheet(&platform->fw.sprite_sheet, {-100.0f, 100.f, 0.0f}, {256.f,128.f});
 }
 
 void

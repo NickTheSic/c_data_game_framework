@@ -94,6 +94,7 @@ main()
         SpriteSheetBeginRender(&platform->fw.sprite_sheet);
         {
             RenderUI(&platform->ui, &platform->fw);
+            DrawText(&platform->ui, &platform->fw, "hello world!", {0.f, 250.f}, {16.f,16.f});
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
         

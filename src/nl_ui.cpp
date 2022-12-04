@@ -7,6 +7,8 @@
 #include <nl_spritesheet.h>
 #include <nl_viewport.h>
 
+static const float UI_TOP_POS = 1.0f;
+
 // Make this a camera functuion?
 static void 
 InitUICamera(UI* ui, const v2f& size)
@@ -41,6 +43,7 @@ InitUI(UI* ui, struct Platform* platform)
     ui->button_sprites[(unsigned char)UIButtonState::Inactive] = LoadSprite(&platform->fw.sprite_sheet, "data/button_inactive.png");
     ui->button_sprites[(unsigned char)UIButtonState::Hovered] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
     ui->button_sprites[(unsigned char)UIButtonState::Pressed] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
+    ui->error_sprite = LoadSprite(&platform->fw.sprite_sheet, "data/err.png");
 
     char letter_filepaths[] = "data/font/#.png"; // 10th should be replaceable
     for (char i = START_FONT_CHARACTERS; i <= END_FONT_CHARACTERS; ++i)
@@ -93,7 +96,6 @@ RenderUI(UI* ui,  struct Framework* fw)
 
     DisplayEntireSheet(&fw->sprite_sheet, {0.0f, 100.f, 0.0f}, {256.f,128.f});
 
-    const float UI_TOP_POS = 1.0f;
     for (auto& button : ui->buttons)
     {
         AddSizedSpriteToRender(&fw->sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
@@ -162,7 +164,41 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 }
 
 void
-DrawText(UI* ui, const char* text, const v2f& pos, const v2f& font_size)
+DrawText(UI* ui, struct Framework* fw, const char* text, const v2f& pos, const v2f& font_size)
 {
-    
+    char c = text[0];
+    int count = 0;
+
+    while (c != '\0')
+    {
+        SpriteHandle sprite = INVALID_SPRITE_HANDLE;
+
+        if (c == ' ')
+        {
+            c = text[++count];
+            continue;
+        }
+
+        if (c > START_NUMBER_CHARACTER && c < END_NUMBER_CHARACTER)
+        {
+            sprite = ui->number_sprites[(unsigned long long)c - START_NUMBER_CHARACTER];
+        }
+        else if (c > START_FONT_CHARACTERS && c < END_FONT_CHARACTERS)
+        {
+            sprite = ui->letter_sprites[(unsigned long long)c - START_FONT_CHARACTERS];
+        }
+        else
+        {
+            sprite = ui->error_sprite;
+        }
+
+        v3f render_pos;
+        render_pos.x = pos.x + (font_size.x * count);
+        render_pos.y = pos.y;
+        render_pos.z = UI_TOP_POS;
+
+        AddSizedSpriteToRender(&fw->sprite_sheet, sprite, render_pos, font_size);
+
+        c = text[++count];
+    }
 }

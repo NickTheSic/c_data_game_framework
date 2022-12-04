@@ -59,6 +59,7 @@ struct UI
     // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?
     SpriteHandle letter_sprites[(unsigned long long)(END_FONT_CHARACTERS - START_FONT_CHARACTERS)+1];
     SpriteHandle number_sprites[(unsigned long long)(END_NUMBER_CHARACTER - START_NUMBER_CHARACTER)+1];
+    SpriteHandle error_sprite;
 
     std::vector<Button> buttons;    
 };
@@ -69,6 +70,6 @@ void UpdateUI(UI* ui, struct Platform* platform);
 void RenderUI(UI* ui, struct Framework* fw);
 
 bool HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down);
-void DrawText(UI* ui, const char* text, const v2f& pos, const v2f& font_size);
+void DrawText(UI* ui, struct Framework* fw, const char* text, const v2f& pos, const v2f& font_size);
 
 #endif //NL_UI_H_
