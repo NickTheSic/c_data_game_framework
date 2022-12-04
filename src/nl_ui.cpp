@@ -57,7 +57,7 @@ InitUI(UI* ui, struct Platform* platform)
         ui->number_sprites[i - START_NUMBER_CHARACTER] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
     }
 
-    InitUICamera(ui, {480.f, 480.f});
+    InitUICamera(ui, {512.f, 512.f});
 }
 
 void 
@@ -90,6 +90,8 @@ void
 RenderUI(UI* ui,  struct Framework* fw)
 {
     SetUniform(&fw->shader, "view", ui->cam.view);
+
+    DisplayEntireSheet(&fw->sprite_sheet, {0.0f, 100.f, 0.0f}, {256.f,128.f});
 
     const float UI_TOP_POS = 1.0f;
     for (auto& button : ui->buttons)
@@ -157,4 +159,10 @@ HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
     }
 
     return mouse_handled;
+}
+
+void
+DrawText(UI* ui, const char* text, const v2f& pos, const v2f& font_size)
+{
+    
 }

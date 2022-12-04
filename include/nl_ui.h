@@ -69,5 +69,6 @@ void UpdateUI(UI* ui, struct Platform* platform);
 void RenderUI(UI* ui, struct Framework* fw);
 
 bool HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down);
+void DrawText(UI* ui, const char* text, const v2f& pos, const v2f& font_size);
 
 #endif //NL_UI_H_

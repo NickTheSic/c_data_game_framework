@@ -66,8 +66,6 @@ GameRender(Platform* platform, GameData* data)
 { 
     SetUniform(&platform->fw.shader, "view", platform->fw.main_camera.view);
     AddSpriteToRender(&platform->fw.sprite_sheet, data->player_sprite, data->player_pos);
-
-    DisplayEntireSheet(&platform->fw.sprite_sheet, {0.0f, 100.f, 0.0f}, {256.f,256.f});
 }
 
 void
