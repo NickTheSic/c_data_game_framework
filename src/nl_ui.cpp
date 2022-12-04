@@ -32,7 +32,7 @@ GetMousePosInUICamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
     out_pos->x = ((static_cast<float>(mouse_pos.x) + camera_size_x) * 0.5f);
     out_pos->y = ((static_cast<float>(mouse_pos.y) - camera_size_y) * 0.5f);
 
-    LOG("Mouse In Camera X: %f, Y: %f", out_pos->x, out_pos->y);
+    //LOG("Mouse In Camera X: %f, Y: %f", out_pos->x, out_pos->y);
 }
 
 void 
@@ -43,11 +43,18 @@ InitUI(UI* ui, struct Platform* platform)
     ui->button_sprites[(unsigned char)UIButtonState::Pressed] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
 
     char letter_filepaths[] = "data/font/#.png"; // 10th should be replaceable
-    for (char i = START_FONT_CHARACTERS; i < END_FONT_CHARACTERS; ++i)
+    for (char i = START_FONT_CHARACTERS; i <= END_FONT_CHARACTERS; ++i)
     {
         letter_filepaths[10] = i;
         LOG("%s", letter_filepaths);
-        LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
+        ui->letter_sprites[i-START_FONT_CHARACTERS] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
+    }
+
+    for (char i = START_NUMBER_CHARACTER; i <= END_NUMBER_CHARACTER; ++i)
+    {
+        letter_filepaths[10] = i;
+        LOG("%s", letter_filepaths);
+        ui->number_sprites[i - START_NUMBER_CHARACTER] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
     }
 
     InitUICamera(ui, {480.f, 480.f});
