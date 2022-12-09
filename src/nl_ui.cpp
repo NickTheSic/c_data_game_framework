@@ -28,13 +28,10 @@ InitUICamera(UI* ui, const v2f& size)
 static void
 GetMousePosInUICamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
 {
-    const float camera_size_x = 0;// camera->size.x;
-    const float camera_size_y = 0;// camera->size.y;
-
-    out_pos->x = ((static_cast<float>(mouse_pos.x)));
-    out_pos->y = ((static_cast<float>(mouse_pos.y)));
-
-    //LOG("Mouse In Camera X: %f, Y: %f", out_pos->x, out_pos->y);
+    // Only really need to use the mouse pos for the UI.
+    // It could be ideal to do it this way for the UI as the UI should always be the screen size
+    out_pos->x = static_cast<float>(mouse_pos.x);
+    out_pos->y = static_cast<float>(mouse_pos.y);
 }
 
 void 
@@ -110,9 +107,7 @@ bool
 HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 {
     bool mouse_handled = false;
-
-    LOG("Mouse: %f, %f", mouse_pos.x, mouse_pos.y);
-
+    
     switch(button->active_state)
     {
         case UIButtonState::Inactive:

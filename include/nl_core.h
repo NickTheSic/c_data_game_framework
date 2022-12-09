@@ -22,4 +22,15 @@
 #include <nl_utils.h>
 #include <nl_viewport.h>
 
+struct Core
+{
+    struct Platform* platform;
+    struct Input* input;
+    struct Framework* framework;
+
+    struct GameData* game;
+
+    struct UI* active_ui;
+};
+
 #endif //NL_CORE_H_

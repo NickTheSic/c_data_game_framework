@@ -37,7 +37,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 		case WM_CREATE:
 		{
 			LPCREATESTRUCT pcs = (LPCREATESTRUCT)lParam;
-			platform = (Platform*)pcs->lpCreateParams;
+			platform = static_cast<Platform*>(pcs->lpCreateParams);
 			SetWindowLongPtr(window, GWLP_USERDATA, (LONG_PTR)(platform));
 			result = DefWindowProc(window, msg, wParam, lParam);
 		} break;
