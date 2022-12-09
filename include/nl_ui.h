@@ -64,6 +64,8 @@ struct UI
     // Might as well have an error sprite
     SpriteHandle error_sprite;
 
+    // TODO: If everything is a sprite I could change this around to not be a vector of 1 type
+    // But instead make it a array of all UI elements, and then have them draw the ones that need to be active
     // UI Elements
     std::vector<Button> buttons;    
 };
