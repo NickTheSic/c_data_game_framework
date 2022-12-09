@@ -64,7 +64,7 @@ GameUpdate(Platform* platform, GameData* data, float delta_time)
 void 
 GameRender(Platform* platform, GameData* data)
 { 
-    SetUniform(&platform->fw.shader, "view", platform->fw.main_camera.view);
+    SetViewUniform(&platform->fw.shader, platform->fw.main_camera.view);
     AddSpriteToRender(&platform->fw.sprite_sheet, data->player_sprite, data->player_pos);
 
     DisplayEntireSheet(&platform->fw.sprite_sheet, {-100.0f, 100.f, 0.0f}, {256.f,128.f});

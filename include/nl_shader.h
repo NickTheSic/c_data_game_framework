@@ -9,11 +9,11 @@
 struct Shader
 {
     unsigned int program;
-    std::map<std::string, unsigned int> uniform_locs; 
+
+    unsigned int view_uniform = -1;
 };
 
-void SetUniform(Shader* shader, const char* name, float val);
-void SetUniform(Shader* shader, const char* name, const mat4f& val);
+void SetViewUniform(Shader* shader, const mat4f& val);
 
 void CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode);
 void CompileSpriteShaderProgram(struct Renderer* renderer);

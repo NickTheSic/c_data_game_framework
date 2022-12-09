@@ -4,35 +4,54 @@
 #include <nl_math.h>
 #include <nl_renderer.h>
 
-static int GetUniformLocation(Shader* shader, std::string name)
-{
-    auto it = shader->uniform_locs.find(name);
+// Keeping around for reference.  I do like using a map and shader, but I don't need this for now
+// In the future I could make my own map or come back to this, but for now I only have specific uniforms I use
+//static int 
+//GetUniformLocation(Shader* shader, std::string name)
+//{
+//    auto it = shader->uniform_locs.find(name);
+//
+//    if (it == shader->uniform_locs.end())
+//    {
+//        shader->uniform_locs[name] = glGetUniformLocation(shader->program, name.c_str());
+//    }
+//
+//    return shader->uniform_locs[name];
+//}
+//
+//void 
+//SetUniform(Shader* shader, const char* name, float val)
+//{
+//    int loc = GetUniformLocation(shader, name);
+//    glUniform1f(loc, val);
+//}
+//
+//void 
+//SetUniform(Shader* shader, const char* name, const mat4f& val)
+//{
+//    int loc = GetUniformLocation(shader, name);
+//
+//    #ifndef USE_GLM_MATH
+//    glUniformMatrix4fv(loc,1, GL_FALSE, &val.m11);
+//    #else
+//    glUniformMatrix4fv(loc,1, GL_FALSE, glm::value_ptr(val));
+//    #endif
+//}
 
-    if (it == shader->uniform_locs.end())
+void 
+SetViewUniform(Shader* shader, const mat4f& val)
+{
+    // TODO: Initialize this somewhere?  Don't need to check if set if we just set it elsewhere
+    if (shader->view_uniform == -1)
     {
-        shader->uniform_locs[name] = glGetUniformLocation(shader->program, name.c_str());
+        // Could make "view" a constant somewhere in case I decide to change it
+        shader->view_uniform = glGetUniformLocation(shader->program, "view");
     }
 
-    return shader->uniform_locs[name];
+    glUniformMatrix4fv(shader->view_uniform, 1, GL_FALSE, &val.m11);
+
+    // hypothetically, if I brought back the old way I can just call it directly here
 }
-
-void SetUniform(Shader* shader, const char* name, float val)
-{
-    int loc = GetUniformLocation(shader, name);
-    glUniform1f(loc, val);
-}
-
-void SetUniform(Shader* shader, const char* name, const mat4f& val)
-{
-    int loc = GetUniformLocation(shader, name);
-
-    #ifndef USE_GLM_MATH
-    glUniformMatrix4fv(loc,1, GL_FALSE, &val.m11);
-    #else
-    glUniformMatrix4fv(loc,1, GL_FALSE, glm::value_ptr(val));
-    #endif
-}
-
 
 void
 CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCode)

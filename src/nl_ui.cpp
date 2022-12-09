@@ -92,7 +92,7 @@ UpdateUI(UI* ui, struct Platform* platform)
 void 
 RenderUI(UI* ui,  struct Framework* fw)
 {
-    SetUniform(&fw->shader, "view", ui->cam.view);
+    SetViewUniform(&fw->shader, ui->cam.view);
 
     DisplayEntireSheet(&fw->sprite_sheet, {0.0f, 100.f, 0.0f}, {256.f,128.f});
 
@@ -107,7 +107,7 @@ bool
 HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 {
     bool mouse_handled = false;
-    
+
     switch(button->active_state)
     {
         case UIButtonState::Inactive:

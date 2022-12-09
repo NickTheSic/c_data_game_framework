@@ -11,7 +11,8 @@ InitializeFramework(Framework* fw, v2i sheet_size, v2f camera_size, v3f starting
     CreateViewMatrixFollow(&fw->main_camera, starting_camera_position);
     CompileSpriteShaderProgram(&fw->sprite_sheet.renderer);
     fw->shader.program = fw->sprite_sheet.renderer.shader_program;
-    SetUniform(&fw->shader, "view", fw->main_camera.view);
+    //SetUniform(&fw->shader, "view", fw->main_camera.view);
+    SetViewUniform(&fw->shader, fw->main_camera.view);
 }
 
 void
