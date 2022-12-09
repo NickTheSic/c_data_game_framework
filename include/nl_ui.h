@@ -32,18 +32,6 @@ enum class UIButtonState : unsigned char
     COUNT
 };
 
-struct _Button
-{
-    ButtonPressCallback press_callback;
-    // void* user_data;
-
-    // Currently a Rectangle like the sprites
-    v2f origin; 
-    v2f size; 
-
-    UIButtonState active_state;
-};
-
 // Basically a sprite
 struct UIElement
 {
@@ -53,25 +41,32 @@ struct UIElement
     SpriteHandle sprite;
 };
 
+struct UISprites
+{
+    // All buttons use the same 3 sprites
+    SpriteHandle buttons[(unsigned long long)UIButtonState::COUNT];
+
+    // Hold all the sprites for the letters of the alphabet
+    // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?
+    SpriteHandle letters[(unsigned long long)(END_FONT_CHARACTERS - START_FONT_CHARACTERS)+1];
+    SpriteHandle numbers[(unsigned long long)(END_NUMBER_CHARACTER - START_NUMBER_CHARACTER)+1];
+    //TODO: Add
+    SpriteHandle punctuation[1];
+
+    // Might as well have an error sprite
+    SpriteHandle error_sprite;
+};
+
 // Would Like a better way to handle the sprite sheet.  We need to end the draw call to switch to the UI anyway.
 // Passing around a sprite sheet is a lot, but I could have multiple textures bound to the one.  All stuff to consider
 struct UI
 {
     Camera cam;
 
-    // All buttons use the same 3 sprites
-    SpriteHandle button_sprites[(unsigned long long)UIButtonState::COUNT];
-
-    // Hold all the sprites for the letters of the alphabet
-    // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?
-    SpriteHandle letter_sprites[(unsigned long long)(END_FONT_CHARACTERS - START_FONT_CHARACTERS)+1];
-    SpriteHandle number_sprites[(unsigned long long)(END_NUMBER_CHARACTER - START_NUMBER_CHARACTER)+1];
-
-    // Might as well have an error sprite
-    SpriteHandle error_sprite;
+    UISprites sprites;
 
     int max_ui_elements;
-    int ui_element_count;
+    int ui_element_draw_count;
     UIElement* elements;
 };
 
