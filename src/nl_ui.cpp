@@ -28,11 +28,11 @@ InitUICamera(UI* ui, const v2f& size)
 static void
 GetMousePosInUICamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
 {
-    const float camera_size_x = camera->size.x;
-    const float camera_size_y = camera->size.y;
+    const float camera_size_x = 0;// camera->size.x;
+    const float camera_size_y = 0;// camera->size.y;
 
-    out_pos->x = ((static_cast<float>(mouse_pos.x) + camera_size_x) * 0.5f);
-    out_pos->y = ((static_cast<float>(mouse_pos.y) - camera_size_y) * 0.5f);
+    out_pos->x = ((static_cast<float>(mouse_pos.x)));
+    out_pos->y = ((static_cast<float>(mouse_pos.y)));
 
     //LOG("Mouse In Camera X: %f, Y: %f", out_pos->x, out_pos->y);
 }
@@ -60,7 +60,10 @@ InitUI(UI* ui, struct Platform* platform)
         ui->number_sprites[i - START_NUMBER_CHARACTER] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
     }
 
-    InitUICamera(ui, {512.f, 512.f});
+    v2f screen_size;
+    screen_size.x = static_cast<float>(platform->viewport.screen_size.x);
+    screen_size.y = static_cast<float>(platform->viewport.screen_size.y);
+    InitUICamera(ui, screen_size);
 }
 
 void 
@@ -107,6 +110,9 @@ bool
 HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
 {
     bool mouse_handled = false;
+
+    LOG("Mouse: %f, %f", mouse_pos.x, mouse_pos.y);
+
     switch(button->active_state)
     {
         case UIButtonState::Inactive:

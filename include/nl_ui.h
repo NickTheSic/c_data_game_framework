@@ -33,11 +33,12 @@ struct Button
 /*
 TODO: NOTES: Ascii 
 Space = 32 
+
 0 = 40
 A = 65
+
 a = 97
 z = 122 
-
 */
 
 static const char START_FONT_CHARACTERS = 'a';
@@ -46,21 +47,24 @@ static const char END_FONT_CHARACTERS = 'z';
 static const char START_NUMBER_CHARACTER = '0';
 static const char END_NUMBER_CHARACTER = '9';
 
-// considering having my own UI sprite sheet as I may need a UI shader
-// Can handle screen size separate than game size
+// Would Like a better way to handle the sprite sheet.  We need to end the draw call to switch to the UI anyway.
+// Passing around a sprite sheet is a lot, but I could have multiple textures bound to the one.  All stuff to consider
 struct UI
 {
     Camera cam;
 
-    // Rendering Stuff
+    // All buttons use the same 3 sprites
     SpriteHandle button_sprites[(unsigned long long)UIButtonState::COUNT];
 
     // Hold all the sprites for the letters of the alphabet
     // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?
     SpriteHandle letter_sprites[(unsigned long long)(END_FONT_CHARACTERS - START_FONT_CHARACTERS)+1];
     SpriteHandle number_sprites[(unsigned long long)(END_NUMBER_CHARACTER - START_NUMBER_CHARACTER)+1];
+
+    // Might as well have an error sprite
     SpriteHandle error_sprite;
 
+    // UI Elements
     std::vector<Button> buttons;    
 };
 
