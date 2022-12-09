@@ -39,6 +39,8 @@ struct UIElement
     v2f size;
 
     SpriteHandle sprite;
+
+    // bool is_hot? is_active
 };
 
 struct UISprites
@@ -54,7 +56,7 @@ struct UISprites
     SpriteHandle punctuation[1];
 
     // Might as well have an error sprite
-    SpriteHandle error_sprite;
+    SpriteHandle error;
 };
 
 // Would Like a better way to handle the sprite sheet.  We need to end the draw call to switch to the UI anyway.
