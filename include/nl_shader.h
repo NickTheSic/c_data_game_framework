@@ -10,7 +10,7 @@ struct Shader
 {
     unsigned int program;
 
-    unsigned int view_uniform = -1;
+    int view_uniform = -1;
 };
 
 void SetViewUniform(Shader* shader, const mat4f& val);
