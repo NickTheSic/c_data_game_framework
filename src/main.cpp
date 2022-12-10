@@ -90,6 +90,14 @@ main()
         SpriteSheetBeginRender(&platform->fw.sprite_sheet);
         {
             RenderUI(&platform->ui, &platform->fw);
+
+            if (HandleButton(&platform->ui, 
+                {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
+                platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
+            {
+                LOG("Successful Button Press");
+            }
+
             DrawText(&platform->ui, &platform->fw, "hello world!", {0.f, 250.f}, {16.f,16.f});
             EndUIRender(&platform->ui, &platform->fw);
         }

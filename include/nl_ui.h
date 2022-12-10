@@ -39,7 +39,7 @@ struct UIElement
 struct UISprites
 {
     // All buttons use the same 3 sprites
-    SpriteHandle buttons[4];
+    SpriteHandle button[3];
 
     // Hold all the sprites for the letters of the alphabet
     // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?

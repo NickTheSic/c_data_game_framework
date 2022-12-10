@@ -144,13 +144,11 @@ AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f
     {
         fprintf(stderr, "Sprite Handle was Invalid\n");
         sprite_handle = sheet->err_sprite_index;
-        //return;
     }
     else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
         fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
         sprite_handle = sheet->err_sprite_index;
-        //return;
     }
     
     if (sheet->renderer.vertex_count + 4 > sheet->renderer.max_vertices)

@@ -41,9 +41,9 @@ InitUI(UI* ui, struct Platform* platform, int max_ui_elements)
     ui->elements = static_cast<UIElement*>(calloc(ui->max_ui_elements, sizeof(UIElement)));
     ui->element_draw_count = 0;
 
-    ui->sprites.buttons[0] = LoadSprite(&platform->fw.sprite_sheet, "data/button_inactive.png");
-    ui->sprites.buttons[1] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
-    ui->sprites.buttons[2] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
+    ui->sprites.button[0] = LoadSprite(&platform->fw.sprite_sheet, "data/button_inactive.png");
+    ui->sprites.button[1] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
+    ui->sprites.button[2] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
     ui->sprites.error = LoadSprite(&platform->fw.sprite_sheet, "data/err.png");
 
     char letter_filepaths[] = "data/font/#.png"; // 10th should be replaceable
@@ -111,6 +111,35 @@ bool
 HandleButton(UI* ui, const v2f& mouse_pos, bool mouse_button_down)
 {
     bool button_pressed = false;
+
+    UIElement* element = &ui->elements[ui->element_draw_count];
+    element->origin = {0.f, 500.f};
+    element->size = {50.f,50.f};
+
+    if (PointInRect(mouse_pos, element->origin, element->size))
+    {
+        if (mouse_button_down && element->is_active)
+        {
+            button_pressed = true;
+            element->sprite = ui->sprites.button[2];
+            element->is_active = false;
+        }
+        else if (!mouse_button_down)
+        {
+            element->sprite = ui->sprites.button[1];
+            element->is_active = true;
+        }
+        else
+        {
+            element->is_active = false;
+            element->sprite = ui->sprites.button[0];
+        }
+    }
+    else
+    {
+        element->is_active = false;
+        element->sprite = ui->sprites.button[0];
+    }
 
     ++ui->element_draw_count;
 
