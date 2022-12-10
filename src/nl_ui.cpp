@@ -68,6 +68,12 @@ InitUI(UI* ui, struct Platform* platform, int max_ui_elements)
 }
 
 void 
+CleanupUI(UI* ui)
+{
+    free(ui->elements);
+}
+
+void 
 UpdateUI(UI* ui, struct Platform* platform)
 {
     v2f mouse_pos = {};
@@ -97,24 +103,23 @@ void
 RenderUI(UI* ui,  struct Framework* fw)
 {
     SetViewUniform(&fw->shader, ui->cam.view);
-//
     DisplayEntireSheet(&fw->sprite_sheet, {0.0f, 100.f, 0.0f}, {256.f,128.f});
-//
-    //for (auto& button : ui->buttons)
-    //{
-    //    AddSizedSpriteToRender(&fw->sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
-    //                          {button.origin.x, button.origin.y, UI_TOP_POS}, button.size);
-    //}
 }
 
-bool  
-HandleButton(UI* ui, const v2f& mouse_pos, bool mouse_button_down)
+bool 
+HandleButton(UI* ui, const v2f& origin, const v2f& size, const char* label, const v2f& mouse_pos, bool mouse_button_down)
 {
     bool button_pressed = false;
 
-    UIElement* element = &ui->elements[ui->element_draw_count];
-    element->origin = {0.f, 500.f};
-    element->size = {50.f,50.f};
+    UIElement* element = &ui->elements[ui->element_draw_count++];
+    element->origin.x = origin.x;
+    element->origin.y = origin.y;
+
+    int count = 1;
+    HandleText(ui, label, {origin.x + (size.y/2), origin.y + (size.y/6)}, {size.x - (size.x/3), size.y - (size.y/3)}, &count);
+
+    element->size.x = size.x * (count);
+    element->size.y = size.y;
 
     if (PointInRect(mouse_pos, element->origin, element->size))
     {
@@ -146,13 +151,11 @@ HandleButton(UI* ui, const v2f& mouse_pos, bool mouse_button_down)
         element->sprite = ui->sprites.button[0];
     }
 
-    ++ui->element_draw_count;
-
     return button_pressed;
 }
 
 void
-DrawText(UI* ui, struct Framework* fw, const char* text, const v2f& pos, const v2f& font_size)
+HandleText(UI* ui, const char* text, const v2f& pos, const v2f& font_size, int* text_count)
 {
     char c = text[0];
     int count = 0;
@@ -191,6 +194,11 @@ DrawText(UI* ui, struct Framework* fw, const char* text, const v2f& pos, const v
         ++ui->element_draw_count;
 
         c = text[++count];
+    }
+
+    if (text_count != 0)
+    {
+        *text_count = count;
     }
 }
 

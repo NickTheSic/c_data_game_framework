@@ -43,6 +43,7 @@ struct UISprites
 
     // Hold all the sprites for the letters of the alphabet
     // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?
+    // TODO: Make this 1 array instread of 3
     SpriteHandle letters[(unsigned long long)(END_FONT_CHARACTERS - START_FONT_CHARACTERS)+1];
     SpriteHandle numbers[(unsigned long long)(END_NUMBER_CHARACTER - START_NUMBER_CHARACTER)+1];
     //TODO: Add
@@ -66,12 +67,14 @@ struct UI
 };
 
 void InitUI(UI* ui, struct Platform* platform, int max_ui_elements);
+void CleanupUI(UI* ui);
+
 void UpdateUI(UI* ui, struct Platform* platform);
 
 void RenderUI(UI* ui, struct Framework* fw);
 void EndUIRender(UI* ui, struct Framework* fw);
 
-bool HandleButton(UI* ui, const v2f& mouse_pos, bool mouse_button_down);
-void DrawText(UI* ui, struct Framework* fw, const char* text, const v2f& pos, const v2f& font_size);
+bool HandleButton(UI* ui, const v2f& origin, const v2f& size, const char* label, const v2f& mouse_pos, bool mouse_button_down);
+void HandleText(UI* ui, const char* text, const v2f& pos, const v2f& font_size, int* text_count = 0);
 
 #endif //NL_UI_H_

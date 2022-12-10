@@ -47,7 +47,7 @@ main()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glViewport(0, 0, 800, 800);
@@ -62,7 +62,7 @@ main()
         return -42069;
     }
 
-    InitUI(&platform->ui, platform, 28);
+    InitUI(&platform->ui, platform, 50);
     
 #ifndef __EMSCRIPTEN__
 
@@ -91,14 +91,28 @@ main()
         {
             RenderUI(&platform->ui, &platform->fw);
 
-            if (HandleButton(&platform->ui, 
+            if (HandleButton(&platform->ui, {0.f, 0.f}, {32.f, 32.f}, "test",
                 {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
                 platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
             {
-                LOG("Successful Button Press");
+                LOG("Successful test Button Press");
             }
 
-            DrawText(&platform->ui, &platform->fw, "hello world!", {0.f, 250.f}, {16.f,16.f});
+            if (HandleButton(&platform->ui, {0.f, 48.f}, {32.f, 32.f}, "funky",
+                {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
+                platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
+            {
+                LOG("Successful funky Button Press");
+            }
+
+            if (HandleButton(&platform->ui, {0.f, 96.f}, {32.f, 32.f}, "yes?man",
+                {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
+                platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
+            {
+                LOG("Successful yes?man Button Press");
+            }
+
+            HandleText(&platform->ui, "hello world!", {0.f, 250.f}, {16.f,16.f});
             EndUIRender(&platform->ui, &platform->fw);
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
@@ -111,6 +125,7 @@ main()
     emscripten_set_main_loop_arg(em_run, game_data, 0, 1);
 #endif
     
+    CleanupUI(&platform->ui);
     GameCleanup(game_data);
     DestroyPlatform(platform);
     return 0;
