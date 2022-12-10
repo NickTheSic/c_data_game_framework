@@ -25,28 +25,21 @@ static const char START_NUMBER_CHARACTER = '0';
 static const char END_NUMBER_CHARACTER = '9';
 
 
-// Name overlaps with the input
-enum class UIButtonState : unsigned char
-{
-    Inactive = 0, Hovered, Pressed, Released,
-    COUNT
-};
-
 // Basically a sprite
 struct UIElement
 {
-    v2f origin;
+    v2f origin; 
     v2f size;
 
     SpriteHandle sprite;
 
-    // bool is_hot? is_active
+    bool is_active;
 };
 
 struct UISprites
 {
     // All buttons use the same 3 sprites
-    SpriteHandle buttons[(unsigned long long)UIButtonState::COUNT];
+    SpriteHandle buttons[4];
 
     // Hold all the sprites for the letters of the alphabet
     // This could definitely be handle differently,  I don't __need__ 32x32 letter sprites but that is what the sprite sheet expects?
@@ -68,14 +61,15 @@ struct UI
     UISprites sprites;
 
     int max_ui_elements;
-    int ui_element_draw_count;
+    int element_draw_count;
     UIElement* elements;
 };
 
-void InitUI(UI* ui, struct Platform* platform);
+void InitUI(UI* ui, struct Platform* platform, int max_ui_elements);
 void UpdateUI(UI* ui, struct Platform* platform);
 
 void RenderUI(UI* ui, struct Framework* fw);
+void EndUIRender(UI* ui, struct Framework* fw);
 
 bool HandleButton(UI* ui, const v2f& mouse_pos, bool mouse_button_down);
 void DrawText(UI* ui, struct Framework* fw, const char* text, const v2f& pos, const v2f& font_size);

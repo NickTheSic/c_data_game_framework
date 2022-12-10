@@ -51,6 +51,8 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, uv)));
     glEnableVertexAttribArray(1);
+
+    sheet->err_sprite_index = LoadSprite(sheet, "data/err.png");
 }
 
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
@@ -122,12 +124,14 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos
     if (sprite_handle == INVALID_SPRITE_HANDLE)
     {
         fprintf(stderr, "Sprite Handle was Invalid\n");
-        return;
+        sprite_handle = sheet->err_sprite_index;
+        //return;
     }
     else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
         fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
-        return;
+        sprite_handle = sheet->err_sprite_index;
+        //return;
     }
 
     AddSizedSpriteToRender(sheet, sprite_handle, pos, sheet->sprites[sprite_handle].size);
@@ -139,12 +143,14 @@ AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f
     if (sprite_handle == INVALID_SPRITE_HANDLE)
     {
         fprintf(stderr, "Sprite Handle was Invalid\n");
-        return;
+        sprite_handle = sheet->err_sprite_index;
+        //return;
     }
     else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
         fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
-        return;
+        sprite_handle = sheet->err_sprite_index;
+        //return;
     }
     
     if (sheet->renderer.vertex_count + 4 > sheet->renderer.max_vertices)

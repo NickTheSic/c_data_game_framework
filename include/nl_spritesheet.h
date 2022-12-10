@@ -52,6 +52,8 @@ struct SpriteSheet
     int used_atlas_height;
     
     unsigned int textureID;
+
+    int err_sprite_index;
     
     int sprite_count;
     std::map<std::string, SpriteHandle> loaded_sprites;

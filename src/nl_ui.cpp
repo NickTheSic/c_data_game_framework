@@ -35,26 +35,30 @@ GetMousePosInUICamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
 }
 
 void 
-InitUI(UI* ui, struct Platform* platform)
+InitUI(UI* ui, struct Platform* platform, int max_ui_elements)
 {
-    ui->button_sprites[(unsigned char)UIButtonState::Inactive] = LoadSprite(&platform->fw.sprite_sheet, "data/button_inactive.png");
-    ui->button_sprites[(unsigned char)UIButtonState::Hovered] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
-    ui->button_sprites[(unsigned char)UIButtonState::Pressed] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
-    ui->error_sprite = LoadSprite(&platform->fw.sprite_sheet, "data/err.png");
+    ui->max_ui_elements = max_ui_elements;
+    ui->elements = static_cast<UIElement*>(calloc(ui->max_ui_elements, sizeof(UIElement)));
+    ui->element_draw_count = 0;
+
+    ui->sprites.buttons[0] = LoadSprite(&platform->fw.sprite_sheet, "data/button_inactive.png");
+    ui->sprites.buttons[1] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
+    ui->sprites.buttons[2] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
+    ui->sprites.error = LoadSprite(&platform->fw.sprite_sheet, "data/err.png");
 
     char letter_filepaths[] = "data/font/#.png"; // 10th should be replaceable
     for (char i = START_FONT_CHARACTERS; i <= END_FONT_CHARACTERS; ++i)
     {
         letter_filepaths[10] = i;
         LOG("%s", letter_filepaths);
-        ui->letter_sprites[i-START_FONT_CHARACTERS] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
+        ui->sprites.letters[i-START_FONT_CHARACTERS] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
     }
 
     for (char i = START_NUMBER_CHARACTER; i <= END_NUMBER_CHARACTER; ++i)
     {
         letter_filepaths[10] = i;
         LOG("%s", letter_filepaths);
-        ui->number_sprites[i - START_NUMBER_CHARACTER] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
+        ui->sprites.numbers[i - START_NUMBER_CHARACTER] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
     }
 
     v2f screen_size;
@@ -76,92 +80,41 @@ UpdateUI(UI* ui, struct Platform* platform)
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
 
     // Can find mouse pos and loop through only the buttons that are near?
-    for (auto& button : ui->buttons)
-    {
-        if (!HandleButton(&button, mouse_pos, mouse_down))
-        {
-            continue;
-        }
-        else
-        {
-            break;
-        }
-    }
+    //for (auto& button : ui->buttons)
+    //{
+    //    if (!HandleButton(&button, mouse_pos, mouse_down))
+    //    {
+    //        continue;
+    //    }
+    //    else
+    //    {
+    //        break;
+    //    }
+    //}
 }
 
 void 
 RenderUI(UI* ui,  struct Framework* fw)
 {
     SetViewUniform(&fw->shader, ui->cam.view);
-
+//
     DisplayEntireSheet(&fw->sprite_sheet, {0.0f, 100.f, 0.0f}, {256.f,128.f});
-
-    for (auto& button : ui->buttons)
-    {
-        AddSizedSpriteToRender(&fw->sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
-                              {button.origin.x, button.origin.y, UI_TOP_POS}, button.size);
-    }
+//
+    //for (auto& button : ui->buttons)
+    //{
+    //    AddSizedSpriteToRender(&fw->sprite_sheet, ui->button_sprites[(unsigned char)button.active_state], 
+    //                          {button.origin.x, button.origin.y, UI_TOP_POS}, button.size);
+    //}
 }
 
 bool  
-HandleButton(Button* button, const v2f& mouse_pos, bool mouse_button_down)
+HandleButton(UI* ui, const v2f& mouse_pos, bool mouse_button_down)
 {
-    bool mouse_handled = false;
+    bool button_pressed = false;
 
-    switch(button->active_state)
-    {
-        case UIButtonState::Inactive:
-        {
-            if (PointInRect(mouse_pos, button->origin, button->size))
-            {
-                button->active_state = UIButtonState::Hovered;
-                mouse_handled = true;
-            }
-        } break;
+    ++ui->element_draw_count;
 
-        case UIButtonState::Hovered:
-        {
-            if (!PointInRect(mouse_pos, button->origin, button->size))
-            {
-                button->active_state = UIButtonState::Inactive;
-            }
-            else if (mouse_button_down)
-            {
-                button->active_state = UIButtonState::Pressed;
-                mouse_handled = true;
-            }
-        } break;
-
-        case UIButtonState::Pressed:
-        {
-            if (!PointInRect(mouse_pos, button->origin, button->size))
-            {
-                button->active_state = UIButtonState::Inactive;
-            }
-            else if (!mouse_button_down)
-            {
-                button->active_state = UIButtonState::Released;
-                mouse_handled = true;
-            }
-        } break;
-
-        case UIButtonState::Released:
-        {
-            if (button->press_callback)
-            {
-                button->press_callback();
-            }
-            button->active_state = UIButtonState::Inactive;
-            mouse_handled = true;
-        } break;
-
-        case UIButtonState::COUNT:
-        // Intentionally empty to surpress warning
-        // Could do the pragma scope to surpress file warning
-        break;
-    }
-
-    return mouse_handled;
+    return button_pressed;
 }
 
 void
@@ -182,24 +135,45 @@ DrawText(UI* ui, struct Framework* fw, const char* text, const v2f& pos, const v
 
         if (c > START_NUMBER_CHARACTER && c < END_NUMBER_CHARACTER)
         {
-            sprite = ui->number_sprites[(unsigned long long)c - START_NUMBER_CHARACTER];
+            sprite = ui->sprites.numbers[(unsigned long long)c - START_NUMBER_CHARACTER];
         }
         else if (c > START_FONT_CHARACTERS && c < END_FONT_CHARACTERS)
         {
-            sprite = ui->letter_sprites[(unsigned long long)c - START_FONT_CHARACTERS];
+            sprite = ui->sprites.letters[(unsigned long long)c - START_FONT_CHARACTERS];
         }
         else
         {
-            sprite = ui->error_sprite;
+            sprite = ui->sprites.error;
         }
 
-        v3f render_pos;
-        render_pos.x = pos.x + (font_size.x * count);
-        render_pos.y = pos.y;
-        render_pos.z = UI_TOP_POS;
+        //AddSizedSpriteToRender(&fw->sprite_sheet, sprite, render_pos, font_size);
+        ui->elements[ui->element_draw_count].origin.x = pos.x + (font_size.x * count);
+        ui->elements[ui->element_draw_count].origin.y = pos.y;
+        ui->elements[ui->element_draw_count].size.x = font_size.x;
+        ui->elements[ui->element_draw_count].size.y = font_size.y;
+        ui->elements[ui->element_draw_count].sprite = sprite;
+        ui->elements[ui->element_draw_count].is_active = 0;
 
-        AddSizedSpriteToRender(&fw->sprite_sheet, sprite, render_pos, font_size);
+        ++ui->element_draw_count;
 
         c = text[++count];
     }
+}
+
+void 
+EndUIRender(UI* ui, struct Framework* fw)
+{
+    v3f render_pos;
+    render_pos.z = UI_TOP_POS;
+
+    for (int i = 0; i < ui->element_draw_count; ++i)
+    {
+        //AddSizedSpriteToRender(&fw->sprite_sheet, sprite, render_pos, font_size);
+        UIElement* element = &ui->elements[i];
+        render_pos.x = element->origin.x;
+        render_pos.y = element->origin.y;
+        AddSizedSpriteToRender(&fw->sprite_sheet, element->sprite, render_pos, element->size);
+    }
+
+    ui->element_draw_count = 0;
 }

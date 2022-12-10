@@ -62,11 +62,7 @@ main()
         return -42069;
     }
 
-    InitUI(&platform->ui, platform);
-    platform->ui.buttons.push_back({[](){LOG("Button 1 Pressed\n")}, 
-                                    {0.f,400.f}, 
-                                    {32.f,32.f}, 
-                                    UIButtonState::Inactive});
+    InitUI(&platform->ui, platform, 28);
     
 #ifndef __EMSCRIPTEN__
 
@@ -95,6 +91,7 @@ main()
         {
             RenderUI(&platform->ui, &platform->fw);
             DrawText(&platform->ui, &platform->fw, "hello world!", {0.f, 250.f}, {16.f,16.f});
+            EndUIRender(&platform->ui, &platform->fw);
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
         
