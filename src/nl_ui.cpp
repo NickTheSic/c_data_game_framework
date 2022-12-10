@@ -120,9 +120,14 @@ HandleButton(UI* ui, const v2f& mouse_pos, bool mouse_button_down)
     {
         if (mouse_button_down && element->is_active)
         {
-            button_pressed = true;
             element->sprite = ui->sprites.button[2];
             element->is_active = false;
+            
+            button_pressed = true;
+        }
+        else if (mouse_button_down && !element->is_active)
+        {
+            element->sprite = ui->sprites.button[2];
         }
         else if (!mouse_button_down)
         {
