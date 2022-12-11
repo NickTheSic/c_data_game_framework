@@ -10,14 +10,28 @@
 
 static Platform* g_platform = nullptr;
 
-Platform* GetGlobalPlatform()
+Platform* 
+GetGlobalPlatform()
 {
 	return g_platform;
 }
 
-void SetGlobalPlatform(Platform* platform)
+void 
+SetGlobalPlatform(Platform* platform)
 {
 	g_platform = platform;
+}
+
+DWORD 
+NLGetEXWindowStyle()
+{
+	return WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+}
+
+DWORD 
+NLGetWindowStyle()
+{
+	return WS_OVERLAPPEDWINDOW;
 }
 
 static LRESULT CALLBACK
@@ -50,11 +64,11 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case WM_SIZE:
 		{	
-			UINT width = LOWORD(lParam);
-			UINT height = HIWORD(lParam);
-			
+			const int width = LOWORD(lParam);
+			const int height = HIWORD(lParam);
+
+			// I realize this won't be here if I want to use vulkan in the future
 			glViewport(0,0, width, height);
-			
 			UpdateScreenSize(&platform->viewport, width, height);
 		} break;
 		
@@ -114,9 +128,8 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 NLPlatform* 
 CreatePlatform(int width, int height, const char* title)
 {
-    DWORD dw_ex_style, dw_style;
-	dw_ex_style = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
-	dw_style = WS_OVERLAPPEDWINDOW;
+	DWORD dw_ex_style = NLGetEXWindowStyle();
+	DWORD dw_style = NLGetWindowStyle();
 
     RECT window_rect = {};
     window_rect.left = (long)0;
