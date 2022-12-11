@@ -153,6 +153,7 @@ AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f
     
     if (sheet->renderer.vertex_count + 4 > sheet->renderer.max_vertices)
     {
+        LOG("Exceeded the vertex count allowed for this spritesheet buffer");
         EndRender(&sheet->renderer);
     }
     

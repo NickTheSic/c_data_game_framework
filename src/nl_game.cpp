@@ -24,7 +24,7 @@ GameData*
 GameInitialize(Platform* platform)
 {
     GameData* data = new GameData();
-    InitializeFramework(&platform->fw, {512,512}, {200.f, 200.f}, {0.0f, 0.0f, 0.0f}, 30);
+    InitializeFramework(&platform->fw, {512,512}, {200.f, 200.f}, {0.0f, 0.0f, 0.0f}, 50);
 
     data->player_pos.x = 0.f;
     data->player_pos.y = 0.f;
