@@ -45,7 +45,7 @@ InitUI(UI* ui, struct Platform* platform, int max_ui_elements)
     ui->sprites.button[0] = LoadSprite(&platform->fw.sprite_sheet, "data/button_inactive.png");
     ui->sprites.button[1] = LoadSprite(&platform->fw.sprite_sheet, "data/button_hovered.png");
     ui->sprites.button[2] = LoadSprite(&platform->fw.sprite_sheet, "data/button_pressed.png");
-    ui->sprites.error = LoadSprite(&platform->fw.sprite_sheet, "data/err.png");
+    ui->sprites.error = platform->fw.sprite_sheet.error_sprite;
 
     char letter_filepaths[] = "data/font/#.png"; // 10th should be replaceable
     for (char i = START_FONT_CHARACTERS; i <= END_FONT_CHARACTERS; ++i)

@@ -10,6 +10,8 @@
 typedef int SpriteHandle;
 static SpriteHandle INVALID_SPRITE_HANDLE = -1;
 
+static const int ALLOWED_SPRITE_DIMENSIONS = 32;
+
 typedef void(*AnimEndCallback)(void *user_data);
 
 struct SpriteVertexData
@@ -20,11 +22,8 @@ struct SpriteVertexData
 
 struct Sprite
 {
-    // position in the game world
-    v3f position;
-
     // game size
-    v2f size;
+    v2f size; 
 
     // Texture Coords
     v2f bl_coord, ur_coord;
@@ -53,11 +52,11 @@ struct SpriteSheet
     
     unsigned int textureID;
 
-    int err_sprite_index;
+    SpriteHandle error_sprite;
     
     int sprite_count;
-    std::map<std::string, SpriteHandle> loaded_sprites;
-    std::vector<Sprite> sprites;
+    
+    Sprite* sprites;
 };
 
 void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);

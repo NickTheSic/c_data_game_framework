@@ -19,6 +19,15 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     
     sheet->atlas_size.x = sx;
     sheet->atlas_size.y = sy;
+
+    unsigned int allowed_sprites = (sx / ALLOWED_SPRITE_DIMENSIONS) * (sy / ALLOWED_SPRITE_DIMENSIONS);
+    sheet->sprites = (Sprite*)calloc(allowed_sprites, sizeof(Sprite));
+
+    if (sheet->sprites == 0)
+    {
+        LOG("ERROR: Sprite Sheet was unable to allocate the sprites array");
+        __builtin_trap();
+    }
     
     // uneeded as long as we = {}; before passing?
     sheet->sprite_count = 0;
@@ -52,18 +61,11 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, uv)));
     glEnableVertexAttribArray(1);
 
-    sheet->err_sprite_index = LoadSprite(sheet, "data/err.png");
+    sheet->error_sprite = LoadSprite(sheet, "data/err.png");
 }
 
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
-{
-    auto it = sheet->loaded_sprites.find(path);
-    
-    if (it != sheet->loaded_sprites.end())
-    {
-        return it->second;
-    }
-    
+{    
     Sprite sprite = {};
     SpriteHandle handle = INVALID_SPRITE_HANDLE;
     
@@ -75,6 +77,12 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     {
         std::cout << stbi_failure_reason() << " while loading: " << path << std::endl;
         return handle;
+    }
+
+    if (gsd.x != ALLOWED_SPRITE_DIMENSIONS || gsd.y != ALLOWED_SPRITE_DIMENSIONS)
+    {
+        LOG("Error: sprite was not allowed size.  Allowed Size: %d, Sprite X: %d Y: %d", ALLOWED_SPRITE_DIMENSIONS, gsd.x, gsd.y);
+        __builtin_trap();
     }
     
     if ((sheet->current_atlas_loc.x + gsd.x) > sheet->atlas_size.x)
@@ -107,15 +115,17 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     
     stbi_image_free(gsd.data);
     
+    // Post increment?
     handle = sheet->sprite_count++;
-    sprite.size.x = 32;
-    sprite.size.y = 32;
-    //sprite.size = gsd;
-    sheet->sprites.push_back(sprite);
-    
-    sheet->loaded_sprites[path] = handle;
-    
-    return sheet->loaded_sprites[path];
+
+    sheet->sprites[handle].bl_coord.x = sprite.bl_coord.x;
+    sheet->sprites[handle].bl_coord.y = sprite.bl_coord.y;
+    sheet->sprites[handle].ur_coord.x = sprite.ur_coord.x;
+    sheet->sprites[handle].ur_coord.y = sprite.ur_coord.y;
+    sheet->sprites[handle].size.x = gsd.x;
+    sheet->sprites[handle].size.y = gsd.y;
+
+    return handle;
 }
 
 void
@@ -124,14 +134,12 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos
     if (sprite_handle == INVALID_SPRITE_HANDLE)
     {
         fprintf(stderr, "Sprite Handle was Invalid\n");
-        sprite_handle = sheet->err_sprite_index;
-        //return;
+        sprite_handle = sheet->error_sprite;
     }
     else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
         fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
-        sprite_handle = sheet->err_sprite_index;
-        //return;
+        sprite_handle = sheet->error_sprite;
     }
 
     AddSizedSpriteToRender(sheet, sprite_handle, pos, sheet->sprites[sprite_handle].size);
@@ -143,12 +151,12 @@ AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f
     if (sprite_handle == INVALID_SPRITE_HANDLE)
     {
         fprintf(stderr, "Sprite Handle was Invalid\n");
-        sprite_handle = sheet->err_sprite_index;
+        sprite_handle = sheet->error_sprite;
     }
     else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
         fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
-        sprite_handle = sheet->err_sprite_index;
+        sprite_handle = sheet->error_sprite;
     }
     
     if (sheet->renderer.vertex_count + 4 > sheet->renderer.max_vertices)
@@ -265,6 +273,11 @@ SpriteSheetEndRender(SpriteSheet* sheet)
 void 
 CleanupSpriteSheet(SpriteSheet* sheet)
 {
+    if (sheet->sprites != 0)
+    {
+        free(sheet->sprites);
+    }
+
     glDeleteTextures(1, &sheet->textureID);
 }
 
