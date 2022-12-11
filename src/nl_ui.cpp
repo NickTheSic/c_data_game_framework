@@ -84,19 +84,6 @@ UpdateUI(UI* ui, struct Platform* platform)
 
     //  Might need a Down/Pressed/Released state instead of just down or up
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
-
-    // Can find mouse pos and loop through only the buttons that are near?
-    //for (auto& button : ui->buttons)
-    //{
-    //    if (!HandleButton(&button, mouse_pos, mouse_down))
-    //    {
-    //        continue;
-    //    }
-    //    else
-    //    {
-    //        break;
-    //    }
-    //}
 }
 
 void 
@@ -170,11 +157,11 @@ HandleText(UI* ui, const char* text, const v2f& pos, const v2f& font_size, int* 
             continue;
         }
 
-        if (c > START_NUMBER_CHARACTER && c < END_NUMBER_CHARACTER)
+        if (c >= START_NUMBER_CHARACTER && c <= END_NUMBER_CHARACTER)
         {
             sprite = ui->sprites.numbers[(unsigned long long)c - START_NUMBER_CHARACTER];
         }
-        else if (c > START_FONT_CHARACTERS && c < END_FONT_CHARACTERS)
+        else if (c >= START_FONT_CHARACTERS && c <= END_FONT_CHARACTERS)
         {
             sprite = ui->sprites.letters[(unsigned long long)c - START_FONT_CHARACTERS];
         }
