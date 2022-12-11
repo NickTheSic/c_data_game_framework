@@ -39,6 +39,7 @@ struct UIElement
 struct UISprites
 {
     // All buttons use the same 3 sprites
+    // TODO: Should the sprites be turned into a 9x9 grid so they scale better?
     SpriteHandle button[3];
 
     // Hold all the sprites for the letters of the alphabet

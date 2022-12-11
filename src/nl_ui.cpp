@@ -170,7 +170,6 @@ HandleText(UI* ui, const char* text, const v2f& pos, const v2f& font_size, int* 
             sprite = ui->sprites.error;
         }
 
-        //AddSizedSpriteToRender(&fw->sprite_sheet, sprite, render_pos, font_size);
         ui->elements[ui->element_draw_count].origin.x = pos.x + (font_size.x * count);
         ui->elements[ui->element_draw_count].origin.y = pos.y;
         ui->elements[ui->element_draw_count].size.x = font_size.x;
@@ -197,7 +196,6 @@ EndUIRender(UI* ui, struct Framework* fw)
 
     for (int i = 0; i < ui->element_draw_count; ++i)
     {
-        //AddSizedSpriteToRender(&fw->sprite_sheet, sprite, render_pos, font_size);
         UIElement* element = &ui->elements[i];
         render_pos.x = element->origin.x;
         render_pos.y = element->origin.y;

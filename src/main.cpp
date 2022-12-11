@@ -113,7 +113,6 @@ main()
             }
 
             HandleText(&platform->ui, "hello world!", {0.f, 250.f}, {16.f,16.f});
-            HandleText(&platform->ui, "abcdefghijklmnopqrstuvwxyz", {0.f, 600.f}, {20.f,20.f});
             EndUIRender(&platform->ui, &platform->fw);
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
