@@ -75,7 +75,10 @@ void UpdateUI(UI* ui, struct Platform* platform);
 void RenderUI(UI* ui, struct Framework* fw);
 void EndUIRender(UI* ui, struct Framework* fw);
 
+// Would like to update in the future to only take origin, size and label
+// I could give the 'global UI context' a mouse position and if button was pressed this frame variable
 bool HandleButton(UI* ui, const v2f& origin, const v2f& size, const char* label, const v2f& mouse_pos, bool mouse_button_down);
+// bool HandleToggleButton(...); // This button remains clicked until it is clicked again
 void HandleText(UI* ui, const char* text, const v2f& pos, const v2f& font_size, int* text_count = 0);
 
 #endif //NL_UI_H_

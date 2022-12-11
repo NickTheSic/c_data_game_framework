@@ -83,6 +83,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 				UpdateKeyState(&platform->input, static_cast<Key>(wParam), static_cast<ButtonState>(is_down));
 			}
 
+			// This should be temporary so in the future I can rebind an exit key
 			if (is_down && wParam == VK_ESCAPE)
 			{
 				NLSetWindowShouldClose(0);

@@ -60,5 +60,6 @@ XORRandom(unsigned int seed = g_random_seed)
     return g_random_seed;
 }
 
+int DUMMY_WARNING_VALUE = XORRandom();
 
 #endif //NL_MATH_H

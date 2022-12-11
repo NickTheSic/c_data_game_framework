@@ -28,6 +28,7 @@ InitUICamera(UI* ui, const v2f& size)
 static void
 GetMousePosInUICamera(Camera* camera, v2f* out_pos, v2i mouse_pos)
 {
+    UNUSED(camera);
     // Only really need to use the mouse pos for the UI.
     // It could be ideal to do it this way for the UI as the UI should always be the screen size
     out_pos->x = static_cast<float>(mouse_pos.x);
@@ -76,6 +77,8 @@ CleanupUI(UI* ui)
 void 
 UpdateUI(UI* ui, struct Platform* platform)
 {
+    // TODO: Could set values inside of the UI here
+    // Then I don't need to pass them in as parameters
     v2f mouse_pos = {};
     mouse_pos.x = platform->input.mouse_pos.x;
     mouse_pos.y = platform->input.mouse_pos.y;
@@ -84,6 +87,7 @@ UpdateUI(UI* ui, struct Platform* platform)
 
     //  Might need a Down/Pressed/Released state instead of just down or up
     bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
+    UNUSED(mouse_down);
 }
 
 void 
