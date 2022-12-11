@@ -21,9 +21,12 @@ struct Platform
     EGLContext context;
 #endif
 
+    // Could move these out of the plat form and into the nl core class I want to make
     Framework fw;
     Input input;
     UI ui;
+
+    // exceptthis, maybe this stays here?
     Viewport viewport;
 };
 

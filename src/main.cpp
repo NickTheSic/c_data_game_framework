@@ -47,10 +47,9 @@ main()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glViewport(0, 0, 800, 800);
     glClearColor(0.1,0.2,0.4,1.0);
 
     InitTime();
@@ -113,6 +112,11 @@ main()
             }
 
             HandleText(&platform->ui, "hello world!", {0.f, 250.f}, {16.f,16.f});
+
+            std::string mouse_pos_str = "x " + std::to_string(platform->input.mouse_pos.x) + " y " + std::to_string(platform->input.mouse_pos.y);
+            HandleText(&platform->ui, mouse_pos_str.c_str(), 
+                {(float)platform->input.mouse_pos.x - 16.f, (float)platform->input.mouse_pos.y}, {16.f,16.f});
+
             EndUIRender(&platform->ui, &platform->fw);
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
