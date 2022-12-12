@@ -21,13 +21,14 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     sheet->atlas_size.x = sx;
     sheet->atlas_size.y = sy;
 
-    unsigned int allowed_sprites = (sx / ALLOWED_SPRITE_DIMENSIONS) * (sy / ALLOWED_SPRITE_DIMENSIONS);
-    sheet->sprites = (Sprite*)calloc(allowed_sprites, sizeof(Sprite));
+    sheet->max_sprites = (sx / ALLOWED_SPRITE_DIMENSIONS) * (sy / ALLOWED_SPRITE_DIMENSIONS);
+    sheet->sprites = (Sprite*)calloc(sheet->max_sprites, sizeof(Sprite));
 
     if (sheet->sprites == 0)
     {
         LOG("ERROR: Sprite Sheet was unable to allocate the sprites array");
         assert(false);
+        return;
     }
     
     // uneeded as long as we = {}; before passing?
@@ -72,7 +73,48 @@ ReloadSprite(SpriteSheet* sheet, const char* path, SpriteHandle to_replace)
     {
         LOG("Trying to replace the Invalide Sprite Handle");
         assert(false);
+        return;
     }
+
+    if (to_replace > sheet->max_sprites)
+    {
+        LOG("Trying to replace sprite handle %d greater than max %d", to_replace, sheet->max_sprites);
+        assert(false);
+        return;
+    }
+
+    GeneratedSprite gsd = {};
+    gsd.data = stbi_load(path, &gsd.x, &gsd.y, &gsd.channel, 4);
+
+    if (stbi_failure_reason())
+    {
+        LOG("%s while loading: %s.  Did not replace sprite %d", stbi_failure_reason(), path, to_replace);
+        return;
+    }
+
+    // In the future if I allow new types I will have to make sure the new sprite fits on the sheet properly
+    if (gsd.x != ALLOWED_SPRITE_DIMENSIONS || gsd.y != ALLOWED_SPRITE_DIMENSIONS)
+    {
+        LOG("Error: sprite was not allowed size.  Allowed Size: %d, Sprite X: %d Y: %d", ALLOWED_SPRITE_DIMENSIONS, gsd.x, gsd.y);
+        assert(false);
+        return;
+    }
+
+    v2i atlas_pos = {};
+    atlas_pos.x = (to_replace * sheet->sprites[to_replace].size.x) % sheet->atlas_size.x;
+    atlas_pos.y = (to_replace * sheet->sprites[to_replace].size.y) / sheet->atlas_size.x;
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0,
+                    atlas_pos.x, atlas_pos.y,
+                    gsd.x, gsd.y, 
+                    GL_RGBA,
+                    GL_UNSIGNED_BYTE,
+                    gsd.data);
+
+    stbi_image_free(gsd.data);
+
+    sheet->sprites[to_replace].size.x = gsd.x;
+    sheet->sprites[to_replace].size.y = gsd.y;  
 }
 
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
@@ -94,6 +136,7 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     {
         LOG("Error: sprite was not allowed size.  Allowed Size: %d, Sprite X: %d Y: %d", ALLOWED_SPRITE_DIMENSIONS, gsd.x, gsd.y);
         assert(false);
+        return handle;
     }
     
     if ((sheet->current_atlas_loc.x + gsd.x) > sheet->atlas_size.x)
@@ -126,15 +169,15 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     
     stbi_image_free(gsd.data);
     
-    // Post increment?
+    // handle = 1; then sprite count = 2
     handle = sheet->sprite_count++;
 
     sheet->sprites[handle].bl_coord.x = sprite.bl_coord.x;
     sheet->sprites[handle].bl_coord.y = sprite.bl_coord.y;
     sheet->sprites[handle].ur_coord.x = sprite.ur_coord.x;
     sheet->sprites[handle].ur_coord.y = sprite.ur_coord.y;
-    sheet->sprites[handle].size.x = (float) gsd.x;
-    sheet->sprites[handle].size.y = (float) gsd.y;
+    sheet->sprites[handle].size.x = gsd.x;
+    sheet->sprites[handle].size.y = gsd.y;
 
     return handle;
 }
@@ -152,8 +195,12 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos
         LOG("Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
         sprite_handle = sheet->error_sprite;
     }
+    
+    v2f size;
+    size.x = sheet->sprites[sprite_handle].size.x;
+    size.y = sheet->sprites[sprite_handle].size.y;
 
-    AddSizedSpriteToRender(sheet, sprite_handle, pos, sheet->sprites[sprite_handle].size);
+    AddSizedSpriteToRender(sheet, sprite_handle, pos, size);
 }
 
 void 

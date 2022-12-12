@@ -20,8 +20,8 @@ struct SpriteVertexData
 
 struct Sprite
 {
-    // game size
-    v2f size; 
+    // loaded
+    v2i size; 
 
     // Texture Coords
     v2f bl_coord, ur_coord;
@@ -53,7 +53,7 @@ struct SpriteSheet
     SpriteHandle error_sprite;
     
     int sprite_count;
-    
+    int max_sprites;
     Sprite* sprites;
 };
 
