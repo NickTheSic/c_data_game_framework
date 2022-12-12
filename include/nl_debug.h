@@ -1,5 +1,7 @@
 /* date = November 7th 2022 7:38 pm */
 
+#include <stdio.h>
+
 #ifndef NL_DEBUG_H
 #define NL_DEBUG_H
 

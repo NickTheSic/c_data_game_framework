@@ -1,6 +1,7 @@
 #include <nl_spritesheet.h>
-
+#include <nl_debug.h>
 #include <nl_math.h>
+#include <nl_gl.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
@@ -75,7 +76,7 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     
     if (stbi_failure_reason())
     {
-        std::cout << stbi_failure_reason() << " while loading: " << path << std::endl;
+        LOG("%s while loading: %s", stbi_failure_reason(), path);
         return handle;
     }
 
@@ -122,8 +123,8 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     sheet->sprites[handle].bl_coord.y = sprite.bl_coord.y;
     sheet->sprites[handle].ur_coord.x = sprite.ur_coord.x;
     sheet->sprites[handle].ur_coord.y = sprite.ur_coord.y;
-    sheet->sprites[handle].size.x = gsd.x;
-    sheet->sprites[handle].size.y = gsd.y;
+    sheet->sprites[handle].size.x = (float) gsd.x;
+    sheet->sprites[handle].size.y = (float) gsd.y;
 
     return handle;
 }

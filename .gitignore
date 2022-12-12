@@ -1,3 +1,8 @@
 
 build/*
 *.rdbg
+*.vcxproj*
+*.sln
+.vs
+obj/*
+VS2019bin/*

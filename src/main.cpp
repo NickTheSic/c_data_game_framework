@@ -71,7 +71,7 @@ main()
 
         #ifdef DEBUG
         // Incomplete but I want to add a delta time modifier
-        delta_time *= time_modifier;
+        // delta_time *= time_modifier;
         #endif
         
         GameUpdate(platform, game_data, delta_time);

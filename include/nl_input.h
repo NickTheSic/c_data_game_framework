@@ -3,6 +3,7 @@
 #define NL_INPUT_H_
 
 #include <nl_key.h>
+#include <nl_math.h>
 #include <vector>
 
 // NOTE: I think this immediately falls apart if I start using a vector as the pointer would change
@@ -37,7 +38,7 @@ struct Input
     // here for now since it is used to calculate the on screen mouse position
     // Less input and more of a screen thing
 
-//Make this its own struct of data for asier passing around?
+    //Make this its own struct of data for asier passing around?
     v2i mouse_pos, prev_mouse_pos;
     //TODO: this should be okay but I know some web key values go above 256
     ButtonState keys[256]; 

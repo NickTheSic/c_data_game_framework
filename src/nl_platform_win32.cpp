@@ -1,6 +1,7 @@
 #include <nl_platform.h>
 #include <nl_input.h>
 #include <nl_key.h>
+#include <nl_gl.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -250,7 +251,7 @@ CreatePlatform(int width, int height, const char* title)
 	{
 		char* rendererString;
 		rendererString = (char*)glGetString(GL_RENDERER);
-		if (rendererString) fprintf(stderr, TEXT("%s\n"), rendererString);
+		if (rendererString) fprintf(stderr, "%s\n", rendererString);
 	}
 
 	// calculate DPI for scaling

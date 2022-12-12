@@ -1,4 +1,5 @@
 #include <nl_camera.h>
+#include <nl_debug.h>
 
 void 
 CreateViewMatrixFollow(Camera* camera, 

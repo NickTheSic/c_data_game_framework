@@ -4,13 +4,11 @@
 
 #include <nl_math.h>
 #include <nl_renderer.h>
-#include <vector>
-#include <map>
 
 typedef int SpriteHandle;
-static SpriteHandle INVALID_SPRITE_HANDLE = -1;
+constexpr SpriteHandle INVALID_SPRITE_HANDLE = -1;
 
-static const int ALLOWED_SPRITE_DIMENSIONS = 32;
+constexpr int ALLOWED_SPRITE_DIMENSIONS = 32;
 
 typedef void(*AnimEndCallback)(void *user_data);
 

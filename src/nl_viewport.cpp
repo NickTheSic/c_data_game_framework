@@ -1,4 +1,6 @@
 #include <nl_viewport.h>
+#include <nl_camera.h>
+#include <nl_math.h>
 
 void 
 UpdateScreenSize(Viewport* viewport, int sx, int sy)
