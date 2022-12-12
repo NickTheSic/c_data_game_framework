@@ -15,6 +15,10 @@
 #include <nl_timer.h>
 #include <nl_ui.h>
 
+#ifdef VS2019_PROJECT
+#include <crtdbg.h>
+#endif
+
 #ifdef __EMSCRIPTEN__
 
 #include <emscripten.h>
@@ -38,6 +42,10 @@ em_run(void* data)
 int 
 main()
 {
+    #ifdef VS2019_PROJECT
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    #endif
+
     Platform* platform = CreatePlatform(800, 800, "TEST");
     
     if (platform == 0) return 1;
@@ -132,5 +140,10 @@ main()
     CleanupUI(&platform->ui);
     GameCleanup(game_data);
     DestroyPlatform(platform);
+
+    #ifdef VS2019_PROJECT
+    _CrtDumpMemoryLeaks();
+    #endif
+
     return 0;
 }

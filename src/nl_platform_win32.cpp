@@ -164,7 +164,11 @@ CreatePlatform(int width, int height, const char* title)
     platform->window = CreateWindowEx(
         dw_ex_style,
 		wc.lpszClassName,
+		#ifdef VS2019_PROJECT
+		L"TITIEL",
+		#else
 		title,
+		#endif
 		dw_style,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		(window_rect.right - window_rect.left),

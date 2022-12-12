@@ -39,12 +39,14 @@ struct Input
     // Less input and more of a screen thing
 
     //Make this its own struct of data for asier passing around?
-    v2i mouse_pos, prev_mouse_pos;
+    v2i mouse_pos = {};
+    v2i prev_mouse_pos = {};
+
     //TODO: this should be okay but I know some web key values go above 256
-    ButtonState keys[256]; 
+    ButtonState keys[256] = {}; 
     //TODO: Regular mice have 3 buttons, my gaming mouse has 5.
     // Test with my actual mouse and see what happens
-    ButtonState mouse_button[3];
+    ButtonState mouse_button[3] = {};
 
     //Mouse Scroll value?
 };

@@ -27,7 +27,9 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     if (sheet->sprites == 0)
     {
         LOG("ERROR: Sprite Sheet was unable to allocate the sprites array");
+        #ifndef VS2019_PROJECT
         __builtin_trap();
+        #endif
     }
     
     // uneeded as long as we = {}; before passing?
@@ -83,7 +85,9 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     if (gsd.x != ALLOWED_SPRITE_DIMENSIONS || gsd.y != ALLOWED_SPRITE_DIMENSIONS)
     {
         LOG("Error: sprite was not allowed size.  Allowed Size: %d, Sprite X: %d Y: %d", ALLOWED_SPRITE_DIMENSIONS, gsd.x, gsd.y);
+        #ifndef VS2019_PROJECT
         __builtin_trap();
+        #endif
     }
     
     if ((sheet->current_atlas_loc.x + gsd.x) > sheet->atlas_size.x)
