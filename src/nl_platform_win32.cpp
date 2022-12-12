@@ -165,7 +165,7 @@ CreatePlatform(int width, int height, const char* title)
         dw_ex_style,
 		wc.lpszClassName,
 		#ifdef VS2019_PROJECT
-		L"TITIEL",
+		TEXT("TITIEL"),
 		#else
 		title,
 		#endif
