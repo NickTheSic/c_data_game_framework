@@ -98,7 +98,7 @@ SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
     
     if (sheet->current_atlas_loc.y + gsd.y > sheet->atlas_size.y)
     {
-        fprintf(stderr, "No more height in the current spritesheet to add sprite.\n");
+        LOG("No more height in the current spritesheet to add sprite.")
         return handle;
     }
     
@@ -138,12 +138,12 @@ AddSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos
 {
     if (sprite_handle == INVALID_SPRITE_HANDLE)
     {
-        fprintf(stderr, "Sprite Handle was Invalid\n");
+        LOG("Sprite Handle was Invalid\n");
         sprite_handle = sheet->error_sprite;
     }
     else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
-        fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
+        LOG("Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
         sprite_handle = sheet->error_sprite;
     }
 
@@ -155,12 +155,12 @@ AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f
 {
     if (sprite_handle == INVALID_SPRITE_HANDLE)
     {
-        fprintf(stderr, "Sprite Handle was Invalid\n");
+        LOG("Sprite Handle was Invalid\n");
         sprite_handle = sheet->error_sprite;
     }
     else if (sprite_handle > sheet->sprite_count || sprite_handle < 0)
     {
-        fprintf(stderr, "Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
+        LOG("Sprite Handle was %d which is not in range of the sheet sprites", sprite_handle);
         sprite_handle = sheet->error_sprite;
     }
     
