@@ -61,7 +61,7 @@ void InitializeSpriteSheet(SpriteSheet* sheet, int sx=1024, int sy=1024);
 void CleanupSpriteSheet(SpriteSheet* sheet);
 
 SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path);
-//SpriteHandle ReloadSprite(Spritesheet* sheet, const char* path, SpriteHandle replace);
+void ReloadSprite(SpriteSheet* sheet, const char* path, SpriteHandle to_replace);
 void AddSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos);
 void AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos, const v2f& size);
 

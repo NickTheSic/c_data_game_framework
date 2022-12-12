@@ -64,6 +64,8 @@ main()
 
     GameData* game_data = GameInitialize(platform);
 
+    LoadSprite(&platform->fw.sprite_sheet, "data/cards/card_0000.png");
+
     if (game_data == 0)
     {
         return -42069;
