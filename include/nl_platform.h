@@ -42,4 +42,12 @@ void NLSwapBuffers(Platform* platform);
 
 void NLSetWindowShouldClose(Platform* platform);
 
+
+/* TO BE IMPLEMENTED 
+
+    will need to keep track of the old screen size as well as the new full screen size
+    void SetFullscreen(bool);
+
+*/
+
 #endif //NL_PLATFORM_H_

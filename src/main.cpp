@@ -56,13 +56,16 @@ main()
 
     // Might want to replace this with a Renderer init
     // That way I could use a GL renderer or Vulkan or other in the future
+    // I could also put this inside the CreatePlatform call or make a global init call
     if (!LoadGLExtensions()) return 2;
 
+    // Could make an init for the renderer
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     //glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
     glClearColor(0.1,0.2,0.4,1.0);
 
     InitTime();
@@ -126,6 +129,7 @@ main()
 
             HandleText(&platform->ui, "hello world!", {0.f, 250.f}, {16.f,16.f});
 
+            // Can refactor to use a char[] instead of string.  I know that it would be 'x ' then up to 4 numbers then ' y ' and 4 numbers
             std::string mouse_pos_str = "x " + std::to_string(platform->input.mouse_pos.x) + " y " + std::to_string(platform->input.mouse_pos.y);
             HandleText(&platform->ui, mouse_pos_str.c_str(), 
                 {(float)platform->input.mouse_pos.x - 16.f, (float)platform->input.mouse_pos.y}, {16.f,16.f});

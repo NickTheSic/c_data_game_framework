@@ -48,7 +48,11 @@ struct Input
     // Test with my actual mouse and see what happens
     ButtonState mouse_button[3] = {};
 
-    //Mouse Scroll value?
+    // Mouse Scroll value?
+
+    // Controller support here?
+    // How should I handle xInput vs alternatives
+    // Make a joystick struct?  Let the joystick handle what type
 };
 
 void UpdateMousePosition(Input* input, int mouse_x, int mouse_y);
