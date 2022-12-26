@@ -4,5 +4,6 @@ build/*
 *.vcxproj*
 *.sln
 .vs
+.vscode
 obj/*
 VS2019bin/*
