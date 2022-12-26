@@ -2,8 +2,6 @@
 #ifndef _NL_SHADER_H_
 #define _NL_SHADER_H_
 
-#include <map>
-#include <string>
 #include <nl_math.h>
 
 struct Shader
