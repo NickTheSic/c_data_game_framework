@@ -2,8 +2,8 @@
 if not exist build mkdir build
 pushd build
 
-set INCLUDES=-I../include -I../include/core -I../include/game -I../include/input -I../include/renderer -I../include/utils -I../include/ui -I../vendor/include
-set SRC_INCLUDES=-I../src -I../src/core -I../src/game -I../src/input -I../src/renderer -I../src/ui
+set INCLUDES=-I../include -I../vendor/include
+set SRC_INCLUDES=-I../src
 set DEFINES=-DPLATFORM_WEB
 set LIBS=-L../lib
 set FLAGS= -Wall -Wextra -o2
