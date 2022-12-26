@@ -127,7 +127,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
     return result;
 }
 
-NLPlatform* 
+Platform* 
 CreatePlatform(int width, int height, const char* title)
 {
 	DWORD dw_ex_style = NLGetEXWindowStyle();
@@ -159,7 +159,7 @@ CreatePlatform(int width, int height, const char* title)
 
     AdjustWindowRectEx(&window_rect, dw_style, 0, dw_ex_style);
 	
-    NLPlatform* platform = new NLPlatform;
+    Platform* platform = new Platform;
 
     platform->window = CreateWindowEx(
         dw_ex_style,
@@ -282,7 +282,7 @@ CreatePlatform(int width, int height, const char* title)
 }
 
 void 
-DestroyPlatform(NLPlatform* platform)
+DestroyPlatform(Platform* platform)
 {
     if (platform)
     {
@@ -296,7 +296,7 @@ DestroyPlatform(NLPlatform* platform)
 }
 
 bool 
-NLPollEvents(NLPlatform* platform)
+NLPollEvents(Platform* platform)
 {
 	//Unused, for compatibility
 	(void)(platform);
@@ -320,13 +320,13 @@ NLPollEvents(NLPlatform* platform)
 }
 
 void 
-NLSwapBuffers(NLPlatform* platform)
+NLSwapBuffers(Platform* platform)
 {
 	SwapBuffers((HDC)platform->device);
 }
 
 void 
-NLSetWindowShouldClose(NLPlatform* platform)
+NLSetWindowShouldClose(Platform* platform)
 {
 	(void)(platform);
 	PostQuitMessage(0);

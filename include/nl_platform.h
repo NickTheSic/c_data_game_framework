@@ -30,8 +30,6 @@ struct Platform
     Viewport viewport;
 };
 
-typedef Platform NLPlatform;
-
 // Helper functions if I want to retrieve the pointer 
 Platform* GetGlobalPlatform();
 void SetGlobalPlatform(Platform* platform);

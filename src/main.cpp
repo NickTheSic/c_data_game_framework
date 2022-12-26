@@ -24,6 +24,9 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
+// TODO: I could make a platform run function
+// Could help clean up main and make this file clean and basic
+// The alternative is to use different main files for windows and web, etc.
 void 
 em_run(void* data)
 {
@@ -51,6 +54,8 @@ main()
     if (platform == 0) return 1;
     SetGlobalPlatform(platform);
 
+    // Might want to replace this with a Renderer init
+    // That way I could use a GL renderer or Vulkan or other in the future
     if (!LoadGLExtensions()) return 2;
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -71,8 +76,6 @@ main()
 
     InitUI(&platform->ui, platform, 100);
 
-    ReloadSprite(&platform->fw.sprite_sheet, "data/err.png", platform->ui.sprites.letters[5]);
-    
 #ifndef __EMSCRIPTEN__
 
     while (NLPollEvents(platform))
