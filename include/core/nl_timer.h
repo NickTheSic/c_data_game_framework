@@ -3,6 +3,6 @@
 #define NL_TIMER_H_
 
 void InitTime();
-float GetTime();
+double GetTime();
 
 #endif //NL_TIMER_H_

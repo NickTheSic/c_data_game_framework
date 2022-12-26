@@ -8,10 +8,10 @@ void InitTime()
     tp1 = tp2 = std::chrono::system_clock::now();
 }
 
-float GetTime()
+double GetTime()
 {
     tp2 = std::chrono::system_clock::now();
-    std::chrono::duration<float> elapsed = tp2-tp1;
+    std::chrono::duration<double> elapsed = tp2-tp1;
     tp1 = tp2;
 
     return elapsed.count();
