@@ -1,8 +1,5 @@
 #include <nl_collision.h>
-
-#warning Not Implemetented Collision
-assert(false);
-return false;
+#include <nl_debug.h>
 
 bool 
 RectOverlapRect(v2f origin1, v2f size1, v2f origin2, v2f size2)
