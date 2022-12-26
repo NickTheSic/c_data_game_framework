@@ -1,4 +1,4 @@
-#include <audio/nl_audio.h>
+#include <nl_audio.h>
 
 bool InitAudio(/*Params...*/)
 {
