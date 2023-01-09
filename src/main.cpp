@@ -7,6 +7,7 @@
 #include <nl_core.h>
 #include <nl_game.h>
 #include <nl_gl.h>
+#include <nl_grid.h>
 #include <nl_input.h>
 #include <nl_math.h>
 #include <nl_platform.h>
@@ -71,6 +72,8 @@ main()
     InitTime();
 
     GameData* game_data = GameInitialize(platform);
+    Grid world_grid = {};
+    InitGrid(&world_grid, 5, 5);
 
     if (game_data == 0)
     {
@@ -146,6 +149,7 @@ main()
     emscripten_set_main_loop_arg(em_run, game_data, 0, 1);
 #endif
     
+    FreeGrid(&world_grid);
     CleanupUI(&platform->ui);
     GameCleanup(game_data);
     DestroyPlatform(platform);
