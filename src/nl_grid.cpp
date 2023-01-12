@@ -45,7 +45,7 @@ void GetGridValue(Grid* grid, int index, int* value)
 
     if (index > grid->width * grid->height)
     {
-        LOG("The index %d was greater than the size of the grid");
+        LOG("The index %d was greater than the size of the grid", index);
         *value = INVALID_GRID_LOCATION;
         return;
     }

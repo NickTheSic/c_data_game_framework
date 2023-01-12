@@ -16,4 +16,12 @@ void CleanupRenderer(Renderer* renderer);
 void BeginRender(Renderer* renderer);
 void EndRender(Renderer* renderer);
 
+
+void SetClearColor(float r, float g, float b, float a);
+void EnableBlend(bool enabled);
+void EnableDepth(bool enabled);
+void EnableCullFace(bool enabled);
+void CullFace(bool front);
+
+ 
 #endif //_NL_RENDERER_H

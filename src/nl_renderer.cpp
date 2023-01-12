@@ -60,3 +60,64 @@ CleanupRenderer(Renderer* renderer)
     
     glDeleteProgram(renderer->shader_program);
 }
+
+void 
+SetClearColor(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+}
+
+void 
+EnableBlend(bool enabled)
+{
+    if (enabled)
+    {
+        // This could go somewhere else but this is where I enable it and I think I only use this one
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
+    else
+    {
+        glDisable(GL_BLEND);
+    }
+}
+
+void
+EnableDepth(bool enabled)
+{
+    if (enabled)
+    {
+        glEnable(GL_DEPTH_TEST);
+    }
+    else
+    {
+        glDisable(GL_DEPTH_TEST);
+    }
+}
+
+void 
+EnableCullFace(bool enabled)
+{
+    if (enabled)
+    {
+        glEnable(GL_CULL_FACE);
+    }
+    else
+    {
+        glDisable(GL_CULL_FACE);
+    }
+}
+
+void 
+CullFace(bool front)
+{
+    if (front)
+    {
+        glCullFace(GL_FRONT);
+    }
+    else
+    {
+        glCullFace(GL_BACK);
+    }
+}
+

@@ -61,13 +61,11 @@ main()
     if (!LoadGLExtensions()) return 2;
 
     // Could make an init for the renderer
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    //glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    EnableBlend(true);
+    EnableCullFace(true);
+    CullFace(false);
 
-    glClearColor(0.1,0.2,0.4,1.0);
+    SetClearColor(0.1,0.2,0.4,1.0);
 
     InitTime();
 
