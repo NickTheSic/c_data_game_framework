@@ -70,3 +70,37 @@ void GetGridValue(Grid* grid, int x, int y, int* value)
 
     *value = grid->data[y*grid->width+x];
 }
+
+void SetGridValue(Grid* grid, int index, int value)
+{
+    if (index < 0 || index > grid->width*grid->height)
+    {
+        LOG("Not a valid index for the grid - Cannot set the value");
+        assert(false);
+        return;
+    }
+
+    grid->data[index] = value;
+}
+
+void SetGridValue(Grid* grid, int x, int y, int value)
+{
+    if (x < 0 || x > grid->width || y < 0 || y > grid->height)
+    {
+        LOG("X: %d, Y: %d was not in grid width and height.  Unable to set grid value", x, y);
+        *value = INVALID_GRID_LOCATION;
+        return;
+    }
+
+    grid->data[y*grid->width+x] = value;
+}
+
+void SaveGrid(Grid* grid, char* filename)
+{
+
+}
+
+void LoadGrid(Grid* grid, char* filename)
+{
+
+}
