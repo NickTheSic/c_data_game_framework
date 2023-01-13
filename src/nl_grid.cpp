@@ -88,7 +88,6 @@ void SetGridValue(Grid* grid, int x, int y, int value)
     if (x < 0 || x > grid->width || y < 0 || y > grid->height)
     {
         LOG("X: %d, Y: %d was not in grid width and height.  Unable to set grid value", x, y);
-        *value = INVALID_GRID_LOCATION;
         return;
     }
 

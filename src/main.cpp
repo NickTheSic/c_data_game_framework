@@ -50,7 +50,7 @@ main()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     #endif
 
-    Platform* platform = CreatePlatform(800, 800, "TEST");
+    Platform* platform = CreatePlatform(1280, 800, "TEST");
     
     if (platform == 0) return 1;
     SetGlobalPlatform(platform);
