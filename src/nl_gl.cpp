@@ -51,7 +51,7 @@ extern "C"{
     
     int LoadGLExtensions()
     {
-#define LOAD_GL_EXTENSION(type, fn) fn = (type)wglGetProcAddress(#fn); if (fn == 0)\
+#define LOAD_GL_EXTENSION(type, fn) fn = (type)GETPROCADDRESSFUN(#fn); if (fn == 0)\
 {return 0;} 
         {
             LOAD_GL_EXTENSION(PFNGLATTACHSHADERPROC, glAttachShader);

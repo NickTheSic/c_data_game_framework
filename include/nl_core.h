@@ -9,7 +9,6 @@
 #include <nl_debug.h>
 #include <nl_framework.h>
 #include <nl_game.h>
-#include <nl_gl.h>
 #include <nl_input.h>
 #include <nl_key.h>
 #include <nl_math.h>
