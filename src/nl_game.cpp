@@ -24,7 +24,9 @@ GameData*
 GameInitialize(Platform* platform)
 {
     GameData* data = new GameData();
-    InitializeFramework(&platform->fw, {512,512}, {200.f, 200.f}, {0.0f, 0.0f, 0.0f}, 100);
+    
+    float ratio = (float)platform->viewport.screen_size.x / (float)platform->viewport.screen_size.y;
+    InitializeFramework(&platform->fw, {512,512}, {ratio*200.f,200.f}, {0.0f, 0.0f, 0.0f}, 100);
 
     data->player_pos.x = 0.f;
     data->player_pos.y = 0.f;
