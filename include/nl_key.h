@@ -14,7 +14,6 @@ enum class MouseButton : unsigned char
     Right
 };
 
-//Rename to Button state and use for mouse and keys?
 enum class ButtonState : unsigned char
 {
     Up = 0, 
