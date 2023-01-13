@@ -8,6 +8,7 @@ struct Audio
 };
 
 bool InitAudio(/*Params...*/);
+void SetBackgroundMusic(/*Params...*/);
 void PlaySound(/*Params...*/);
 void CleanupAudio(/*Params...*/);
 
