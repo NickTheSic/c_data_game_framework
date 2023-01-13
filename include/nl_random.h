@@ -15,5 +15,4 @@ XORRandom(unsigned int seed = g_random_seed)
     return g_random_seed;
 }
 
-
 #endif NL_RANDOM_H_
