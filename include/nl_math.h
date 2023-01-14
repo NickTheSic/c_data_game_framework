@@ -8,8 +8,6 @@ struct v2i
     int x, y;
 };
 
-#ifndef USE_GLM_MATH
-
 struct v2f
 {
     float x, y;
@@ -27,22 +25,6 @@ struct mat4f
     float m31; float m32; float m33; float m34; 
     float m41; float m42; float m43; float m44;
 };
-
-#else
-
-#ifdef __EMSCRIPTEN__
- #define GLM_FORCE_PURE
-#endif
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-typedef glm::vec2 v2f;
-typedef glm::vec3 v3f;
-typedef glm::mat4 mat4f;
-
-#endif
 
 void CreateIdentityMartix(mat4f& matrix);
 void CreateOrtho(mat4f& matrix, float left, float right, float bottom, float top, float near_z, float far_z);

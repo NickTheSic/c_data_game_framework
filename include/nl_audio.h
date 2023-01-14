@@ -3,8 +3,8 @@
 
 struct Audio
 {
-    // BMG Buffer
-    // SFX Buffers
+    // BMG Buffer?
+    // SFX Buffer?
 };
 
 bool InitAudio(/*Params...*/);
