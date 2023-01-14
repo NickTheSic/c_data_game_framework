@@ -4,22 +4,36 @@
 
 struct Controller
 {
-    int player_index;
+    unsigned char player_index;
 
-    bool dpad_up, dpad_down, dpad_left, dpad_right;
-    bool start, select;
-    bool left_stick, right_stick; // Stick Click
-    bool left_shoulder, right_shoulder;
-    bool a, b, x, y;
+    unsigned short dpad_up        : 1;
+    unsigned short dpad_down      : 1;
+    unsigned short dpad_left      : 1;
+    unsigned short dpad_right     : 1;
+    unsigned short start          : 1;
+    unsigned short select         : 1;
+    unsigned short left_stick     : 1;
+    unsigned short right_stick    : 1; 
+    unsigned short left_shoulder  : 1;
+    unsigned short right_shoulder : 1;
+    unsigned short a              : 1;
+    unsigned short b              : 1;
+    unsigned short x              : 1;
+    unsigned short y              : 1;
 
-    float right_trigger, left_trigger;
+    float right_trigger;
+    float left_trigger;
 
-    float left_x_axis, left_y_axis;
-    float right_x_axis, right_y_axis;
+    float left_x_axis;
+    float left_y_axis;
+    float right_x_axis;
+    float right_y_axis;
 };
 
 void InitControllerSystem();
 void CleanupControllerSystem();
+
+void LogControllerState(Controller* controller);
 
 void PollController(Controller* controller);
 void VibrateController(Controller* controller, float intensity);

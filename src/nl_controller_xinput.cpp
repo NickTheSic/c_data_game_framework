@@ -1,9 +1,5 @@
 #include <nl_controller.h>
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#undef near
-#undef far
 #include <xinput.h>
 
 #define X_INPUT_GET_STATE(name) DWORD name(DWORD ControllerNumber, XINPUT_STATE* State)
@@ -63,29 +59,79 @@ void PollController(Controller* controller)
     {   
         XINPUT_GAMEPAD* pad = &state.Gamepad;
 
-        controller->dpad_up         = pad->wButtons & XINPUT_GAMEPAD_DPAD_UP;
-        controller->dpad_down       = pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN;
-        controller->dpad_left       = pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT;
-        controller->dpad_right      = pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT;
-        controller->start           = pad->wButtons & XINPUT_GAMEPAD_START;
-        controller->select          = pad->wButtons & XINPUT_GAMEPAD_BACK;
-        controller->left_stick      = pad->wButtons & XINPUT_GAMEPAD_LEFT_THUMB;
-        controller->right_stick     = pad->wButtons & XINPUT_GAMEPAD_RIGHT_THUMB;
-        controller->left_shoulder   = pad->wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER;
-        controller->right_shoulder  = pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER;
-        controller->a               = pad->wButtons & XINPUT_GAMEPAD_A;
-        controller->b               = pad->wButtons & XINPUT_GAMEPAD_B;
-        controller->x               = pad->wButtons & XINPUT_GAMEPAD_X;
-        controller->y               = pad->wButtons & XINPUT_GAMEPAD_Y;
+        controller->dpad_up        = (pad->wButtons & XINPUT_GAMEPAD_DPAD_UP)        != 0;
+        controller->dpad_down      = (pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN)      != 0;
+        controller->dpad_left      = (pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT)      != 0;
+        controller->dpad_right     = (pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)     != 0;
+        controller->start          = (pad->wButtons & XINPUT_GAMEPAD_START)          != 0;
+        controller->select         = (pad->wButtons & XINPUT_GAMEPAD_BACK)           != 0;
+        controller->left_stick     = (pad->wButtons & XINPUT_GAMEPAD_LEFT_THUMB)     != 0;
+        controller->right_stick    = (pad->wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)    != 0;
+        controller->left_shoulder  = (pad->wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)  != 0;
+        controller->right_shoulder = (pad->wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0;
+        controller->a              = (pad->wButtons & XINPUT_GAMEPAD_A)              != 0;
+        controller->b              = (pad->wButtons & XINPUT_GAMEPAD_B)              != 0;
+        controller->x              = (pad->wButtons & XINPUT_GAMEPAD_X)              != 0;
+        controller->y              = (pad->wButtons & XINPUT_GAMEPAD_Y)              != 0;
 
-        controller->left_trigger    = (float)pad->bLeftTrigger / 255.f;
-        controller->right_trigger   = (float)pad->bRightTrigger / 255.f;
+        controller->left_trigger   = (float)pad->bLeftTrigger / 255.f;
+        controller->right_trigger  = (float)pad->bRightTrigger / 255.f;
+
+        if (pad->sThumbLX < 0){
+            controller->left_x_axis = (float)pad->sThumbLX / 32768.0f;
+        } else {
+            controller->left_x_axis = (float)pad->sThumbLX / 32767.0f;
+        }
+
+        if (pad->sThumbLY < 0){
+            controller->left_y_axis = (float)pad->sThumbLY / 32768.f;
+        } else {   
+            controller->left_y_axis = (float)pad->sThumbLY / 32767.f;
+        }   
+
+        if (pad->sThumbRX < 0){
+            controller->right_x_axis = (float)pad->sThumbRX / 32768.f;
+        } else {
+            controller->right_x_axis = (float)pad->sThumbRX / 32767.f;
+        }
         
+        if (pad->sThumbRY < 0){
+            controller->right_y_axis = (float)pad->sThumbRY / 32768.f;
+        } else {
+            controller->right_y_axis = (float)pad->sThumbRY / 32767.f;
+        }
+
     }
     else
     {
         // Controller is not available
     }
+}
+
+void 
+LogControllerState(Controller* controller)
+{
+    if (controller->dpad_up != 0){ LOG("dpad_up is down");} 
+    if (controller->dpad_down != 0){ LOG("dpad_down is down");} 
+    if (controller->dpad_left != 0){ LOG("dpad_left is down");} 
+    if (controller->dpad_right != 0){ LOG("dpad_right is down");} 
+    if (controller->start != 0){ LOG("start is down");} 
+    if (controller->select != 0){ LOG("select is down");} 
+    if (controller->left_stick != 0){ LOG("left_stick is down");} 
+    if (controller->right_stick != 0){ LOG("right_stick is down");} 
+    if (controller->left_shoulder != 0){ LOG("left_shoulder is down");} 
+    if (controller->right_shoulder != 0){ LOG("right_shoulder is down");} 
+    if (controller->a != 0){ LOG("a is down");} 
+    if (controller->b != 0){ LOG("b is down");} 
+    if (controller->x != 0){ LOG("x is down");} 
+    if (controller->y != 0){ LOG("y is down");} 
+
+    if (controller->left_trigger != 0.0f){ LOG("controller->left_trigger is %f", controller->left_trigger);} 
+    if (controller->right_trigger != 0.0f){ LOG("controller->left_trigger is %f", controller->right_trigger);} 
+    if (controller->left_x_axis != 0.0f){ LOG("controller->left_x_axis is %f", controller->left_x_axis);} 
+    if (controller->left_y_axis != 0.0f){ LOG("controller->left_y_axis is %f", controller->left_y_axis);} 
+    if (controller->right_x_axis != 0.0f){ LOG("controller->right_x_axis is %f", controller->right_x_axis);} 
+    if (controller->right_y_axis != 0.0f){ LOG("controller->right_y_axis is %f", controller->right_y_axis);} 
 }
 
 void VibrateController(Controller* controller, float intensity)

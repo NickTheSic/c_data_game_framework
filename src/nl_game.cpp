@@ -48,11 +48,7 @@ void
 GameUpdate(Platform* platform, GameData* data, float delta_time)
 {
     PollController(&data->controller);
-
-    if (data->controller.a)
-    {
-        LOG("A PRESSED.  RTrigger: %f", data->controller.right_trigger);
-    }
+    //LogControllerState(&data->controller);
 
     data->player_velocty.x = data->player_velocty.y = 0.f;
 
