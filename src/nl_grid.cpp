@@ -96,10 +96,10 @@ void SetGridValue(Grid* grid, int x, int y, int value)
 
 void SaveGrid(Grid* grid, char* filename)
 {
-
+    UNUSED(grid); UNUSED(filename);
 }
 
 void LoadGrid(Grid* grid, char* filename)
 {
-
+    UNUSED(grid); UNUSED(filename);
 }

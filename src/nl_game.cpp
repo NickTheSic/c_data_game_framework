@@ -1,6 +1,7 @@
 #include <nl_game.h>
 
 #include <nl_camera.h>
+#include <nl_controller.h>
 #include <nl_debug.h>
 #include <nl_framework.h>
 #include <nl_gl.h>
@@ -18,6 +19,8 @@ struct GameData
     v2f player_velocty;
 
     SpriteHandle player_sprite;
+
+    Controller controller = {};
 };
 
 GameData* 
@@ -27,6 +30,8 @@ GameInitialize(Platform* platform)
     
     float ratio = (float)platform->viewport.screen_size.x / (float)platform->viewport.screen_size.y;
     InitializeFramework(&platform->fw, {512,512}, {ratio*200.f,200.f}, {0.0f, 0.0f, 0.0f}, 100);
+
+    InitControllerSystem();
 
     data->player_pos.x = 0.f;
     data->player_pos.y = 0.f;
@@ -42,6 +47,13 @@ GameInitialize(Platform* platform)
 void 
 GameUpdate(Platform* platform, GameData* data, float delta_time)
 {
+    PollController(&data->controller);
+
+    if (data->controller.a)
+    {
+        LOG("A PRESSED.  RTrigger: %f", data->controller.right_trigger);
+    }
+
     data->player_velocty.x = data->player_velocty.y = 0.f;
 
     const float Speed = 100.f;

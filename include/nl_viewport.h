@@ -10,7 +10,7 @@ struct Viewport
     v2i screen_center;
 };
 
-void GetAspectRatio(Viewport* viewport, float ratio) {assert(false); /*Implement Me*/};
+//void GetAspectRatio(Viewport* viewport, float ratio) {assert(false); /*Implement Me*/};
 
 void UpdateScreenSize(Viewport* viewport, int sx, int sy);
 void GetScreenSize(Viewport* veiwport, int* sx, int* sy);
