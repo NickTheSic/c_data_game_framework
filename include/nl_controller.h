@@ -4,12 +4,12 @@
 
 struct Controller
 {
-    unsigned char dpad_up, dpad_down, dpad_left, dpad_right;
-    unsigned char a, b, x, y;
-    unsigned char right_shoulder, left_shoulder;
-    unsigned char right_stick, left_stick
+    bool dpad_up, dpad_down, dpad_left, dpad_right;
+    bool a, b, x, y;
+    bool right_stick, left_stick
+    bool start, select;
 
-    unsigned char start, select;
+    float right_shoulder, left_shoulder;
     
     float right_trigger, left_trigger;
 }
@@ -17,8 +17,7 @@ struct Controller
 void InitControllerSystem(int controller_count);
 void CleanupControllerSystem();
 
-void PollControllers();
-
+void PollController(Controller* controller);
 
 
 #endif //NL_CONTROLLER_H_
