@@ -87,5 +87,6 @@ GameRender(Platform* platform, GameData* data)
 void
 GameCleanup(GameData* data)
 {
+    CleanupControllerSystem();
     delete data;
 }
