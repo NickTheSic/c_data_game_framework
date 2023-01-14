@@ -87,3 +87,10 @@ void PollController(Controller* controller)
         // Controller is not available
     }
 }
+
+void VibrateController(Controller* controller, float intensity)
+{
+    UNUSED(controller); UNUSED(intensity);
+    LOG("Vibrate Controller not implemented");
+    assert(false);
+}

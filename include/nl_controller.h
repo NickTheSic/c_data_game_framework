@@ -22,6 +22,6 @@ void InitControllerSystem();
 void CleanupControllerSystem();
 
 void PollController(Controller* controller);
-
+void VibrateController(Controller* controller, float intensity);
 
 #endif //NL_CONTROLLER_H_
