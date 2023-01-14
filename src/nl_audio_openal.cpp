@@ -36,5 +36,13 @@ void CleanupAudio(/*Params...*/)
     alcDestroyContext(AudioDevice.context);
     alcCloseDevice(AudioDevice.device);
 }
+
+bool LoadSound(/*Params*/)
+{
+    #error Implement Load sound
 }
 
+bool LoadBGM(/*Params*/)
+{
+    #error Implement load BGM
+}
