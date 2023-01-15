@@ -16,60 +16,60 @@ void SetGlobalPlatform(Platform* platform)
 static EM_BOOL 
 keyboard_callback(int eventType, const EmscriptenKeyboardEvent* e, void* platform)
 {
-    #error Incomplete keyboard callback
-    	if (eventType == EMSCRIPTEN_EVENT_KEYDOWN)
-		{
-			static_cast<mst::Engine*>(engine)->HandleKey((mst::Key)emscripten_compute_dom_pk_code(e->code), true);
-		}
+    //#error Incomplete keyboard callback
+    if (eventType == EMSCRIPTEN_EVENT_KEYDOWN)
+	{
+		//static_cast<mst::Engine*>(engine)->HandleKey((mst::Key)emscripten_compute_dom_pk_code(e->code), true);
+	}
 
-		if (eventType == EMSCRIPTEN_EVENT_KEYUP)
-		{
-			static_cast<mst::Engine*>(engine)->HandleKey((mst::Key)emscripten_compute_dom_pk_code(e->code), false);
-		}
+	if (eventType == EMSCRIPTEN_EVENT_KEYUP)
+	{
+		//static_cast<mst::Engine*>(engine)->HandleKey((mst::Key)emscripten_compute_dom_pk_code(e->code), false);
+	}
 
-		return EM_TRUE;
+	return EM_TRUE;
 }
 
 static EM_BOOL
-mouse_callback()
+mouse_callback(int event_type, const EmscriptenMouseEvent* e, void* platform)
 {
-    #error Incomplete Mouse callback
+    //#error Incomplete Mouse callback
     //Mouse button press
-		if (e->button == 0) // left click
+	if (e->button == 0) // left click
+	{
+		if (event_type == EMSCRIPTEN_EVENT_MOUSEDOWN)
 		{
-			if (eventType == EMSCRIPTEN_EVENT_MOUSEDOWN)
-			{
-				static_cast<mst::Engine*>(engine)->HandleMouseButton(0, true);
-			}
-			else if (eventType == EMSCRIPTEN_EVENT_MOUSEUP)
-			{
-				static_cast<mst::Engine*>(engine)->HandleMouseButton(0, false);
-			}
+			//static_cast<mst::Engine*>(engine)->HandleMouseButton(0, true);
 		}
-
-		if (e->button == 2) // right click
+		else if (event_type == EMSCRIPTEN_EVENT_MOUSEUP)
 		{
-			if (eventType == EMSCRIPTEN_EVENT_MOUSEDOWN)
-			{
-				static_cast<mst::Engine*>(engine)->HandleMouseButton(1, true);
-			}
-			else if (eventType == EMSCRIPTEN_EVENT_MOUSEUP)
-			{
-				static_cast<mst::Engine*>(engine)->HandleMouseButton(1, false);
-			}
+			//static_cast<mst::Engine*>(engine)->HandleMouseButton(0, false);
 		}
+	}
 
-		return EM_FALSE;
+	if (e->button == 2) // right click
+	{
+		if (event_type == EMSCRIPTEN_EVENT_MOUSEDOWN)
+		{
+			//static_cast<mst::Engine*>(engine)->HandleMouseButton(1, true);
+		}
+		else if (event_type == EMSCRIPTEN_EVENT_MOUSEUP)
+		{
+			//static_cast<mst::Engine*>(engine)->HandleMouseButton(1, false);
+		}
+	}
+
+	return EM_FALSE;
 }
 
 static EM_BOOL
-mouse_move_callback()
+mouse_move_callback(int eventType, const EmscriptenMouseEvent* e, void* platform)
 {
-    #error Incomplete mouse move callback 
-    mst::Engine* engine = static_cast<mst::Engine*>(inEngine);
-		engine->HandleMouseMove(e->targetX, engine->ScreenSize.y - e->targetY);
+    //#error Incomplete mouse move callback 
+    //mst::Engine* engine = static_cast<mst::Engine*>(inEngine);
+	//engine->HandleMouseMove(e->targetX, engine->ScreenSize.y - e->targetY);
 
-		return EM_FALSE;
+	return EM_FALSE;
 }
 
 Platform* CreatePlatform(int width, int height, const char* title)
@@ -79,6 +79,8 @@ Platform* CreatePlatform(int width, int height, const char* title)
 
     Platform* platform = new Platform();
 
+	emscripten_set_window_title(title);
+
     emscripten_set_canvas_element_size("#canvas", width, height);
 
 	//set up callbacks here
@@ -86,7 +88,7 @@ Platform* CreatePlatform(int width, int height, const char* title)
 	emscripten_set_keyup_callback("#canvas", platform, 1, keyboard_callback);
 
 	//emscripten_set_wheel_callback("#canvas", this, 1, wheel_callback);
-	emscripten_set_mousedown_callback("#canvas", platform, 1, );
+	emscripten_set_mousedown_callback("#canvas", platform, 1, mouse_callback);
 	emscripten_set_mouseup_callback("#canvas", platform, 1, mouse_callback);
 	emscripten_set_mousemove_callback("#canvas", platform, 1, mouse_move_callback);
 
@@ -98,7 +100,7 @@ Platform* CreatePlatform(int width, int height, const char* title)
 	EGLConfig  config;
 
 	platform->display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-	eglInitialize(platform->isplay, nullptr, nullptr);
+	eglInitialize(platform->display, nullptr, nullptr);
 	eglChooseConfig(platform->display, attribute_list, &config, 1, &num_config);
 		
 	/* create an EGL rendering context */
@@ -116,18 +118,18 @@ void DestroyPlatform(Platform* platform)
     UNUSED(platform);
 }
 
-bool NLPollEvents(NLPlatform* platform)
+bool NLPollEvents(Platform* platform)
 {
     UNUSED(platform);
     return true;
 }
 
-void NLSwapBuffers(NLPlatform* platform)
+void NLSwapBuffers(Platform* platform)
 {
     eglSwapBuffers(platform->display, platform->surface);
 }
 
-void NLSetWindowShouldClose(NLPlatform* platform)
+void NLSetWindowShouldClose(Platform* platform)
 {
     UNUSED(platform);
 }

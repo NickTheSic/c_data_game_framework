@@ -31,12 +31,14 @@
 void 
 em_run(void* data)
 {
+    // I am realizing I hate that I have to do this
+    Platform* platform = GetGlobalPlatform();
     GameData* game_data = (GameData*)data;
 
     const float delta_time = GetTime();
 
-    GameUpdate(game_data, delta_time);
-    GameRender(game_data);
+    GameUpdate(platform, game_data, delta_time);
+    GameRender(platform, game_data);
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

@@ -63,9 +63,9 @@ GameUpdate(Platform* platform, GameData* data, float delta_time)
         data->player_velocty.y = 1.f;
     if (platform->input.keys[(int)Key::S] == ButtonState::Down || data->controller.dpad_down == 1 || data->controller.left_y_axis < -0.1f)
         data->player_velocty.y = -1.f;
-    if (platform->input.keys[(int)'A'] == ButtonState::Down || data->controller.dpad_left == 1 || data->controller.left_x_axis < -0.1f)
+    if (platform->input.keys[(int)Key::A] == ButtonState::Down || data->controller.dpad_left == 1 || data->controller.left_x_axis < -0.1f)
         data->player_velocty.x = -1.f;
-    if (platform->input.keys[(int)'D'] == ButtonState::Down || data->controller.dpad_right == 1 || data->controller.left_x_axis > 0.1f)
+    if (platform->input.keys[(int)Key::D] == ButtonState::Down || data->controller.dpad_right == 1 || data->controller.left_x_axis > 0.1f)
         data->player_velocty.x = 1.f;
 
     data->player_pos.x += data->player_velocty.x * Speed * delta_time;

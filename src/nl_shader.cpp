@@ -4,6 +4,16 @@
 #include <nl_math.h>
 #include <nl_renderer.h>
 
+#if defined PLATFORM_WEB || defined __EMSCRIPTEN__
+#define SHADER_VERSION_HEADER "#version 300 es\n precision mediump float;\n"
+
+#elif defined (PLATFORM_WINDOWS) || defined(_WIN32)
+#define SHADER_VERSION_HEADER  "#version 330 core\n"
+
+#else
+#error Double check the shaders required for glsl on the platform!
+#endif
+
 // Keeping around for reference.  I do like using a map and shader, but I don't need this for now
 // In the future I could make my own map or come back to this, but for now I only have specific uniforms I use
 //static int 
@@ -78,25 +88,25 @@ CompileSpriteShaderProgram(Renderer* renderer)
     unsigned int vertShader, fragShader;
     
     const char* vertCode = 
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 inPos;"
-        "layout (location = 1) in vec2 inCoords;"
-        "out vec2 TexCoords;"
-        "uniform mat4 view;"
-        "void main(){"
-        "gl_Position = view * vec4(inPos, 1.0f);"
-        "TexCoords = inCoords;"
+        SHADER_VERSION_HEADER
+        "layout (location = 0) in vec3 inPos;  \n"
+        "layout (location = 1) in vec2 inCoords\n;"
+        "out vec2 TexCoords;\n"
+        "uniform mat4 view;\n"
+        "void main(){\n"
+        "gl_Position = view * vec4(inPos, 1.0f);\n"
+        "TexCoords = inCoords;\n"
         "}\0"
         ;
     
     const char* fragCode = 
-        "#version 330 core\n"
-        "out vec4 FragColor;"
-        "in vec2 TexCoords;"
-        "uniform sampler2D tex;"
-        "void main(){"
-        "FragColor = texture(tex, TexCoords);"
-        "if (FragColor.a == 0) discard;"
+        SHADER_VERSION_HEADER
+        "out vec4 FragColor;\n"
+        "in vec2 TexCoords;\n"
+        "uniform sampler2D tex;\n"
+        "void main(){\n"
+        "FragColor = texture(tex, TexCoords);\n"
+        "if (FragColor.a == 0.0) discard;\n"
         "}\0"
         ;
     

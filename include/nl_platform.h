@@ -7,6 +7,12 @@
 #include <nl_ui.h>
 #include <nl_viewport.h>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#include <EGL/egl.h>
+#endif
+
 struct Platform
 {
 #ifdef _WIN32

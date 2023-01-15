@@ -6,12 +6,14 @@ set INCLUDES=-I../include -I../vendor/include
 set SRC_INCLUDES=-I../src
 set DEFINES=-DPLATFORM_WEB
 set LIBS=-L../lib
-set FLAGS= -Wall -Wextra -o2
+set FLAGS= -Wall -Wextra -O2 -s ALLOW_MEMORY_GROWTH=1 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2
 set DATA=--preload-file data
+set SHELL_FILE=--shell-file ../MinimalShell.html
+set EXTRA= %1 %2 %3 
 
 @echo on
 
-em++ %FLAGS% %INCLUDES% %LIBS% ../src/build.cpp -o a.exe %DATA%
+em++ %FLAGS% %INCLUDES% %SRC_INCLUDES% %LIBS% %EXTRA% ../src/build.cpp -o index.html %DATA%
 
 @echo off
 popd 
