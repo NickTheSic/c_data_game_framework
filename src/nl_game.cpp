@@ -18,7 +18,7 @@ struct GameData
     v3f player_pos;
     v2f player_velocty;
 
-    SpriteHandle player_sprite;
+    SpriteAnimation player_sprite;
 
     Controller controller = {};
 };
@@ -39,7 +39,11 @@ GameInitialize(Platform* platform)
     data->player_velocty.x = 0.f;
     data->player_velocty.y = 0.f;
 
-    data->player_sprite = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-01.png");
+    InitializeSpriteAnim(&data->player_sprite, 4, 10);
+    data->player_sprite.sprite_handles[0] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-01.png");
+    data->player_sprite.sprite_handles[1] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-02.png");
+    data->player_sprite.sprite_handles[2] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-03.png");
+    data->player_sprite.sprite_handles[3] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-04.png");
 
     return data;
 }
@@ -51,6 +55,7 @@ GameUpdate(Platform* platform, GameData* data, float delta_time)
     //LogControllerState(&data->controller);
 
     data->player_velocty.x = data->player_velocty.y = 0.f;
+    UpdateSpriteAnimation(&data->player_sprite, delta_time);
 
     const float Speed = 100.f;
 
@@ -75,7 +80,7 @@ void
 GameRender(Platform* platform, GameData* data)
 { 
     SetViewUniform(&platform->fw.shader, platform->fw.main_camera.view);
-    AddSpriteToRender(&platform->fw.sprite_sheet, data->player_sprite, data->player_pos);
+    RenderSpriteAnimationFrame(&platform->fw.sprite_sheet, &data->player_sprite, data->player_pos);
 
     DisplayEntireSheet(&platform->fw.sprite_sheet, {-100.0f, 100.f, 0.0f}, {256.f,128.f});
 }
@@ -83,6 +88,7 @@ GameRender(Platform* platform, GameData* data)
 void
 GameCleanup(GameData* data)
 {
+    CleanupSpriteAnimation(&data->player_sprite);
     CleanupControllerSystem();
     delete data;
 }
