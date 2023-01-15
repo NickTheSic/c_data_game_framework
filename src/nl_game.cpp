@@ -71,9 +71,7 @@ GameUpdate(Platform* platform, GameData* data, float delta_time)
     data->player_pos.x += data->player_velocty.x * Speed * delta_time;
     data->player_pos.y += data->player_velocty.y * Speed * delta_time;
 
-
     CreateViewMatrixFollow(&platform->fw.main_camera, data->player_pos);
-
 }
 
 void 
