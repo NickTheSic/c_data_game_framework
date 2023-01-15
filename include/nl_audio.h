@@ -1,12 +1,6 @@
 #ifndef 
 #define _NL_AUDIO_H_
 
-struct Audio
-{
-    // BMG Buffer?
-    // SFX Buffer?
-};
-
 bool InitAudio(/*Params...*/);
 void CleanupAudio(/*Params...*/);
 
