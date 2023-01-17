@@ -41,8 +41,8 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
     glGenTextures(1, &sheet->textureID);
     glBindTexture(GL_TEXTURE_2D, sheet->textureID);
     
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     
@@ -54,7 +54,11 @@ InitializeSpriteSheet(SpriteSheet *sheet, int sx, int sy)
                  0,
                  GL_RGBA,
                  GL_UNSIGNED_BYTE,
-                 0
+#if !defined __EMSCRIPTEN__ || !defined PLATFORM_WEB
+                0
+#else
+                new unsigned char[sheet->atlas_size.x*sheet->atlas_size.y]
+#endif
                  );
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, position)));
@@ -117,7 +121,8 @@ ReloadSprite(SpriteSheet* sheet, const char* path, SpriteHandle to_replace)
     sheet->sprites[to_replace].size.y = gsd.y;  
 }
 
-SpriteHandle LoadSprite(SpriteSheet* sheet, const char* path)
+SpriteHandle 
+LoadSprite(SpriteSheet* sheet, const char* path)
 {    
     Sprite sprite = {};
     SpriteHandle handle = INVALID_SPRITE_HANDLE;
@@ -219,7 +224,8 @@ AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f
     
     if (sheet->renderer.vertex_count + 4 > sheet->renderer.max_vertices)
     {
-        LOG("Exceeded the vertex count allowed for this spritesheet buffer");
+        LOG("Exceeded the vertex count allowed for this spritesheet buffer. Allowed %i, used trying to use %i",
+                sheet->renderer.max_vertices, sheet->renderer.vertex_count + 4);
         EndRender(&sheet->renderer);
     }
     
@@ -320,6 +326,14 @@ void SpriteSheetBeginRender(SpriteSheet* sheet)
 {   
     BeginRender(&sheet->renderer);
     glBindTexture(GL_TEXTURE_2D, sheet->textureID);
+
+    #if defined (PLATFORM_WEB) || defined (__EMSCRIPTEN__)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, position)));
+    glEnableVertexAttribArray(0);
+    
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertexData), (void*)(offsetof(SpriteVertexData, uv)));
+    glEnableVertexAttribArray(1);
+    #endif
 }
 
 void

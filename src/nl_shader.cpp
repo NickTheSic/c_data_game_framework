@@ -89,25 +89,25 @@ CompileSpriteShaderProgram(Renderer* renderer)
     
     const char* vertCode = 
         SHADER_VERSION_HEADER
-        "layout (location = 0) in vec3 inPos;  \n"
-        "layout (location = 1) in vec2 inCoords\n;"
-        "out vec2 TexCoords;\n"
-        "uniform mat4 view;\n"
-        "void main(){\n"
-        "gl_Position = view * vec4(inPos, 1.0f);\n"
-        "TexCoords = inCoords;\n"
-        "}\0"
+        "layout (location = 0) in vec3 inPos;    \n"
+        "layout (location = 1) in vec2 inCoords  \n;"
+        "out vec2 TexCoords;                     \n"
+        "uniform mat4 view;                      \n"
+        "void main(){                            \n"
+        "gl_Position = view * vec4(inPos, 1.0f); \n"
+        "TexCoords = inCoords;                   \n"
+        "}                                       \0"
         ;
     
     const char* fragCode = 
         SHADER_VERSION_HEADER
-        "out vec4 FragColor;\n"
-        "in vec2 TexCoords;\n"
-        "uniform sampler2D tex;\n"
-        "void main(){\n"
-        "FragColor = texture(tex, TexCoords);\n"
-        "if (FragColor.a == 0.0) discard;\n"
-        "}\0"
+        "out vec4 FragColor;                     \n"
+        "in vec2 TexCoords;                      \n"
+        "uniform sampler2D tex;                  \n"
+        "void main(){                            \n"
+        "FragColor = texture(tex, TexCoords);    \n"
+        "if (FragColor.a == 0.0) discard;        \n"
+        "}                                       \0"
         ;
     
     CompileShaderCode(vertShader, GL_VERTEX_SHADER, vertCode);

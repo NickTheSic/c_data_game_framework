@@ -51,14 +51,14 @@ InitUI(UI* ui, struct Platform* platform, int max_ui_elements)
     for (char i = START_FONT_CHARACTERS; i <= END_FONT_CHARACTERS; ++i)
     {
         letter_filepaths[10] = i;
-        LOG("%s", letter_filepaths);
+        //LOG("%s", letter_filepaths);
         ui->sprites.letters[i-START_FONT_CHARACTERS] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
     }
 
     for (char i = START_NUMBER_CHARACTER; i <= END_NUMBER_CHARACTER; ++i)
     {
         letter_filepaths[10] = i;
-        LOG("%s", letter_filepaths);
+        //LOG("%s", letter_filepaths);
         ui->sprites.numbers[i - START_NUMBER_CHARACTER] = LoadSprite(&platform->fw.sprite_sheet, letter_filepaths);
     }
 

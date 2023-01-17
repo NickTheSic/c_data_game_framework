@@ -25,68 +25,16 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
-// TODO: I could make a platform run function
-// Could help clean up main and make this file clean and basic
-// The alternative is to use different main files for windows and web, etc.
+#endif
+
 void 
-em_run(void* data)
+run(void* data)
 {
-    // I am realizing I hate that I have to do this
     Platform* platform = GetGlobalPlatform();
     GameData* game_data = (GameData*)data;
 
+    // I am realizing I hate that I have to do this
     const float delta_time = GetTime();
-
-    GameUpdate(platform, game_data, delta_time);
-    GameRender(platform, game_data);
-    
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-#endif
-
-int 
-main()
-{
-    #ifdef VS2019_PROJECT
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    #endif
-
-    Platform* platform = CreatePlatform(1280, 800, "TEST");
-    
-    if (platform == 0) return 1;
-    SetGlobalPlatform(platform);
-
-    // Might want to replace this with a Renderer init
-    // That way I could use a GL renderer or Vulkan or other in the future
-    // I could also put this inside the CreatePlatform call or make a global init call
-    if (!LoadGLExtensions()) return 2;
-
-    // Could make an init for the renderer
-    EnableBlend(true);
-    EnableCullFace(true);
-    CullFace(false);
-
-    SetClearColor(0.1,0.2,0.4,1.0);
-
-    InitTime();
-
-    GameData* game_data = GameInitialize(platform);
-    Grid world_grid = {};
-    InitGrid(&world_grid, 5, 5);
-
-    if (game_data == 0)
-    {
-        return -42069;
-    }
-
-    InitUI(&platform->ui, platform, 100);
-
-#ifndef __EMSCRIPTEN__
-
-    while (NLPollEvents(platform))
-    {
-        const float delta_time = GetTime();
 
         #ifdef DEBUG
         // Incomplete but I want to add a delta time modifier
@@ -143,10 +91,49 @@ main()
         
         NLSwapBuffers(platform);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+int 
+main()
+{
+    #ifdef VS2019_PROJECT
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    #endif
+
+    Platform* platform = CreatePlatform(1280, 800, "TEST");
+    
+    if (platform == 0) return 1;
+    SetGlobalPlatform(platform);
+
+    // Might want to replace this with a Renderer init
+    // That way I could use a GL renderer or Vulkan or other in the future
+    // I could also put this inside the CreatePlatform call or make a global init call
+    if (!LoadGLExtensions()) return 2;
+
+    // Could make an init for the renderer
+    EnableBlend(true);
+    EnableCullFace(true);
+    CullFace(false);
+
+    SetClearColor(0.1,0.2,0.4,1.0);
+
+    InitTime();
+
+    GameData* game_data = GameInitialize(platform);
+    Grid world_grid = {};
+    InitGrid(&world_grid, 5, 5);
+
+    if (game_data == 0)
+    {
+        return -42069;
     }
 
+    InitUI(&platform->ui, platform, 100);
+
+#ifndef __EMSCRIPTEN__
+    while (NLPollEvents(platform)){run((void*)game_data);};
 #else
-    emscripten_set_main_loop_arg(em_run, game_data, 0, 1);
+    emscripten_set_main_loop_arg(run, game_data, 0, 1);
 #endif
     
     FreeGrid(&world_grid);
