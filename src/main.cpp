@@ -40,57 +40,57 @@ run(void* data)
         // Incomplete but I want to add a delta time modifier
         // delta_time *= time_modifier;
         #endif
-    NLSwapBuffers(platform);
     glClear(GL_COLOR_BUFFER_BIT); 
     glClear(GL_DEPTH_BUFFER_BIT);
        
-        GameUpdate(platform, game_data, delta_time);
-        UpdateUI(&platform->ui, platform);
-
-        // Might want to let the sprites render themselves if they are active,
-        // Loaded sprites are different than draw sprites, drawn sprites re use loaded sprites
-        SpriteSheetBeginRender(&platform->fw.sprite_sheet);
+    GameUpdate(platform, game_data, delta_time);
+    UpdateUI(&platform->ui, platform);
+    
+    // Might want to let the sprites render themselves if they are active,
+    // Loaded sprites are different than draw sprites, drawn sprites re use loaded sprites
+    SpriteSheetBeginRender(&platform->fw.sprite_sheet);
+    {
+        GameRender(platform, game_data);
+    }
+    SpriteSheetEndRender(&platform->fw.sprite_sheet);
+    
+    // UI Rendering, Calling begin and end so that I draw on the correct camera
+    SpriteSheetBeginRender(&platform->fw.sprite_sheet);
+    {
+        RenderUI(&platform->ui, &platform->fw);
+        if (HandleButton(&platform->ui, {0.f, 0.f}, {32.f, 32.f}, "test",
+            {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
+            platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
         {
-            GameRender(platform, game_data);
+            LOG("Successful test Button Press");
         }
-        SpriteSheetEndRender(&platform->fw.sprite_sheet);
-        
-        // UI Rendering, Calling begin and end so that I draw on the correct camera
-        SpriteSheetBeginRender(&platform->fw.sprite_sheet);
+    
+        if (HandleButton(&platform->ui, {0.f, 48.f}, {32.f, 32.f}, "funky",
+            {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
+            platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
         {
-            RenderUI(&platform->ui, &platform->fw);
-
-            if (HandleButton(&platform->ui, {0.f, 0.f}, {32.f, 32.f}, "test",
-                {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
-                platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
-            {
-                LOG("Successful test Button Press");
-            }
-
-            if (HandleButton(&platform->ui, {0.f, 48.f}, {32.f, 32.f}, "funky",
-                {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
-                platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
-            {
-                LOG("Successful funky Button Press");
-            }
-
-            if (HandleButton(&platform->ui, {0.f, 96.f}, {32.f, 32.f}, "yes?man",
-                {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
-                platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
-            {
-                LOG("Successful yes?man Button Press");
-            }
-
-            HandleText(&platform->ui, "hello world!", {0.f, 250.f}, {16.f,16.f});
-
-            // Can refactor to use a char[] instead of string.  I know that it would be 'x ' then up to 4 numbers then ' y ' and 4 numbers
-            std::string mouse_pos_str = "x " + std::to_string(platform->input.mouse_pos.x) + " y " + std::to_string(platform->input.mouse_pos.y);
-            HandleText(&platform->ui, mouse_pos_str.c_str(), 
-                {(float)platform->input.mouse_pos.x - 16.f, (float)platform->input.mouse_pos.y}, {16.f,16.f});
-
-            EndUIRender(&platform->ui, &platform->fw);
+            LOG("Successful funky Button Press");
         }
-        SpriteSheetEndRender(&platform->fw.sprite_sheet);
+    
+        if (HandleButton(&platform->ui, {0.f, 96.f}, {32.f, 32.f}, "yes?man",
+            {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
+            platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
+        {
+            LOG("Successful yes?man Button Press");
+        }
+    
+        HandleText(&platform->ui, "hello world!", {0.f, 250.f}, {16.f,16.f});
+        // Can refactor to use a char[] instead of string.  I know that it would be 'x ' then up to 4 numbers then ' y ' and 4 numbers
+        std::string mouse_pos_str = "x " + std::to_string(platform->input.mouse_pos.x) + " y " + std::to_string(platform->input.mouse_pos.y);
+    
+        HandleText(&platform->ui, mouse_pos_str.c_str(), 
+            {(float)platform->input.mouse_pos.x - 16.f, (float)platform->input.mouse_pos.y}, {16.f,16.f});
+        EndUIRender(&platform->ui, &platform->fw);
+    }
+
+    SpriteSheetEndRender(&platform->fw.sprite_sheet);
+    
+    NLSwapBuffers(platform);
 }
 
 int 
