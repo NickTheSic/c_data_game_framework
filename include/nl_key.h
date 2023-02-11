@@ -30,6 +30,7 @@ enum class Key
 #if defined(_WIN32)
 
     A = 'A', B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
+    ZERO = '0', ONE = '1', TWO = '2', THREE = '3', FOUR, FIVE, SIX, SEVEN, EIGHT, NINE,
 
 #elif defined(__EMSCRIPTEN__)
 

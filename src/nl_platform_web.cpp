@@ -16,18 +16,17 @@ void SetGlobalPlatform(Platform* platform)
 static EM_BOOL 
 keyboard_callback(int eventType, const EmscriptenKeyboardEvent* e, void* platform)
 {
-    //#error Incomplete keyboard callback
+	Platform* _platform = (Platform*)platform;
+
     if (eventType == EMSCRIPTEN_EVENT_KEYDOWN)
 	{
-		//static_cast<mst::Engine*>(engine)->HandleKey((mst::Key)emscripten_compute_dom_pk_code(e->code), true);
+		UpdateKeyState(&_platform->input, (Key)emscripten_compute_dom_pk_code(e->code), ButtonState::Down);
 	}
 
 	if (eventType == EMSCRIPTEN_EVENT_KEYUP)
 	{
-		//static_cast<mst::Engine*>(engine)->HandleKey((mst::Key)emscripten_compute_dom_pk_code(e->code), false);
+		UpdateKeyState(&_platform->input, (Key)emscripten_compute_dom_pk_code(e->code), ButtonState::Up);
 	}
-
-	UNUSED(e); UNUSED(platform);
 
 	return EM_TRUE;
 }
@@ -35,19 +34,18 @@ keyboard_callback(int eventType, const EmscriptenKeyboardEvent* e, void* platfor
 static EM_BOOL
 mouse_callback(int event_type, const EmscriptenMouseEvent* e, void* platform)
 {
-    //#error Incomplete Mouse callback
-	UNUSED(platform);
+	Platform* _platform = (Platform*)platform; 
+
     //Mouse button press
 	if (e->button == 0) // left click
 	{
 		if (event_type == EMSCRIPTEN_EVENT_MOUSEDOWN)
 		{
-			//static_cast<mst::Engine*>(engine)->HandleMouseButton(0, true);
-			fprintf(stdout, "LEft Button Down\n");
+			UpdateMouseState(&_platform->input, MouseButton::Left, ButtonState::Down);
 		}
 		else if (event_type == EMSCRIPTEN_EVENT_MOUSEUP)
 		{
-			//static_cast<mst::Engine*>(engine)->HandleMouseButton(0, false);
+			UpdateMouseState(&_platform->input, MouseButton::Left, ButtonState::Up);
 		}
 	}
 
@@ -55,11 +53,11 @@ mouse_callback(int event_type, const EmscriptenMouseEvent* e, void* platform)
 	{
 		if (event_type == EMSCRIPTEN_EVENT_MOUSEDOWN)
 		{
-			//static_cast<mst::Engine*>(engine)->HandleMouseButton(1, true);
+			UpdateMouseState(&_platform->input, MouseButton::Right, ButtonState::Down);
 		}
 		else if (event_type == EMSCRIPTEN_EVENT_MOUSEUP)
 		{
-			//static_cast<mst::Engine*>(engine)->HandleMouseButton(1, false);
+			UpdateMouseState(&_platform->input, MouseButton::Right, ButtonState::Up);
 		}
 	}
 
@@ -67,13 +65,11 @@ mouse_callback(int event_type, const EmscriptenMouseEvent* e, void* platform)
 }
 
 static EM_BOOL
-mouse_move_callback(int eventType, const EmscriptenMouseEvent* e, void* platform)
+mouse_move_callback(int event_type, const EmscriptenMouseEvent* e, void* platform)
 {
-    //#error Incomplete mouse move callback 
-    //mst::Engine* engine = static_cast<mst::Engine*>(inEngine);
-	//engine->HandleMouseMove(e->targetX, engine->ScreenSize.y - e->targetY);
-
-	UNUSED(eventType); UNUSED(e); UNUSED(platform);
+	UNUSED(event_type);
+	Platform* _platform = (Platform*)platform;
+	UpdateMousePosition(&_platform->input, e->targetX, _platform->viewport.screen_size.y - e->targetY);
 
 	return EM_FALSE;
 }
@@ -120,6 +116,7 @@ Platform* CreatePlatform(int width, int height, const char* title)
     return platform;
 }
 
+
 void DestroyPlatform(Platform* platform)
 {
     // I don't actually think the web needs to clean up or we did something wrong?
@@ -128,6 +125,7 @@ void DestroyPlatform(Platform* platform)
 
 bool NLPollEvents(Platform* platform)
 {
+	// Emscripten Polls events for me
     UNUSED(platform);
     return true;
 }
