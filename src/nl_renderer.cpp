@@ -21,7 +21,9 @@ void
 InitializeRenderer(Renderer* renderer, unsigned int BatchCount, size_t DataSize)
 {
     renderer->max_vertices = BatchCount*4;
+    LOG("Max Vertices: %d", renderer->max_vertices);
     unsigned int IndiceCount = BatchCount*6;
+    LOG("Indice Count: %d", IndiceCount);
     
     glGenVertexArrays(1, &renderer->vao);
     glGenBuffers(1, &renderer->vbo);

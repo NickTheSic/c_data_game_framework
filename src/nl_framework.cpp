@@ -5,13 +5,15 @@ InitializeFramework(Framework* fw, v2i sheet_size, v2f camera_size, v3f starting
 {
     fw->main_camera.size.x = camera_size.x;
     fw->main_camera.size.y = camera_size.y;
+    LOG("Framework Camera Size X: %f, Y: %f", fw->main_camera.size.x, fw->main_camera.size.y);
 
     InitializeRenderer(&fw->sprite_sheet.renderer, batch_count, sizeof(SpriteVertexData));
     InitializeSpriteSheet(&fw->sprite_sheet, sheet_size.x, sheet_size.y);
+    
     CreateViewMatrixFollow(&fw->main_camera, starting_camera_position);
     CompileSpriteShaderProgram(&fw->sprite_sheet.renderer);
+    
     fw->shader.program = fw->sprite_sheet.renderer.shader_program;
-    //SetUniform(&fw->shader, "view", fw->main_camera.view);
     SetViewUniform(&fw->shader, fw->main_camera.view);
 }
 

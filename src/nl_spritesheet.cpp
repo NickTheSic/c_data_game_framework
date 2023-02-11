@@ -359,7 +359,7 @@ InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed)
     anim->count = count;
     anim->speed = speed;
     
-    anim->sprite_handles = new SpriteHandle[anim->count];
+    anim->sprite_handles = (SpriteHandle*)calloc(anim->count, sizeof(SpriteHandle));
     for (int i = 0; i < anim->count; ++i)
     {
         anim->sprite_handles[i] = INVALID_SPRITE_HANDLE;
@@ -369,7 +369,7 @@ InitializeSpriteAnim(SpriteAnimation* anim, int count, float speed)
 void 
 CleanupSpriteAnimation(SpriteAnimation* anim)
 {
-    delete[] anim->sprite_handles;
+    free(anim->sprite_handles);
 }
 
 void

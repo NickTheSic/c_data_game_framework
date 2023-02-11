@@ -58,9 +58,20 @@ SetViewUniform(Shader* shader, const mat4f& val)
         shader->view_uniform = glGetUniformLocation(shader->program, "view");
     }
 
+    // Debug stuff - NEed 3 times since it gets set twice to the first instance
+    // I want to see both the spritesheet camera and the UI camera
+    static int do_thrice;
+    if (do_thrice < 3)
+    {
+        DEBUG_LOG_MATRIX(val);
+        ++do_thrice;
+    }
+
+
     glUniformMatrix4fv(shader->view_uniform, 1, GL_FALSE, &val.m11);
 
-    // hypothetically, if I brought back the old way I can just call it directly here
+    // hypothetically, if I brought back the old way I can just call it directly here as so
+    // SetUniform(&fw->shader, "view", fw->main_camera.view);
 }
 
 void
@@ -75,10 +86,9 @@ CompileShaderCode(unsigned int& shader, unsigned int type, const char* shaderCod
     
     if (!success)
     {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << "Error compiling shader: " << type << std::endl;
-        std::cout << "\t" << infoLog << std::endl;
+        char info_log[512];
+        glGetShaderInfoLog(shader, 512, NULL, info_log);
+        LOG("Error Compiling shader: %d\n\t%s\n", type, info_log);
     }
 }
 
@@ -90,7 +100,7 @@ CompileSpriteShaderProgram(Renderer* renderer)
     const char* vertCode = 
         SHADER_VERSION_HEADER
         "layout (location = 0) in vec3 inPos;    \n"
-        "layout (location = 1) in vec2 inCoords  \n;"
+        "layout (location = 1) in vec2 inCoords; \n"
         "out vec2 TexCoords;                     \n"
         "uniform mat4 view;                      \n"
         "void main(){                            \n"
@@ -103,9 +113,9 @@ CompileSpriteShaderProgram(Renderer* renderer)
         SHADER_VERSION_HEADER
         "out vec4 FragColor;                     \n"
         "in vec2 TexCoords;                      \n"
-        "uniform sampler2D tex;                  \n"
+        "uniform sampler2D text;                 \n"
         "void main(){                            \n"
-        "FragColor = texture(tex, TexCoords);    \n"
+        "FragColor = texture(text, TexCoords);   \n"
         "if (FragColor.a == 0.0) discard;        \n"
         "}                                       \0"
         ;

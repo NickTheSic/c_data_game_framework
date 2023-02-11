@@ -11,6 +11,13 @@ CreateViewMatrixFollow(Camera* camera,
     const float top    = position.y + camera->size.y;
 
     CreateOrtho(camera->view, left, right, bottom, top, 0.0f, 100.0f); 
+
+    static bool do_once;
+    if (!do_once)
+    {
+        do_once = true;
+        DEBUG_LOG_MATRIX(camera->view);
+    }
 }
 
 void 

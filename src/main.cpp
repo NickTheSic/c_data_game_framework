@@ -30,17 +30,20 @@
 void 
 run(void* data)
 {
+    // I am realizing I hate that I have to do this
     Platform* platform = GetGlobalPlatform();
     GameData* game_data = (GameData*)data;
 
-    // I am realizing I hate that I have to do this
     const float delta_time = GetTime();
 
         #ifdef DEBUG
         // Incomplete but I want to add a delta time modifier
         // delta_time *= time_modifier;
         #endif
-        
+    NLSwapBuffers(platform);
+    glClear(GL_COLOR_BUFFER_BIT); 
+    glClear(GL_DEPTH_BUFFER_BIT);
+       
         GameUpdate(platform, game_data, delta_time);
         UpdateUI(&platform->ui, platform);
 
@@ -88,9 +91,6 @@ run(void* data)
             EndUIRender(&platform->ui, &platform->fw);
         }
         SpriteSheetEndRender(&platform->fw.sprite_sheet);
-        
-        NLSwapBuffers(platform);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 int 
@@ -131,7 +131,10 @@ main()
     InitUI(&platform->ui, platform, 100);
 
 #ifndef __EMSCRIPTEN__
-    while (NLPollEvents(platform)){run((void*)game_data);};
+    while (NLPollEvents(platform))
+    {
+        run((void*)game_data);
+    };
 #else
     emscripten_set_main_loop_arg(run, game_data, 0, 1);
 #endif

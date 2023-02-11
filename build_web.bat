@@ -6,8 +6,8 @@ set INCLUDES=-I../include -I../vendor/include
 set SRC_INCLUDES=-I../src
 set DEFINES=-DPLATFORM_WEB
 set LIBS=-L../lib
-set FLAGS= -Wall -Wextra -O2 -s ALLOW_MEMORY_GROWTH=1 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2
-set DATA=--preload-file data
+set FLAGS= -Wall -Wextra -Werror -O2 -s ALLOW_MEMORY_GROWTH=1 -sMAX_WEBGL_VERSION=2 -sMIN_WEBGL_VERSION=2 -sFULL_ES3 -sFULL_ES2
+set DATA=--preload-file data 
 set SHELL_FILE=--shell-file ../MinimalShell.html
 set EXTRA= %1 %2 %3 
 
