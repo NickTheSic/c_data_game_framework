@@ -58,16 +58,6 @@ SetViewUniform(Shader* shader, const mat4f& val)
         shader->view_uniform = glGetUniformLocation(shader->program, "view");
     }
 
-    // Debug stuff - NEed 3 times since it gets set twice to the first instance
-    // I want to see both the spritesheet camera and the UI camera
-    static int do_thrice;
-    if (do_thrice < 3)
-    {
-        DEBUG_LOG_MATRIX(val);
-        ++do_thrice;
-    }
-
-
     glUniformMatrix4fv(shader->view_uniform, 1, GL_FALSE, &val.m11);
 
     // hypothetically, if I brought back the old way I can just call it directly here as so

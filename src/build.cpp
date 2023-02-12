@@ -16,7 +16,7 @@
 
 // Specific Implementations?
 // Could be added on a platform basis
-//#include <nl_audio_openal.cpp>
+#include <nl_audio_openal.cpp>
 
 // Game
 #include <nl_game.cpp>

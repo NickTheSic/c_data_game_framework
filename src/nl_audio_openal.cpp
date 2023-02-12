@@ -17,20 +17,22 @@ struct OpenAL_AudioDevice
 
 bool InitAudio(/*Params...*/)
 {
-    #error Implement Audio system function
+    assert(false); // Not Implemented
+    return false;
 }
 
 void PlaySound(/*Params...*/)
 {
-    #error Implement Audio system function
+    assert(false); // Not Implemented
 }
 
 void CleanupAudio(/*Params...*/)
 {
     // Cleanup buffers?
-    #error Implement Audio system function
-    AudioDevice.Context=alcGetCurrentContext();
-    AudioDevice.Device=alcGetContextsDevice(AudioDevice.context);
+    assert(false); //incomplete
+
+    AudioDevice.context=alcGetCurrentContext();
+    AudioDevice.device=alcGetContextsDevice(AudioDevice.context);
     
     alcMakeContextCurrent(NULL);
     alcDestroyContext(AudioDevice.context);
@@ -39,10 +41,12 @@ void CleanupAudio(/*Params...*/)
 
 bool LoadSound(/*Params*/)
 {
-    #error Implement Load sound
+    assert(false); // Not Implemented
+    return false;
 }
 
 bool LoadBGM(/*Params*/)
 {
-    #error Implement load BGM
+    assert(false); // Not Implemented
+    return false;
 }

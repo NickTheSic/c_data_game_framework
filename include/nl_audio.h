@@ -1,4 +1,4 @@
-#ifndef 
+#ifndef _NL_AUDIO_H_
 #define _NL_AUDIO_H_
 
 bool InitAudio(/*Params...*/);
@@ -10,4 +10,4 @@ bool LoadBGM(/*Params*/);
 void SetBackgroundMusic(/*Params...*/);
 void PlaySound(/*Params...*/);
 
-#endif
+#endif //_NL_AUDIO_H_
