@@ -1,12 +1,7 @@
 #include <nl_timer.h>
 #include <chrono>
 
-std::chrono::time_point<std::chrono::system_clock> tp1, tp2;
-
-void InitTime()
-{
-    tp1 = tp2 = std::chrono::system_clock::now();
-}
+std::chrono::time_point<std::chrono::system_clock> tp1 = std::chrono::system_clock::now(), tp2 = std::chrono::system_clock::now();
 
 double GetTime()
 {

@@ -10,4 +10,10 @@ bool LoadBGM(/*Params*/);
 void SetBackgroundMusic(/*Params...*/);
 void PlaySound(/*Params...*/);
 
+
+// Should take 0 - 100 by default and calculated per implementation
+void SetVolume(/*char volume*/);
+void GetVolume(); // Not sure if I return a value or pass by reference
+
+
 #endif //_NL_AUDIO_H_

@@ -117,8 +117,6 @@ main()
 
     SetClearColor(0.1,0.2,0.4,1.0);
 
-    InitTime();
-
     GameData* game_data = GameInitialize(platform);
     Grid world_grid = {};
     InitGrid(&world_grid, 5, 5);

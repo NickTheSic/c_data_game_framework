@@ -49,7 +49,7 @@ bool InitAudio(/*Params... My version took a buffer count, but I could just hard
     error = alGetError();
     if (error != AL_NO_ERROR)
     {
-        //alDisplayALError("alGenBuffers: ", error);
+        //alDisplayALError("alGenBuffers: %i", error);
         return false;
     }
 

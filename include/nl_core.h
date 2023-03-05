@@ -32,4 +32,64 @@ struct Core
     struct UI* active_ui;
 };
 
+/*
+
+Initialize();
+Cleanup();
+
+
+// For handling input AND drawing
+BeginFrame();
+EndFrame(); 
+
+
+// Draw Functions for users to use
+LoadSprite();
+DrawSprite();
+
+
+// Possible Audio Functions
+LoadSound();
+PlaySound();
+SetVolume();
+PlayBGM();
+SetBGM();
+
+// Quick Example Program
+
+int mmain()
+{
+    Initialize();
+
+    while (ShouldRun())
+    {
+        BeginFrame();
+
+        GameUpdateAndRender();
+        {
+            UpdatPlayer()
+            {
+                Move up down left right
+            }
+
+            UpdateAI()
+            {
+                Move them towards player
+            }
+
+            UpdateUI()
+            {
+                Display Health and other UI Stuff
+            }
+        }
+
+        EndFrame();
+    }
+
+    Cleanup();
+    return 0;
+}
+
+*/
+
 #endif //NL_CORE_H_
