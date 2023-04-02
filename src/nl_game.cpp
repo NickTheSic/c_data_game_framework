@@ -26,7 +26,8 @@ struct GameData
 GameData* 
 GameInitialize(Platform* platform)
 {
-    GameData* data = new GameData();
+    platform->game_data = new GameData();
+    GameData* data = (GameData*)platform->game_data;
     
     float ratio = (float)platform->viewport.screen_size.x / (float)platform->viewport.screen_size.y;
     InitializeFramework(&platform->fw, {512,512}, {ratio*200.f,200.f}, {0.0f, 0.0f, 0.0f}, 100);
@@ -45,7 +46,7 @@ GameInitialize(Platform* platform)
     data->player_sprite.sprite_handles[2] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-03.png");
     data->player_sprite.sprite_handles[3] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-04.png");
 
-    return data;
+    return (GameData*)platform->game_data;
 }
 
 void 

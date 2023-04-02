@@ -27,18 +27,13 @@ struct Platform
     EGLContext context;
 #endif
 
-    // Could move these out of the plat form and into the nl core class I want to make
     Framework fw;
     Input input;
     UI ui;
-
-    // exceptthis, maybe this stays here?
     Viewport viewport;
-};
 
-// Helper functions if I want to retrieve the pointer 
-Platform* GetGlobalPlatform();
-void SetGlobalPlatform(Platform* platform);
+    void *game_data;
+};
 
 Platform* CreatePlatform(int width, int height, const char* title);
 void DestroyPlatform(Platform* platform);

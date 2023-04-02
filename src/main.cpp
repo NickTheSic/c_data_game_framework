@@ -4,7 +4,6 @@
 #include <string>
 
 #include <nl_camera.h>
-#include <nl_core.h>
 #include <nl_game.h>
 #include <nl_gl.h>
 #include <nl_grid.h>
@@ -31,15 +30,15 @@ void
 run(void* data)
 {
     // I am realizing I hate that I have to do this
-    Platform* platform = GetGlobalPlatform();
-    GameData* game_data = (GameData*)data;
+    Platform* platform = (Platform*)data;
+    GameData* game_data = (GameData*)platform->game_data;
 
     const float delta_time = GetTime();
 
-        #ifdef DEBUG
-        // Incomplete but I want to add a delta time modifier
-        // delta_time *= time_modifier;
-        #endif
+    #ifdef DEBUG
+    // Incomplete but I want to add a delta time modifier
+    // delta_time *= time_modifier;
+    #endif
     glClear(GL_COLOR_BUFFER_BIT); 
     glClear(GL_DEPTH_BUFFER_BIT);
        
@@ -103,7 +102,6 @@ main()
     Platform* platform = CreatePlatform(1280, 800, "TEST");
     
     if (platform == 0) return 1;
-    SetGlobalPlatform(platform);
 
     // Might want to replace this with a Renderer init
     // That way I could use a GL renderer or Vulkan or other in the future
@@ -117,7 +115,7 @@ main()
 
     SetClearColor(0.1,0.2,0.4,1.0);
 
-    GameData* game_data = GameInitialize(platform);
+    GameData *game_data = GameInitialize(platform);
     Grid world_grid = {};
     InitGrid(&world_grid, 5, 5);
 
@@ -131,7 +129,7 @@ main()
 #ifndef __EMSCRIPTEN__
     while (NLPollEvents(platform))
     {
-        run((void*)game_data);
+        run((void*)platform);
     };
 #else
     emscripten_set_main_loop_arg(run, game_data, 0, 1);
