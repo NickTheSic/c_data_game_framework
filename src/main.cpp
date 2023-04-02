@@ -20,10 +20,8 @@
 #endif
 
 #ifdef __EMSCRIPTEN__
-
 #include <emscripten.h>
 #include <emscripten/html5.h>
-
 #endif
 
 void 
@@ -83,6 +81,7 @@ run(void* data)
     
         HandleText(&platform->ui, mouse_pos_str.c_str(), 
             {(float)platform->input.mouse_pos.x - 16.f, (float)platform->input.mouse_pos.y}, {16.f,16.f});
+            
         EndUIRender(&platform->ui, &platform->fw);
     }
     SpriteSheetEndRender(&platform->fw.sprite_sheet);
@@ -110,7 +109,6 @@ main()
     EnableBlend(true);
     EnableCullFace(true);
     CullFace(false);
-
     SetClearColor(0.1,0.2,0.4,1.0);
 
     GameData *game_data = GameInitialize(platform);
