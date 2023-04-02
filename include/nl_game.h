@@ -11,4 +11,6 @@ void GameUpdate(struct Platform* platform, GameData* data, float delta_time);
 void GameRender(struct Platform* platform, GameData* data);
 void GameCleanup(GameData* data);
 
+void* temp_GetTilePtr(GameData* data);
+
 #endif //_NL_GAME_H

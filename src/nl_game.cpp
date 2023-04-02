@@ -5,6 +5,7 @@
 #include <nl_debug.h>
 #include <nl_framework.h>
 #include <nl_gl.h>
+#include <nl_grid.h>
 #include <nl_input.h>
 #include <nl_key.h>
 #include <nl_platform.h>
@@ -23,7 +24,13 @@ struct GameData
     Controller controller = {};
 
     Grid world_grid = {};
+    Tile tiles[3];
 };
+
+void* temp_GetTilePtr(GameData* data)
+{
+    return data->tiles;
+}
 
 GameData* 
 GameInitialize(Platform* platform)
@@ -48,7 +55,24 @@ GameInitialize(Platform* platform)
     data->player_sprite.sprite_handles[2] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-03.png");
     data->player_sprite.sprite_handles[3] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-04.png");
 
-    InitGrid(&data->world_grid, 5, 5);
+    // Grid
+    {
+        InitGrid(&data->world_grid, 5, 5);
+        Grid* grid = &data->world_grid;
+        grid->tile_size = 32;
+
+        SetGridValue(grid, 2, 2, 1);
+        // Creates the walls around the outside
+        for (int i = 0; i < 5; ++i)
+        {
+            SetGridValue(grid, 0, i, 2);
+            SetGridValue(grid, 4, i, 2);
+            SetGridValue(grid, i, 0, 2);
+            SetGridValue(grid, i, 4, 2);
+        }
+        
+        InitializeTileSet(platform, data->tiles);
+    }
 
     return (GameData*)platform->game_data;
 }
@@ -83,6 +107,25 @@ void
 GameRender(Platform* platform, GameData* data)
 { 
     SetViewUniform(&platform->fw.shader, platform->fw.main_camera.view);
+
+    for (int i = 0; i < data->world_grid.width * data->world_grid.height; ++i)
+    {
+        int value, x, y;
+        GetGridValue(&data->world_grid, i, &value);
+        GridGetXYFromIndex(&data->world_grid, i, &x, &y);
+        //void AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos, const v2f& size);
+
+        v2f tile_size;
+        tile_size.x = static_cast<float>(data->world_grid.tile_size);
+        tile_size.y = static_cast<float>(tile_size.x);
+        v3f pos;
+        pos.x = tile_size.y * x;
+        pos.y = tile_size.y * y;
+        pos.z = 1.f;
+
+        AddSizedSpriteToRender(&platform->fw.sprite_sheet, data->tiles[value].sprite, pos, tile_size);
+    }
+
     RenderSpriteAnimationFrame(&platform->fw.sprite_sheet, &data->player_sprite, data->player_pos);
 
     DisplayEntireSheet(&platform->fw.sprite_sheet, {-100.0f, 100.f, 0.0f}, {256.f,128.f});

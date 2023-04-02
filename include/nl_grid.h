@@ -3,6 +3,22 @@
 
 constexpr int INVALID_GRID_LOCATION = -1;
 
+enum class TileType : unsigned char
+{
+    Ground,
+    Wall,
+    Liquid,
+};
+
+struct Tile
+{
+    TileType type;
+    unsigned int sprite;
+};
+
+void InitializeTileSet(Platform* platform, Tile* tiles);
+void ReloadTileSet(Platform* platform, Tile* tiles, int set);
+
 struct Grid
 {
     int width;
@@ -14,6 +30,8 @@ struct Grid
 
 void InitGrid(Grid* grid, int width, int height);
 void FreeGrid(Grid* grid);
+
+void GridGetXYFromIndex(Grid* grid, int index, int* x, int *y);
 
 void GetGridValue(Grid* grid, int index, int* value);
 void GetGridValue(Grid* grid, int x, int y, int* value);

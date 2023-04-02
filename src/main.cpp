@@ -58,6 +58,7 @@ run(void* data)
             {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
             platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
         {
+            ReloadTileSet(platform, (Tile*)temp_GetTilePtr(game_data), 0);
             LOG("Successful test Button Press");
         }
     
@@ -65,6 +66,7 @@ run(void* data)
             {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
             platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))
         {
+            ReloadTileSet(platform, (Tile*)temp_GetTilePtr(game_data), 1);
             LOG("Successful funky Button Press");
         }
     
