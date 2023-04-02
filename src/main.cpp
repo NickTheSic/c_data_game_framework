@@ -130,7 +130,7 @@ main()
         run((void*)platform);
     };
 #else
-    emscripten_set_main_loop_arg(run, game_data, 0, 1);
+    emscripten_set_main_loop_arg(run, platform, 0, 1);
 #endif
     
     FreeGrid(&world_grid);
