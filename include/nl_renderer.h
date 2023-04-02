@@ -16,12 +16,13 @@ void CleanupRenderer(Renderer* renderer);
 void BeginRender(Renderer* renderer);
 void EndRender(Renderer* renderer);
 
-
 void SetClearColor(float r, float g, float b, float a);
 void EnableBlend(bool enabled);
 void EnableDepth(bool enabled);
 void EnableCullFace(bool enabled);
 void CullFace(bool front);
 
+// Not sure if this is the best name for it
+void ResetScreenBuffer();
  
 #endif //_NL_RENDERER_H

@@ -4,7 +4,13 @@
 
 struct Controller
 {
-    unsigned char player_index;
+    float right_trigger;
+    float left_trigger;
+
+    float left_x_axis;
+    float left_y_axis;
+    float right_x_axis;
+    float right_y_axis;
 
     unsigned short dpad_up        : 1;
     unsigned short dpad_down      : 1;
@@ -20,14 +26,9 @@ struct Controller
     unsigned short b              : 1;
     unsigned short x              : 1;
     unsigned short y              : 1;
-
-    float right_trigger;
-    float left_trigger;
-
-    float left_x_axis;
-    float left_y_axis;
-    float right_x_axis;
-    float right_y_axis;
+    
+    // Silly to make it a 3 player game max
+    unsigned char player_index    : 2;
 };
 
 void InitControllerSystem();

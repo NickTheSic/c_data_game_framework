@@ -29,9 +29,8 @@
 void 
 run(void* data)
 {
-    // I am realizing I hate that I have to do this
-    Platform* platform = (Platform*)data;
-    GameData* game_data = (GameData*)platform->game_data;
+    Platform* platform = static_cast<Platform*>(data);
+    GameData* game_data = static_cast<GameData*>(platform->game_data);
 
     const float delta_time = GetTime();
 
@@ -39,8 +38,8 @@ run(void* data)
     // Incomplete but I want to add a delta time modifier
     // delta_time *= time_modifier;
     #endif
-    glClear(GL_COLOR_BUFFER_BIT); 
-    glClear(GL_DEPTH_BUFFER_BIT);
+
+    ResetScreenBuffer();
        
     GameUpdate(platform, game_data, delta_time);
     UpdateUI(&platform->ui, platform);
@@ -86,7 +85,6 @@ run(void* data)
             {(float)platform->input.mouse_pos.x - 16.f, (float)platform->input.mouse_pos.y}, {16.f,16.f});
         EndUIRender(&platform->ui, &platform->fw);
     }
-
     SpriteSheetEndRender(&platform->fw.sprite_sheet);
     
     NLSwapBuffers(platform);

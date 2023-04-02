@@ -123,3 +123,9 @@ CullFace(bool front)
     }
 }
 
+void
+ResetScreenBuffer()
+{
+    glClear(GL_COLOR_BUFFER_BIT); 
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
