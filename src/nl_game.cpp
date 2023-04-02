@@ -21,6 +21,8 @@ struct GameData
     SpriteAnimation player_sprite;
 
     Controller controller = {};
+
+    Grid world_grid = {};
 };
 
 GameData* 
@@ -45,6 +47,8 @@ GameInitialize(Platform* platform)
     data->player_sprite.sprite_handles[1] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-02.png");
     data->player_sprite.sprite_handles[2] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-03.png");
     data->player_sprite.sprite_handles[3] = LoadSprite(&platform->fw.sprite_sheet,"data/testanim-04.png");
+
+    InitGrid(&data->world_grid, 5, 5);
 
     return (GameData*)platform->game_data;
 }
@@ -87,6 +91,7 @@ GameRender(Platform* platform, GameData* data)
 void
 GameCleanup(GameData* data)
 {
+    FreeGrid(&data->world_grid);
     CleanupSpriteAnimation(&data->player_sprite);
     CleanupControllerSystem();
     delete data;

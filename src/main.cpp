@@ -114,8 +114,6 @@ main()
     SetClearColor(0.1,0.2,0.4,1.0);
 
     GameData *game_data = GameInitialize(platform);
-    Grid world_grid = {};
-    InitGrid(&world_grid, 5, 5);
 
     if (game_data == 0)
     {
@@ -133,7 +131,6 @@ main()
     emscripten_set_main_loop_arg(run, platform, 0, 1);
 #endif
     
-    FreeGrid(&world_grid);
     CleanupUI(&platform->ui);
     GameCleanup(game_data);
     DestroyPlatform(platform);
