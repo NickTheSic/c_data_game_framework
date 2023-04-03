@@ -54,6 +54,25 @@ run(void* data)
     SpriteSheetBeginRender(&platform->fw.sprite_sheet);
     {
         RenderUI(&platform->ui, &platform->fw);
+
+        {
+            static float timed_loop;
+            static int fps_count;
+            static int frames;
+            
+            timed_loop += delta_time;
+            if (timed_loop > 1.0f)
+            {
+                fps_count = (float)frames / timed_loop;
+                timed_loop -= 1.0f;
+                frames = 0;
+            }
+            ++frames;
+
+            std::string fps = "fps " + std::to_string(fps_count);
+            HandleText(&platform->ui, fps.c_str(), {0.f, 720.f}, {16.f,16.f});
+        }
+
         if (HandleButton(&platform->ui, {0.f, 0.f}, {32.f, 32.f}, "test",
             {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, 
             platform->input.mouse_button[(int)MouseButton::Left] == ButtonState::Down))

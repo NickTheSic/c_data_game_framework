@@ -111,17 +111,6 @@ void SetGridValue(Grid* grid, int x, int y, int value)
     grid->data[y*grid->width+x] = value;
 }
 
-void SaveGrid(Grid* grid, char* filename)
-{
-    UNUSED(grid); UNUSED(filename);
-}
-
-void LoadGrid(Grid* grid, char* filename)
-{
-    UNUSED(grid); UNUSED(filename);
-}
-
-
 void InitializeTileSet(Platform* platform, Tile* tiles)
 {
     tiles[0].type = TileType::Ground;
