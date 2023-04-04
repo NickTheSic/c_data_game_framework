@@ -7,3 +7,5 @@ build/*
 .vscode
 obj/*
 VS2019bin/*
+build.exe
+build.obj

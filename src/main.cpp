@@ -55,6 +55,7 @@ run(void* data)
     {
         RenderUI(&platform->ui, &platform->fw);
 
+        // FPS Counter
         {
             static float timed_loop;
             static int fps_count;
