@@ -3,22 +3,6 @@
 #include <nl_math.h>
 
 void 
-UpdateScreenSize(Viewport* viewport, int sx, int sy)
-{
-    viewport->screen_size.x = sx;
-    viewport->screen_size.y = sy;
-    //LOG("Viewport size x: %d, viewport size y: %d",  viewport->screen_size.x, viewport->screen_size.y);
-
-    //Maybe also want half screen size
-
-    //Are't used anywhere else at the moment
-    viewport->screen_center.x = sx - (sx / 2);
-    viewport->screen_center.y = sy - (sy / 2);
-
-    //LOG("Viewport screen center x: %d, center y: %d", viewport->screen_center.x, viewport->screen_center.y)
-}
-
-void 
 GetMouseInViewportWithCamera(v2f* out_pos, Viewport* viewport, Camera* camera, v2i mouse_pos)
 {
     const float camera_size_x = camera->size.x*2;

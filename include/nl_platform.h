@@ -43,6 +43,7 @@ void NLSwapBuffers(Platform* platform);
 
 void NLSetWindowShouldClose(Platform* platform);
 
+void UpdateScreenSize(Platform* platform, int width, int height);
 
 /* TO BE IMPLEMENTED 
 

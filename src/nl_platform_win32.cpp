@@ -68,9 +68,7 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 			const int width = LOWORD(lParam);
 			const int height = HIWORD(lParam);
 
-			// I realize this won't be here if I want to use vulkan in the future
-			glViewport(0,0, width, height);
-			UpdateScreenSize(&platform->viewport, width, height);
+			UpdateScreenSize(platform, width, height);
 		} break;
 		
 		case WM_KEYUP:
@@ -231,6 +229,22 @@ CreatePlatform(int width, int height, const char* title)
 		return nullptr;
 	}
 
+	// calculate DPI for scaling
+	{
+		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+		
+		const UINT dpi = GetDpiForWindow((HWND)platform->window);
+		AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
+		SetWindowPos(
+			(HWND)platform->window,
+			0,
+			window_rect.left,
+			window_rect.top,
+			window_rect.right - window_rect.left,
+			window_rect.bottom - window_rect.top,
+			SWP_NOMOVE);
+	}
+
 	platform->context = wglCreateContext((HDC)platform->device);
 	if (platform->context == nullptr)
 	{
@@ -258,21 +272,21 @@ CreatePlatform(int width, int height, const char* title)
 		if (rendererString) fprintf(stderr, "%s\n", rendererString);
 	}
 
-	// calculate DPI for scaling
-	{
-		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+	// // calculate DPI for scaling
+	// {
+	// 	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 		
-		const UINT dpi = GetDpiForWindow((HWND)platform->window);
-		AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
-		SetWindowPos(
-			(HWND)platform->window,
-			0,
-			window_rect.left,
-			window_rect.top,
-			window_rect.right - window_rect.left,
-			window_rect.bottom - window_rect.top,
-			SWP_NOMOVE);
-	}
+	// 	const UINT dpi = GetDpiForWindow((HWND)platform->window);
+	// 	AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
+	// 	SetWindowPos(
+	// 		(HWND)platform->window,
+	// 		0,
+	// 		window_rect.left,
+	// 		window_rect.top,
+	// 		window_rect.right - window_rect.left,
+	// 		window_rect.bottom - window_rect.top,
+	// 		SWP_NOMOVE);
+	// }
 
 	ShowWindow((HWND)platform->window, SW_SHOW);
 	SetForegroundWindow((HWND)platform->window);
@@ -330,4 +344,17 @@ NLSetWindowShouldClose(Platform* platform)
 {
 	(void)(platform);
 	PostQuitMessage(0);
+}
+
+void UpdateScreenSize(Platform* platform, int width, int height)
+{
+	platform->fw.main_camera.size.x = width;
+	platform->fw.main_camera.size.y = height;
+
+	platform->viewport.screen_size.x = width;
+    platform->viewport.screen_size.y = height;
+    platform->viewport.screen_center.x = width - (width / 2);
+    platform->viewport.screen_center.y = height - (height / 2);
+
+	glViewport(0,0, width, height);
 }
