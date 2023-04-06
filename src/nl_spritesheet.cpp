@@ -251,22 +251,23 @@ AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f
     pos3.x = pos.x;
     pos3.y = pos.y + size.y;
     pos3.z = pos.z;
-    
+
+    const float uv_epsilon = 0.0001f;
     v2f& uv0 = vertices[0].uv;
-    uv0.x = sprite.bl_coord.x;
-    uv0.y = sprite.bl_coord.y;
+    uv0.x = sprite.bl_coord.x + uv_epsilon;
+    uv0.y = sprite.bl_coord.y + uv_epsilon;
     
     v2f& uv1 = vertices[1].uv;
-    uv1.x = sprite.ur_coord.x;
-    uv1.y = sprite.bl_coord.y;
+    uv1.x = sprite.ur_coord.x - uv_epsilon;
+    uv1.y = sprite.bl_coord.y + uv_epsilon;
     
     v2f& uv2 = vertices[2].uv;
-    uv2.x = sprite.ur_coord.x;
-    uv2.y = sprite.ur_coord.y;
+    uv2.x = sprite.ur_coord.x - uv_epsilon;
+    uv2.y = sprite.ur_coord.y - uv_epsilon;
     
     v2f& uv3 = vertices[3].uv;
-    uv3.x = sprite.bl_coord.x;
-    uv3.y = sprite.ur_coord.y;
+    uv3.x = sprite.bl_coord.x + uv_epsilon;
+    uv3.y = sprite.ur_coord.y - uv_epsilon;
     
     glBufferSubData(GL_ARRAY_BUFFER,
                     sheet->renderer.vertex_count*sizeof(SpriteVertexData),

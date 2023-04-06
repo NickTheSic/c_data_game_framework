@@ -21,7 +21,7 @@ InitUICamera(UI* ui, const v2f& size)
     const float bottom = 0.f;
     const float top    = ui->cam.size.y;
 
-    CreateOrtho(ui->cam.view, left, right, bottom, top, 0.0f, 100.0f); 
+    CreateOrtho(ui->cam.view, left, right, bottom, top, 0.0f, 10.0f); 
 }
 
 void UpdateUICamera(UI* ui, const v2f& size)
@@ -80,7 +80,7 @@ CleanupUI(UI* ui)
 }
 
 void 
-UpdateUI(UI* ui, struct Platform* platform)
+UpdateUI(UI* ui, Platform* platform)
 {
     // TODO: Could set values inside of the UI here
     // Then I don't need to pass them in as parameters
@@ -91,8 +91,8 @@ UpdateUI(UI* ui, struct Platform* platform)
     GetMousePosInUICamera(&ui->cam, &mouse_pos, platform->input.mouse_pos);
 
     //  Might need a Down/Pressed/Released state instead of just down or up
-    bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
-    UNUSED(mouse_down);
+    //bool mouse_down = platform->input.mouse_button[(unsigned char)MouseButton::Left] == ButtonState::Down;
+    //UNUSED(mouse_down);
 }
 
 void 
