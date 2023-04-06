@@ -92,12 +92,14 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 		case WM_MOUSEWHEEL:
 		{
-			int mouse_delta = HIWORD(wParam);
-			int modifier = LOWORD(wParam);
+			short mouse_delta = HIWORD(wParam);
+			short modifier = LOWORD(wParam);
 
-			LOG("%d", mouse_delta);
-
-			ZoomInCamera(&platform->fw.main_camera, mouse_delta > 2000);
+			if (modifier == MK_CONTROL)
+			{
+				LOG("%d", mouse_delta);
+				ZoomInCamera(&platform->fw.main_camera, mouse_delta > 0);
+			}
 
 			break;
 		}
