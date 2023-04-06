@@ -5,10 +5,10 @@ void
 CreateViewMatrixFollow(Camera* camera, 
                        const v3f& position)
 {
-    const float left   = position.x - (camera->size.x + camera->zoom.x);
-    const float right  = position.x + (camera->size.x + camera->zoom.x);
-    const float bottom = position.y - (camera->size.y + camera->zoom.y);
-    const float top    = position.y + (camera->size.y + camera->zoom.y);
+    const float left   = position.x - (camera->size.x + camera->zoom_ratio.x);
+    const float right  = position.x + (camera->size.x + camera->zoom_ratio.x);
+    const float bottom = position.y - (camera->size.y + camera->zoom_ratio.y);
+    const float top    = position.y + (camera->size.y + camera->zoom_ratio.y);
 
     CreateOrtho(camera->view, left, right, bottom, top, 0.0f, 10.0f); 
 }
@@ -40,10 +40,16 @@ void CopyCameraToFrom(Camera* cam1, Camera* cam2)
     cam1->size.y = cam2->size.y;
 }
 
+void RecalculateZoom(Camera* camera)
+{
+    const float ratio = camera->size.x / camera->size.y;
+    camera->zoom_ratio.x = camera->zoom * ratio;
+    camera->zoom_ratio.y = camera->zoom;
+}
+
 void ZoomInCamera(Camera* camera, bool zoom_out)
 {
-    const float adjust = zoom_out ? 10.f : -10.f;
-    const float ratio = camera->size.x / camera->size.y;
-    camera->zoom.x += adjust*ratio;
-    camera->zoom.y += adjust;
+    const float adjust = zoom_out ? 1.f : -1.f;
+    camera->zoom += adjust;
+    RecalculateZoom(camera);
 }

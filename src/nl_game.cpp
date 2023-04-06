@@ -107,7 +107,7 @@ GameUpdate(Platform* platform, GameData* data, float delta_time)
     data->player_pos.x += data->player_velocty.x * Speed * delta_time;
     data->player_pos.y += data->player_velocty.y * Speed * delta_time;
 
-    CreateViewMatrixFollow(&platform->fw.main_camera, data->player_pos);
+    CreateViewMatrixFollow(&platform->fw.main_camera, {data->player_pos.x + 16.f, data->player_pos.y + 16.f, 0.f});
 }
 
 void 
@@ -124,11 +124,11 @@ GameRender(Platform* platform, GameData* data)
 
         v2f tile_size;
         tile_size.x = static_cast<float>(data->world_grid.tile_size);
-        tile_size.y = static_cast<float>(tile_size.x);
+        tile_size.y = static_cast<float>(data->world_grid.tile_size);
         v3f pos;
-        pos.x = tile_size.y * x;
-        pos.y = tile_size.y * y;
-        pos.z = 1.f;
+        pos.x = (tile_size.x) * x;
+        pos.y = (tile_size.y) * y;
+        pos.z = 0.f;
 
         AddSizedSpriteToRender(&platform->fw.sprite_sheet, data->tiles[value].sprite, pos, tile_size);
     }

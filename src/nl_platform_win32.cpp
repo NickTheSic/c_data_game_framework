@@ -97,7 +97,6 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			if (modifier == MK_CONTROL)
 			{
-				LOG("%d", mouse_delta);
 				ZoomInCamera(&platform->fw.main_camera, mouse_delta > 0);
 			}
 
@@ -352,9 +351,9 @@ void UpdateScreenSize(Platform* platform, int width, int height)
 
 	int s_width = width * x;
 	int s_height = height * y;
-
 	platform->fw.main_camera.size.x = s_width  >> 1;
 	platform->fw.main_camera.size.y = s_height >> 1;
+	RecalculateZoom(&platform->fw.main_camera);
 
 	platform->viewport.screen_size.x = s_width;
     platform->viewport.screen_size.y = s_height;
