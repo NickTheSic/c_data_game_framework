@@ -71,6 +71,7 @@ void InitUI(UI* ui, struct Platform* platform, int max_ui_elements);
 void CleanupUI(UI* ui);
 
 void UpdateUI(UI* ui, struct Platform* platform);
+void UpdateUICamera(UI* ui, const v2f& size);
 
 void RenderUI(UI* ui, struct Framework* fw);
 void EndUIRender(UI* ui, struct Framework* fw);

@@ -120,14 +120,13 @@ GameRender(Platform* platform, GameData* data)
         int value, x, y;
         GetGridValue(&data->world_grid, i, &value);
         GridGetXYFromIndex(&data->world_grid, i, &x, &y);
-        //void AddSizedSpriteToRender(SpriteSheet* sheet, SpriteHandle sprite_handle, const v3f& pos, const v2f& size);
 
-        v2f tile_size;
+        v2f tile_size = {};
         tile_size.x = static_cast<float>(data->world_grid.tile_size);
         tile_size.y = static_cast<float>(data->world_grid.tile_size);
-        v3f pos;
-        pos.x = (tile_size.x) * x;
-        pos.y = (tile_size.y) * y;
+        v3f pos = {};
+        pos.x = tile_size.x * x;
+        pos.y = tile_size.y * y;
         pos.z = 0.f;
 
         AddSizedSpriteToRender(&platform->fw.sprite_sheet, data->tiles[value].sprite, pos, tile_size);

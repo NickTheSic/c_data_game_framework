@@ -10,7 +10,7 @@ CreateViewMatrixFollow(Camera* camera,
     const float bottom = position.y - (camera->size.y + camera->zoom_ratio.y);
     const float top    = position.y + (camera->size.y + camera->zoom_ratio.y);
 
-    CreateOrtho(camera->view, left, right, bottom, top, 0.0f, 10.0f); 
+    CreateOrtho(camera->view, left, right, bottom, top, -1.0f, 1.0f); 
 }
 
 void 

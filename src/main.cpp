@@ -80,6 +80,7 @@ run(void* data)
         {
             ReloadTileSet(platform, (Tile*)temp_GetTilePtr(game_data), 0);
             LOG("Successful test Button Press");
+            glClearColor(0.8,0.1,0.1,1);
         }
     
         if (HandleButton(&platform->ui, {0.f, 48.f}, {32.f, 32.f}, "funky",
@@ -88,6 +89,7 @@ run(void* data)
         {
             ReloadTileSet(platform, (Tile*)temp_GetTilePtr(game_data), 1);
             LOG("Successful funky Button Press");
+            glClearColor(0.4,0.9,0.1,1);
         }
     
         if (HandleButton(&platform->ui, {0.f, 96.f}, {32.f, 32.f}, "yes?man",
@@ -102,7 +104,7 @@ run(void* data)
         std::string mouse_pos_str = "x " + std::to_string(platform->input.mouse_pos.x) + " y " + std::to_string(platform->input.mouse_pos.y);
     
         HandleText(&platform->ui, mouse_pos_str.c_str(), 
-            {(float)platform->input.mouse_pos.x - 16.f, (float)platform->input.mouse_pos.y}, {16.f,16.f});
+            {(float)platform->input.mouse_pos.x, (float)platform->input.mouse_pos.y}, {16.f,16.f});
             
         EndUIRender(&platform->ui, &platform->fw);
     }

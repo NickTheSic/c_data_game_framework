@@ -346,14 +346,16 @@ NLSetWindowShouldClose(Platform* platform)
 
 void UpdateScreenSize(Platform* platform, int width, int height)
 {
-	float x, y;
-	NLGetWindowDPIScaling(platform, &x, &y);
+	//float x, y;
+	//NLGetWindowDPIScaling(platform, &x, &y);
 
-	int s_width = width * x;
-	int s_height = height * y;
+	int s_width = width  ;// * x;
+	int s_height = height;// * y;
 	platform->fw.main_camera.size.x = s_width  >> 1;
 	platform->fw.main_camera.size.y = s_height >> 1;
 	RecalculateZoom(&platform->fw.main_camera);
+
+	UpdateUICamera(&platform->ui, {(float)s_width, (float)s_height});
 
 	platform->viewport.screen_size.x = s_width;
     platform->viewport.screen_size.y = s_height;

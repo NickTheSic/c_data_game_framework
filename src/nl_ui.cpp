@@ -24,6 +24,11 @@ InitUICamera(UI* ui, const v2f& size)
     CreateOrtho(ui->cam.view, left, right, bottom, top, 0.0f, 100.0f); 
 }
 
+void UpdateUICamera(UI* ui, const v2f& size)
+{
+    InitUICamera(ui, size);
+}
+
 //TODO: This is wrong, as I made an original assumptionabout how my cameras were going to work
 static void
 GetMousePosInUICamera(Camera* camera, v2f* out_pos, v2i mouse_pos)

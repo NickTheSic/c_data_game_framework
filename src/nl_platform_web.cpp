@@ -110,12 +110,27 @@ Platform* CreatePlatform(int width, int height, const char* title)
 		
 	eglMakeCurrent(platform->display, platform->surface, platform->surface, platform->context);
 	
-	UpdateScreenSize(&platform->viewport, width, height);
+	UpdateScreenSize(platform, width, height);
 	glViewport(0,0, width, height);
 
     return platform;
 }
 
+void UpdateScreenSize(Platform* platform, int width, int height)
+{
+	int s_width = width;
+	int s_height = height;
+	platform->fw.main_camera.size.x = s_width  >> 1;
+	platform->fw.main_camera.size.y = s_height >> 1;
+	RecalculateZoom(&platform->fw.main_camera);
+
+	platform->viewport.screen_size.x = s_width;
+    platform->viewport.screen_size.y = s_height;
+    platform->viewport.screen_center.x = s_width - (s_width / 2);
+    platform->viewport.screen_center.y = s_height - (s_height / 2);
+
+	glViewport(0,0, s_width, s_height);
+}
 
 void DestroyPlatform(Platform* platform)
 {
@@ -132,7 +147,9 @@ bool NLPollEvents(Platform* platform)
 
 void NLSwapBuffers(Platform* platform)
 {
-	//UNUSED(platform);
+	//  Apparently doesn't actually do anything
+	//  the emscripten handles its own swap buffers between calls of the run fuction apparently
+	//  TODO: find the link to the documentation that says that
     eglSwapBuffers(platform->display, platform->surface);
 }
 
