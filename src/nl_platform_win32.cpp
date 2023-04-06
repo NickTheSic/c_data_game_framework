@@ -1,4 +1,5 @@
 #include <nl_platform.h>
+#include <nl_camera.h>
 #include <nl_input.h>
 #include <nl_key.h>
 #include <nl_gl.h>
@@ -88,6 +89,18 @@ WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
 				NLSetWindowShouldClose(0);
 			}
 		} break;
+
+		case WM_MOUSEWHEEL:
+		{
+			int mouse_delta = HIWORD(wParam);
+			int modifier = LOWORD(wParam);
+
+			LOG("%d", mouse_delta);
+
+			ZoomInCamera(&platform->fw.main_camera, mouse_delta > 2000);
+
+			break;
+		}
 
 		case WM_MOUSEMOVE:
 		{
@@ -229,22 +242,6 @@ CreatePlatform(int width, int height, const char* title)
 		return nullptr;
 	}
 
-	// calculate DPI for scaling
-	{
-		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-		
-		const UINT dpi = GetDpiForWindow((HWND)platform->window);
-		AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
-		SetWindowPos(
-			(HWND)platform->window,
-			0,
-			window_rect.left,
-			window_rect.top,
-			window_rect.right - window_rect.left,
-			window_rect.bottom - window_rect.top,
-			SWP_NOMOVE);
-	}
-
 	platform->context = wglCreateContext((HDC)platform->device);
 	if (platform->context == nullptr)
 	{
@@ -273,20 +270,20 @@ CreatePlatform(int width, int height, const char* title)
 	}
 
 	// // calculate DPI for scaling
-	// {
-	// 	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-		
-	// 	const UINT dpi = GetDpiForWindow((HWND)platform->window);
-	// 	AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
-	// 	SetWindowPos(
-	// 		(HWND)platform->window,
-	// 		0,
-	// 		window_rect.left,
-	// 		window_rect.top,
-	// 		window_rect.right - window_rect.left,
-	// 		window_rect.bottom - window_rect.top,
-	// 		SWP_NOMOVE);
-	// }
+	{
+		SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
+		const UINT dpi = GetDpiForWindow((HWND)platform->window);
+		AdjustWindowRectExForDpi(&window_rect, dw_style, 0, dw_ex_style, dpi);
+		SetWindowPos(
+			(HWND)platform->window,
+			0,
+			window_rect.left,
+			window_rect.top,
+			window_rect.right - window_rect.left,
+			window_rect.bottom - window_rect.top,
+			SWP_NOMOVE);
+	}
 
 	ShowWindow((HWND)platform->window, SW_SHOW);
 	SetForegroundWindow((HWND)platform->window);
@@ -348,13 +345,25 @@ NLSetWindowShouldClose(Platform* platform)
 
 void UpdateScreenSize(Platform* platform, int width, int height)
 {
-	platform->fw.main_camera.size.x = width;
-	platform->fw.main_camera.size.y = height;
+	float x, y;
+	NLGetWindowDPIScaling(platform, &x, &y);
 
-	platform->viewport.screen_size.x = width;
-    platform->viewport.screen_size.y = height;
-    platform->viewport.screen_center.x = width - (width / 2);
-    platform->viewport.screen_center.y = height - (height / 2);
+	int s_width = width * x;
+	int s_height = height * y;
 
-	glViewport(0,0, width, height);
+	platform->fw.main_camera.size.x = s_width  >> 1;
+	platform->fw.main_camera.size.y = s_height >> 1;
+
+	platform->viewport.screen_size.x = s_width;
+    platform->viewport.screen_size.y = s_height;
+    platform->viewport.screen_center.x = s_width - (s_width / 2);
+    platform->viewport.screen_center.y = s_height - (s_height / 2);
+
+	glViewport(0,0, s_width, s_height);
+}
+
+void NLGetWindowDPIScaling(Platform* platform, float* x, float* y)
+{
+	*x = 1.f;
+	*y = 1.f;
 }

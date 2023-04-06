@@ -38,8 +38,15 @@ GameInitialize(Platform* platform)
     platform->game_data = new GameData();
     GameData* data = (GameData*)platform->game_data;
     
-    float ratio = (float)platform->viewport.screen_size.x / (float)platform->viewport.screen_size.y;
-    InitializeFramework(&platform->fw, {512,512}, {ratio*200.f,200.f}, {0.0f, 0.0f, 0.0f}, 100);
+    v2f camera_size = {};
+    camera_size.x = (float)platform->viewport.screen_size.x / 2.f; 
+    camera_size.y = (float)platform->viewport.screen_size.y / 2.f; 
+
+    InitializeFramework(&platform->fw, 
+        {512,512}, 
+        camera_size, 
+        {0.0f, 0.0f, 0.0f}, 
+        100);
 
     InitControllerSystem();
 
