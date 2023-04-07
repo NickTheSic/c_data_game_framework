@@ -66,7 +66,7 @@ GameInitialize(Platform* platform)
     {
         InitGrid(&data->world_grid, 5, 5);
         Grid* grid = &data->world_grid;
-        grid->tile_size = 32;
+        grid->tile_size = 48;
 
         SetGridValue(grid, 2, 2, 1);
         // Creates the walls around the outside

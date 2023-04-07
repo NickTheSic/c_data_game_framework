@@ -1,4 +1,27 @@
 
+#include <nl_audio.h>
+#include <nl_camera.h>
+#include <nl_collision.h>
+#include <nl_controller.h>
+#include <nl_debug.h>
+//#include <nl_fileio.h>
+#include <nl_framework.h>
+#include <nl_game.h>
+#include <nl_gl.h>
+#include <nl_grid.h>
+#include <nl_input.h>
+#include <nl_key.h>
+#include <nl_math.h>
+#include <nl_platform.h>
+#include <nl_random.h>
+#include <nl_renderer.h>
+#include <nl_shader.h>
+#include <nl_spritesheet.h>
+#include <nl_timer.h>
+#include <nl_ui.h>
+#include <nl_utils.h>
+#include <nl_viewport.h>
+
 #include <main.cpp>
 #include <nl_camera.cpp>
 #include <nl_collision.cpp>
