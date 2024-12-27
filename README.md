@@ -1,0 +1,1 @@
+An attempt at creating my own framework.  Nothing wrong with this iteration, but this has been surpassed by [nl_](https://github.com/NickTheSic/nlGameFramework) which is currently being update and expanded upon
